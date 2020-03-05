@@ -1,0 +1,7 @@
+Title="Update Folder"
+Cond="(pgrep('dockerd')!==false)"
+Markdown="false"
+---
+<?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/add-update.folder.php");
+?>

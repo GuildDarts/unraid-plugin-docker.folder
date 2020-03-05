@@ -1,0 +1,186 @@
+Menu="Docker"
+Icon="server"
+---
+<?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
+?>
+
+<style type="text/css">
+    [class*="docker-folder-child-"] > td{
+        padding-left: 30px !important;
+    }
+    .docker-folder-child {
+        display:none;
+    }
+    
+</style>
+
+<script>
+
+(async () => {
+    folders = await read_folders()
+    cpuMemoryLoad()
+    $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#docker_list" );
+})();
+
+
+
+
+async function apply_folder() {
+    let folderNames = Object.keys(await folders)
+    
+    for (const folderName of folderNames) {
+        docker_hide(folderName, "docker")
+
+        let folderId = folders[folderName]['id']
+        edit_folder_base(folderName, folderId)
+        edit_folder_extra(folderName, folderId)
+        autoStartFolder(folderName)
+    }
+}
+
+
+function edit_folder_extra(folderName, folderId) {
+    // remoes extra info like container id
+    $(`#${folderId}`).parent().parent().find("span.advanced").remove()
+
+    var outerTr = $(`#${folderId}`).parent().parent().parent()
+
+    // add docker-folder-parent- for cpuMemoryLoad
+    outerTr.addClass(`docker-folder-parent-${folderName}`)
+
+    // remove version network etc...
+    var indexesToSelect = [1,2,6,7]
+    var elements = outerTr.find( "td" ).filter(function(i) {
+      return $.inArray(i, indexesToSelect) > -1;
+    });
+    elements.empty();
+
+    // add show children button
+    if ($(outerTr).find("td > span > i").length == 0) {
+        $(`#${folderId}`).parent().append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)
+        $(outerTr).find("td > span > i").click(function() {
+            childrenDropdown(outerTr, folderName)
+        });
+    }
+
+}
+
+
+
+function childrenDropdown(outerTr, folderName) {
+    childrenMove(folderName)
+    docker_toggle_visibility(folderName)
+    $(outerTr).find("td > span > i").toggleClass("fa-chevron-down", "fa-chevron-up")
+    
+    if ($(outerTr).find("td > span > i").hasClass("fa-chevron-down") == false) {
+        $(`.docker-folder-child-${folderName}`).each(function() {
+            $(this).appendTo("#docker_list_storage")
+        });
+    }
+}
+
+function childrenMove(folderName) {
+    for (const folder of folders[folderName]['children'].reverse()) {
+        $(`.docker-folder-child-${folderName}`).each(function() {
+            if (folder== $(this).find(".appname").text()) {
+                $(this).insertAfter(`.docker-folder-parent-${folderName}`);
+            }
+        });
+    }
+}
+
+function cpuMemoryLoad() {
+    $(`[class*="docker-folder-parent-"]`).each(function() {
+        var cpuLoad = 0.00
+        var memoryLoad = 0.00
+        var memoryMax = 0.00
+        let classFolderName = $(this).attr('class').split("-").pop()
+        
+        $(`.docker-folder-child-${classFolderName}`).each(function() {
+            cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
+            let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
+            //console.log(memory)
+            if (parseInt(memory[1]) > 0) {
+                memoryMax = memory[1]
+            }
+            memoryLoad += memoryCheck(memory[0])
+        });
+        $(this).children("td.advanced").children("[class*='cpu-']").text(cpuLoad.toFixed(2) + '%')
+        $(this).children("td.advanced").children("[class*='mem-']").text(`${memoryLoad}MiB / ${memoryMax}`)
+
+    });
+
+    setTimeout(cpuMemoryLoad , 2000)
+}
+
+
+function memoryCheck(mem) {
+    let nr
+    let type
+    mib = mem.match(/(\d*\.?\d+)/g)
+    return parseInt(mib)
+}
+
+
+function autoStartFolder(folderName) {
+
+    // set the init state for folder autostart
+    if (checkFolderSwitch()) {
+        var initState = 'checked'
+    }
+
+    // adds switches
+    $(`.docker-folder-parent-${folderName}`).find('td:nth-last-child(2)').html(
+        `<input type="checkbox" class="docker-folder-autostart" folder="${folderName}" ${initState}>`
+    ).find('input').switchButton({
+        labels_placement: "right"
+    });
+
+    // event: clicks all the children so they match parent
+    $(`.docker-folder-parent-${folderName}`).find('input.docker-folder-autostart').change(function() {
+        clickChild($(this).prop('checked'))
+    });
+    
+
+    function clickChild(state) {
+        $(`.docker-folder-child-${folderName}`).find('input.autostart').each(function() {
+            if (state !== $(this).prop('checked')) {
+                $(this).parent().find('div.switch-button-background').trigger('click')
+            }
+        })
+    }
+
+    // returns true if any child has autostart checked
+    function checkFolderSwitch() {
+        var initStateArray = []
+        $(`.docker-folder-child-${folderName}`).find('input.autostart').each(function() {
+            initStateArray.push($(this).prop('checked'))
+        })
+        
+        return initStateArray.some( (val, i, arr) => val === true)
+    }
+
+
+}
+
+
+$('<input/>', {
+    type: 'button',
+    onclick: 'addFolder()',
+    value: 'Add Folder',
+    style: 'display:none'
+}).insertBefore("div.content.shift > input:first-of-type");
+
+function addFolder() {
+  var path = location.pathname;
+  var x = path.indexOf('?');
+  if (x!=-1) path = path.substring(0,x);
+  location = path+'/AddFolder';
+}
+
+
+
+
+</script>
