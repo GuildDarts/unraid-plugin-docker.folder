@@ -131,7 +131,7 @@
         let containers = folders[folderName]['children']
         let containersString = JSON.stringify(containers)
 
-        $(`.docker-folder-parent-${folderName}`).find("[id*='load-']").removeClass('fa-square fa-play').addClass('fa-refresh fa-spin')
+        $(`.docker-folder-parent-${folderName}`).find("span.inner > i").removeClass('fa-square fa-play').addClass('fa-refresh fa-spin')
 
         if (action !== "update") {
             $.get("/plugins/docker.folder/scripts/docker_default_cmd.php", {

@@ -20,6 +20,8 @@ async function apply_folder() {
 
         let folderId = folders[folderName]['id']
         edit_folder_base(folderName, folderId)
+        // add docker-folder-parent-
+        $(`#${folderId}`).parent().addClass(`docker-folder-parent-${folderName}`)
     }
 }
 
