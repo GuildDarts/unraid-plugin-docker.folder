@@ -110,8 +110,6 @@
     function edit_folder_base(folderName, folderId) {
         let foldersChildrenLength = folders[folderName]['children'].length
 
-        var typeCheck = folders[folderName]["type"] == "docker"
-
         // set icon
         if (folders[folderName]["icon"] !== "") {
             $(`#${folderId}`).find("img").attr("src", folders[folderName]["icon"])

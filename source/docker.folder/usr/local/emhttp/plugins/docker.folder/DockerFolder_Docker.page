@@ -18,6 +18,8 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 
 <script>
 
+var activeDropdowns = [];
+
 (async () => {
     folders = await read_folders()
     cpuMemoryLoad()
@@ -65,19 +67,35 @@ function edit_folder_extra(folderName, folderId) {
         });
     }
 
+    // open dropdown on loadlist
+    for (const dropdown of activeDropdowns) {
+        if (dropdown == folderName) {
+            docker_toggle_visibility(folderName)
+            $(outerTr).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+            childrenMove(folderName)
+        }
+    }
+
 }
 
 
 
 function childrenDropdown(outerTr, folderName) {
-    childrenMove(folderName)
     docker_toggle_visibility(folderName)
-    $(outerTr).find("td > span > i").toggleClass("fa-chevron-down", "fa-chevron-up")
+    $(outerTr).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
     
-    if ($(outerTr).find("td > span > i").hasClass("fa-chevron-down") == false) {
+    if ($(outerTr).find("td > span > i").hasClass("fa-chevron-up")) {
         $(`.docker-folder-child-${folderName}`).each(function() {
             $(this).appendTo("#docker_list_storage")
         });
+        // remove folderName from activeDropdowns
+        activeDropdowns = activeDropdowns.filter(function(elm) {
+            return elm != folderName
+        })
+    } else {
+        childrenMove(folderName)
+        // add folderName to activeDropdowns
+        activeDropdowns.push(folderName)
     }
 }
 
