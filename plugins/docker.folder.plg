@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.03.05">
+<!ENTITY version   "2020.03.12">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "690286f4892f38762ab231b3cb690a0f">
+<!ENTITY md5       "2ceaecb85159edbf2dbb26601d532710">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.03.12
+- fix: if folders.json does not exist create it
+- fix: dashboard folder status icon not animating
+- fix: dropdown resetting on loadlist
+
 ###2020.03.05
 - Initial Release
 </CHANGES>
