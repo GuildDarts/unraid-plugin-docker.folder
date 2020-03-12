@@ -180,7 +180,22 @@
             type: "get",
             async: true
         }));
-        return await JSON.parse(postResult)
+        try {
+            var folders = await JSON.parse(postResult)
+        }
+        catch(err) {
+            if (err instanceof SyntaxError) {
+                var result = await Promise.resolve($.get("/plugins/docker.folder/include/post-install.php"))
+                if (result !== 'err') {
+                    return read_folders()
+                } else {
+                    throw err
+                }
+            } else {
+                throw err
+            }
+        }
+        return await folders
     }
 
     async function read_userprefs() {
