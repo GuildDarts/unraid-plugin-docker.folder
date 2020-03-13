@@ -51,8 +51,8 @@
         }
 
         dropdownButton(dropdown, folderName, "divider")
-        dropdownButton(dropdown, folderName, "Edit", "wrench")
-        dropdownButton(dropdown, folderName, "Remove", "trash")
+        dropdownButton(dropdown, folderName, "Edit Folder", "wrench")
+        dropdownButton(dropdown, folderName, "Remove Folder", "trash")
     }
 
 
