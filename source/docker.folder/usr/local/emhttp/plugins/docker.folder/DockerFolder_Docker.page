@@ -189,7 +189,7 @@ $('<input/>', {
     onclick: 'addFolder()',
     value: 'Add Folder',
     style: 'display:none'
-}).insertBefore("div.content.shift > input:first-of-type");
+}).insertBefore("div.content > input:first-of-type");
 
 function addFolder() {
   var path = location.pathname;
