@@ -2,17 +2,23 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.03.12">
+<!ENTITY version   "2020.03.13">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "2ceaecb85159edbf2dbb26601d532710">
+<!ENTITY md5       "3bb96d9c51b1e1a26c5f7db4640dbb39">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.03.13
+- fix: "add folder" button now displays with Tabbed Mode (Display Settings)
+- fix: folder name no longer allow spaces
+- change: WebUI must start with http/https
+- change: edit/remove dropdown now include Folder at the end
+
 ###2020.03.12
 - fix: if folders.json does not exist create it
 - fix: dashboard folder status icon not animating
