@@ -103,9 +103,10 @@ function endsWith($haystack, $needle) {
   <p><strong>docker-compose example</strong> "docker-compose -f /path/to/docker-compose.yml up/down/etc"</p>
   
   </blockquote>
+  <form id="form" onsubmit="return false">
   <dl>
     <dt>Name:</dt>
-    <dd><input class="setting" type="text" name="name"></dd>
+    <dd><input class="setting" type="text" name="name" pattern="[^\s]+"  title="no spaces please :)" required></dd>
 
     <dt>Icon:</dt>
     <dd><input class="setting" type="text" name="icon"></dd>
@@ -139,12 +140,13 @@ function endsWith($haystack, $needle) {
       <tr>
         <td></td>
         <td>
-          <input type="submit" value="Submit" onclick="submit()">
+          <input type="submit" value="Submit">
         </td>
       </tr>
     </table>
     <br><br><br>
   </dl>
+</form>
 </div>
 
 <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.switchbutton.css">
@@ -307,11 +309,14 @@ function buttonAdd() {
   return tmp_array
 }
 
-
+// add event listen for form submit
+$('#form').submit(function(){
+  submit()
+})
 
 async function submit() {
   $('input[type=button]').prop('disabled',true);
-  
+
   let settings = await getSettings()
 
   if (editFolderName == null) {
