@@ -67,14 +67,14 @@
 
 
         switch (name) {
-            case "Edit":
+            case "Edit Folder":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     editFolder(folderName)
                 })
                 return
             break;
 
-            case "Remove":
+            case "Remove Folder":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     swal({
                         title: "Are you sure?",
