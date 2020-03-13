@@ -114,7 +114,7 @@ function endsWith($haystack, $needle) {
     <!--BUTTONS-->
 
     <dt>WebUI:</dt>
-    <dd><input class="settingB" type="text" name="WebUI"></dd>
+    <dd><input class="settingB" type="text" name="WebUI" pattern="^https?:\/\/.*"  title="WebUI must start with http/https"></dd>
 
     <dt>Start:</dt>
     <dd><input class="settingB" type="text" name="Start"></dd>
