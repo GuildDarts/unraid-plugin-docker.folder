@@ -18,7 +18,7 @@
 
 
 <?php
-    $response = json_decode("${_GET["settings"]}",true);
+    $response = json_decode("${_POST["settings"]}",true);
     
     $name = $response["name"];
     unset($response{'name'});

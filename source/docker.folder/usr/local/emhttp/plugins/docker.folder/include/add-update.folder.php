@@ -25,6 +25,30 @@
 .checked {
   background-color: rgb(0, 200, 30, 0.3);
 }
+
+#icon-upload
+{
+  display: none;
+}
+#icon-upload-label
+{
+  cursor: pointer;
+  left: -54px;
+  position: relative;
+}
+#icon-upload-preview
+{
+  height: 44px;
+  width: 44px;
+  left: -44px;
+  position: relative;
+}
+#icon-upload-input
+{
+  left: -48px;
+  position: relative;
+}
+
 </style>
 
 
@@ -109,7 +133,12 @@ function endsWith($haystack, $needle) {
     <dd><input class="setting" type="text" name="name" pattern="[^\s]+"  title="no spaces please :)" required></dd>
 
     <dt>Icon:</dt>
-    <dd><input class="setting" type="text" name="icon"></dd>
+    <dd>
+      <img id="icon-upload-preview" src="/plugins/dynamix.docker.manager/images/question.png">
+      <input id="icon-upload-input" class="setting" type="text" name="icon">
+      <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
+      <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
+    </dd>
     
     <!--BUTTONS-->
 
@@ -328,7 +357,7 @@ async function submit() {
 
 
   let settingsSting = JSON.stringify(settings)
-  $.get( "/plugins/docker.folder/scripts/save_folder.php", { settings:settingsSting } );
+  $.post( "/plugins/docker.folder/scripts/save_folder.php", { settings:settingsSting } );
 
   //lazy fck
   location.replace(`/${location.href.split("/")[3]}`)
@@ -337,6 +366,21 @@ async function submit() {
 async function createDocker(name) {
   return postResult = await Promise.resolve ($.get( "/plugins/docker.folder/scripts/docker_folder_create.php", { name:name } )
     );
+}
+
+// event listen for icon input change. Sets preview
+$("#icon-upload-input").on("input",function(){
+  $("#icon-upload-preview").attr('src', $(this).val())
+});
+
+function iconEncodeImageFileAsURL(element) {
+  var file = element.files[0];
+  var reader = new FileReader();
+  reader.onloadend = function() {
+    $("#icon-upload-input").val(reader.result)
+    $("#icon-upload-preview").attr('src', reader.result)
+  }
+  reader.readAsDataURL(file);
 }
 
 </script>
