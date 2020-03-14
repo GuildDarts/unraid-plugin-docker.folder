@@ -98,7 +98,7 @@ function endsWith($haystack, $needle) {
   <blockquote class="inline_help" style="display: block;">
   <p>Some info about the settings (sorry about bad wording)</p>
   <p>If the start/stop/restart/update input is blank the button will not display</p>
-  <p><strong>Docker_Default</strong> in the input will make the button run "docker start/stop/etc $container"</p>
+  <p>"<strong>Docker_Default</strong>" in the input will make the button run "docker start/stop/etc $container"</p>
   <p>anything else will be run as a normal bash command this can then run E.g docker-compose</p>
   <p><strong>docker-compose example</strong> "docker-compose -f /path/to/docker-compose.yml up/down/etc"</p>
   
