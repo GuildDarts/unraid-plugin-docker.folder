@@ -40,6 +40,8 @@ async function apply_folder() {
         edit_folder_extra(folderName, folderId)
         autoStartFolder(folderName)
     }
+    // remove tianon/true orphan image element
+    $('#183cb5fd5414').parent().parent().parent().remove()
 }
 
 
