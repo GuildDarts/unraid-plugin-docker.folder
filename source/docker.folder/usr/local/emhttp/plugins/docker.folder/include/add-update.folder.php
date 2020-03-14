@@ -375,12 +375,22 @@ $("#icon-upload-input").on("input",function(){
 
 function iconEncodeImageFileAsURL(element) {
   var file = element.files[0];
-  var reader = new FileReader();
-  reader.onloadend = function() {
-    $("#icon-upload-input").val(reader.result)
-    $("#icon-upload-preview").attr('src', reader.result)
+  // 3mb
+  if (file.size < 3145728) {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      $("#icon-upload-input").val(reader.result)
+      $("#icon-upload-preview").attr('src', reader.result)
+    }
+    reader.readAsDataURL(file);
+  } else {
+    swal({
+      title: "Too large",
+      text: "images above the 3mb-5mb range cause issues ;(",
+      type: "warning"
+    })
   }
-  reader.readAsDataURL(file);
+  
 }
 
 </script>
