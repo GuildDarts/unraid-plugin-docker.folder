@@ -9,6 +9,7 @@ require_once "$docroot/webGui/include/Helpers.php";
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.ui.css">
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.switchbutton.css">
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.filetree.css">
+  <link rel="stylesheet" type="text/css" href="<?autov("/plugins/dynamix.docker.manager/styles/style-{$display['theme']}.css")?>">
 
   <script src="/webGui/javascript/jquery.switchbutton.js"></script>
 
