@@ -53,7 +53,8 @@ The 'post-install' script
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-php &plugdir;/include/post-install.php
+php &plugdir;/scripts/create_folders_file.php
+php &plugdir;/scripts/migration.php
 
 echo ""
 echo "----------------------------------------------------"

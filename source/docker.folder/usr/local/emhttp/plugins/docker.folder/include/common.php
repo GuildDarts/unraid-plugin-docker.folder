@@ -2,6 +2,31 @@
     .docker-folder-hide {
         display: none;
     }
+
+    .sub-dropdown-context:before {
+        transform: rotate(-90deg);
+        position: absolute;
+        top: 10px;
+        left: -11px;
+        display: inline-block;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid #ccc;
+        border-left: 7px solid transparent;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        content: '';
+    }
+
+    .sub-dropdown-context:after {
+        transform: rotate(-90deg);
+        position: absolute;
+        top: 9px;
+        left: -10px;
+        display: inline-block;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #ffffff;
+        border-left: 6px solid transparent;
+        content: '';
+    }
 </style>
 
 
@@ -36,45 +61,44 @@
         let dropdown = $(`#dropdown-${folderId}`)
         dropdown.empty()
 
+        dropdown.addClass('docker-dropdown-menu')
+
         for (const button of folders[folderName]['buttons']) {
-
-            if (button['cmd'] == "") {
-                continue
-            }
-
-            dropdownButton(dropdown, folderName, button['name'], button['icon'], button['cmd'])
-
-            // add divider after WebUi and Restart
-            if (button['name'] == "WebUI" && button['cmd'] !== "" || button['name'] == "Restart") {
-                dropdownButton(dropdown, folderName, "divider")
-            }
+            dropdownButton(dropdown, folderName, button['type'], button['name'], button['icon'], button['cmd'])
         }
 
         dropdownButton(dropdown, folderName, "divider")
-        dropdownButton(dropdown, folderName, "Edit Folder", "wrench")
-        dropdownButton(dropdown, folderName, "Remove Folder", "trash")
+        dropdownButton(dropdown, folderName, null, "Edit Folder", "wrench")
+        dropdownButton(dropdown, folderName, null, "Remove Folder", "trash")
     }
 
 
-    function dropdownButton(dropdown, folderName, name, icon, cmd) {
+    function dropdownButton(dropdown, folderName, type, name, icon, cmd) {
 
-        if (name == "divider") {
+        if (type == "divider") {
             dropdown.append("<li class='divider'></li>")
             return
         }
 
         dropdown.append(`<li> <a name='${name}' href='#'> <i class='fa fa-fw fa-${icon} fa-lg'></i> &nbsp;&nbsp;${name}</a> </li>`)
 
-
         switch (name) {
             case "Edit Folder":
+                $(dropdown).find(`li > a[name ="${name}"]`).mouseover(
+                    function() {
+                        removeSubMenu()
+                    })
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     editFolder(folderName)
                 })
                 return
-            break;
+                break;
 
             case "Remove Folder":
+                $(dropdown).find(`li > a[name ="${name}"]`).mouseover(
+                    function() {
+                        removeSubMenu()
+                    })
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     swal({
                         title: "Are you sure?",
@@ -86,24 +110,56 @@
                     });
                 })
                 return
-            break;
+                break;
         }
 
-        if (cmd == "Docker_Default") {
-            $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
-                dockerDefaultCmd(folderName, name)
-            })
-            return
-        }
+        switch (type) {
+            case "Docker_Default":
+                $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
+                    dockerDefaultCmd(folderName, cmd)
+                })
+                return
+                break;
 
-        if (RegExp(/^https?:\/\//g).test(cmd)) {
-            $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd)
-        } else {
-            $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
-                let title = `${name}: ${folderName}`;
-                let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`;
-                popupWithIframe(title, address, true, 'loadlist');
-            })
+            case "WebUI":
+                $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd)
+                break;
+
+            case "Bash":
+                $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
+                    let title = `${name}: ${folderName}`;
+                    let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`;
+                    popupWithIframe(title, address, true, 'loadlist');
+                })
+                break
+
+            case "Docker_Sub_Menu":
+                $(dropdown).find(`li > a`).each(function() {
+                    if ($(this).find('i').hasClass('fa-docker')) {
+                        $(this).hover(
+                            function() {
+                                removeSubMenu()
+                                addSubMenu($(this), cmd)
+                            },
+                            function() {
+                                var dropdownHover = false
+                                $(`#dropdown-${cmd}`).hover(
+                                    function() {
+                                        dropdownHover = true
+                                    },
+                                    function() {
+                                        removeSubMenu(cmd)
+                                    }
+                                )
+                            }
+                        )
+                    } else {
+                        $(this).hover(function() {
+                            removeSubMenu()
+                        })
+                    }
+                })
+                break
         }
     }
 
@@ -126,8 +182,7 @@
 
     }
 
-    function dockerDefaultCmd(folderName, name) {
-        let action = name.toLowerCase()
+    function dockerDefaultCmd(folderName, action) {
         let containers = folders[folderName]['children']
         let containersString = JSON.stringify(containers)
 
@@ -165,7 +220,34 @@
 
     }
 
+    function addSubMenu(e, cmd) {
+        var offset = e.offset();
+        $(`#dropdown-${cmd}`).css({
+            position: 'absolute',
+            left: offset.left + e.width() + 35,
+            top: offset.top,
+            display: 'block'
+        }).removeClass('dropdown-context').addClass('sub-dropdown-context')
+    }
 
+    function removeSubMenu(cmd) {
+        if (cmd == null) {
+            $(`[id*="dropdown-"]`).each(function() {
+                if (!$(this).hasClass('docker-dropdown-menu')) {
+                    $(this).hide()
+                }
+            })
+            return
+        }
+
+        $(`#dropdown-${cmd}`).css({
+            display: 'none'
+        })
+    }
+
+    $('body').click(function() {
+        removeSubMenu()
+    })
 
     function editFolder(folderName) {
         var path = location.pathname;
@@ -182,11 +264,11 @@
         }));
         try {
             var folders = await JSON.parse(postResult)
-        }
-        catch(err) {
+        } catch (err) {
             if (err instanceof SyntaxError) {
-                var result = await Promise.resolve($.get("/plugins/docker.folder/include/post-install.php"))
-                if (result !== 'err') {
+                var result = await Promise.resolve($.get("/plugins/docker.folder/scripts/create_folders_file.php"))
+                if (result == 'folders.json created') {
+                    console.log(await result)
                     return read_folders()
                 } else {
                     throw err
@@ -195,7 +277,15 @@
                 throw err
             }
         }
+        // check foldersVersion run migration
+        if (folders['foldersVersion'] == null || folders['foldersVersion'] < 2) {
+            console.log("Docker Folder: migration")
+            await $.post("/plugins/docker.folder/scripts/migration.php");
+            folders = await read_folders()
+        }
+        delete folders['foldersVersion']
         return await folders
+
     }
 
     async function read_userprefs() {
