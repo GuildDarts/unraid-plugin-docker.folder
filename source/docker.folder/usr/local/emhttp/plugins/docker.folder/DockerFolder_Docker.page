@@ -69,6 +69,11 @@ function edit_folder_extra(folderName, folderId) {
         });
     }
 
+    // start_expanded
+    if (folders[folderName]['start_expanded'] == true) {
+        activeDropdowns.push(folderName)
+    }
+
     // open dropdown on loadlist
     for (const dropdown of activeDropdowns) {
         if (dropdown == folderName) {

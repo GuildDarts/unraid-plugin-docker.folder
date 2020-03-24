@@ -141,7 +141,7 @@ function endsWith($haystack, $needle)
 
 
 ?>
-
+<div id="docker_tabbed" style="float:right;margin-top:-55px"></div>
 <div>
   <form id="form" onsubmit="return false">
     <dl>
@@ -155,6 +155,11 @@ function endsWith($haystack, $needle)
         <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
           <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
       </dd>
+
+      <div class="advanced" style="display: none">
+        <dt>Start expanded</dt>
+        <dd><input class="basic-switch setting" name="start_expanded" type="checkbox" /></dd>
+      </div>
 
       <div id="dialogAddConfig" style="display:none"></div>
       <div id="buttonLocation"></div>
@@ -191,8 +196,9 @@ function endsWith($haystack, $needle)
 </div>
 
 <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.switchbutton.css">
-
 <script src="/plugins/docker.folder/include/jquery.switchbutton-latest.js"></script>
+<script src="/plugins/dynamix.vm.manager/javascript/dynamix.vm.manager.js"></script>
+
 <script>
   let url = new URLSearchParams(window.location.search)
   editFolderName = url.get("folderName")
@@ -236,6 +242,10 @@ function endsWith($haystack, $needle)
             case "icon":
               $(this).val(folders[folderName]['icon'])
               break;
+
+            case "start_expanded":
+              $(this).prop('checked', folders[folderName]['start_expanded'])
+            break;
           }
         })
 
@@ -245,7 +255,7 @@ function endsWith($haystack, $needle)
     }
 
     //make it green
-    $('input[type="checkbox"]').change(function() {
+    $('.container_item > .settingC-box > input[type="checkbox"]').change(function() {
       if ($(this).prop("checked") == true) {
         $(this).parent().parent().addClass("checked")
       } else {
@@ -275,6 +285,10 @@ function endsWith($haystack, $needle)
       zIndex: 9999
     })
 
+    $('.basic-switch').switchButton({
+      show_labels: false
+    });
+
   }
 
 
@@ -292,6 +306,10 @@ function endsWith($haystack, $needle)
       }
       value = value.trim();
 
+      // get true/false for checkbox input
+      if (name == 'start_expanded') {
+        value = $(this).prop('checked')
+      }
 
       settings[name] = value;
     });
@@ -354,7 +372,6 @@ function endsWith($haystack, $needle)
 
     console.log(settings)
 
-    
     let settingsSting = JSON.stringify(settings)
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
       settings: settingsSting
@@ -394,4 +411,39 @@ function endsWith($haystack, $needle)
     }
 
   }
+
+  var this_tab = $('input[name$="tabs"]').length;
+  $(function() {
+    var content = "<div class='switch-wrapper'><input type='checkbox' class='advanced-switch'></div>";
+    <? if (!$tabbed) : ?>
+      $("#docker_tabbed").html(content);
+    <? else : ?>
+      var last = $('input[name$="tabs"]').length;
+      var elementId = "normalAdvanced";
+      $('.tabs').append("<span id='" + elementId + "' class='status vhshift' style='display:none;'>" + content + "&nbsp;</span>");
+      if ($('#tab' + this_tab).is(':checked')) {
+        $('#' + elementId).show();
+      }
+      $('#tab' + this_tab).bind({
+        click: function() {
+          $('#' + elementId).show();
+        }
+      });
+      for (var x = 1; x <= last; x++)
+        if (x != this_tab) $('#tab' + x).bind({
+          click: function() {
+            $('#' + elementId).hide();
+          }
+        });
+    <? endif; ?>
+    $('.advanced-switch').switchButton({
+      labels_placement: "left",
+      on_label: 'Advanced View',
+      off_label: 'Basic View'
+    });
+    $('.advanced-switch').change(function() {
+      var status = $(this).is(':checked');
+      toggleRows('advanced', status, 'basic');
+    });
+  });
 </script>
