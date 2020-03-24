@@ -240,7 +240,11 @@ function endsWith($haystack, $needle)
               break;
 
             case "icon":
-              $(this).val(folders[folderName]['icon'])
+              var icon = folders[folderName]['icon']
+              $(this).val(icon)
+              if (icon !== "") {
+                $('#icon-upload-preview').attr('src', icon)
+              }
               break;
 
             case "start_expanded":
