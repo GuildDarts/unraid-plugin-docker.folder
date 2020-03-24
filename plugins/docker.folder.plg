@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.03.14">
+<!ENTITY version   "2020.03.24">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "69bde770e3f5c5f334a8d2b1f11b8bdf">
+<!ENTITY md5       "b3fb8fab433d7833c9a16a571aa22e60">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.03.24
+- added: better buttons
+- added: folders can now start expanded
+- fix: there is now max image upload size of 3mb (per image)
+
 ###2020.03.14
 - added: upload icon
 - fix: added double quotes around Docker_Default so double click does not get a trailing space
