@@ -8,12 +8,15 @@ require_once "$docroot/webGui/include/Helpers.php";
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.ui.css">
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.switchbutton.css">
   <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.filetree.css">
-  <link rel="stylesheet" type="text/css" href="<?autov("/plugins/dynamix.docker.manager/styles/style-{$display['theme']}.css")?>">
+  <link rel="stylesheet" type="text/css" href="<? autov("/plugins/dynamix.docker.manager/styles/style-{$display['theme']}.css") ?>">
 
   <script src="/webGui/javascript/jquery.switchbutton.js"></script>
 
   <link type="text/css" rel="stylesheet" href="/plugins/docker.folder/include/fa-icon-picker/simple-iconpicker.css">
   <script src="/plugins/docker.folder/include/fa-icon-picker/simple-iconpicker.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="/plugins/docker.folder/include/image-picker/image-picker.css">
+  <script src="/plugins/docker.folder/include/image-picker/image-picker.min.js"></script>
 </head>
 
 
@@ -92,6 +95,12 @@ require_once "$docroot/webGui/include/Helpers.php";
     <input type="text" value="Im Just a Simple Divider" name="{0}" disabled>&nbsp;{4}
   </dd>
 </div>
+
+<div id="templateIconPicker" style="display:none">
+  <select class="image-picker">
+  </select>
+</div>
+
 
 
 <script>
@@ -395,11 +404,68 @@ require_once "$docroot/webGui/include/Helpers.php";
   }
 
   function getVal(el, name) {
-    var el = $(el).find("*[name="+name+"]");
+    var el = $(el).find("*[name=" + name + "]");
     if (el.length) {
       return ($(el).attr('type') == 'checkbox') ? ($(el).is(':checked') ? "on" : "off") : $(el).val();
     } else {
       return "";
     }
+  }
+
+
+
+  // icon select
+  function iconPickerPopup() {
+    var title = 'Select Icon';
+    var popup = $("#dialogAddConfig");
+
+    // Load checkedContainerIds
+    loadCheckedDockers()
+
+    // Load popup the popup with the template info
+    popup.html($("#templateIconPicker").html());
+
+    // add images to imagePicker
+    for ([i, container] of checkedContainerIds.entries()) {
+      var img = $(`.container-id:contains('${container}')`).parent().find('.docker_img').attr('src')
+      if (img !== '/plugins/dynamix.docker.manager/images/question.png') {
+        popup.find('select').append(`<option data-img-src="${img}" value="${i}"></option>`)
+      }
+    }
+
+    // Load imagePicker
+    popup.find('.image-picker').imagepicker()
+
+    // Start Dialog section
+    popup.dialog({
+      title: title,
+      resizable: false,
+      width: 900,
+      modal: true,
+      show: {
+        effect: 'fade',
+        duration: 250
+      },
+      hide: {
+        effect: 'fade',
+        duration: 250
+      },
+      buttons: {
+        "Pick": function() {
+          var img = popup.find('.selected > img').attr('src')
+          $('#icon-upload-input').val(img)
+          $("#icon-upload-preview").attr('src', img)
+          $(this).dialog("close");
+        },
+        Cancel: function() {
+          $(this).dialog("close");
+        }
+      }
+    });
+    $(".ui-dialog .ui-dialog-titlebar").addClass('menu');
+    $(".ui-dialog .ui-dialog-title").css('text-align', 'center').css('width', "100%");
+    $(".ui-dialog .ui-dialog-content").css('padding-top', '15px').css('vertical-align', 'bottom');
+    $(".ui-button-text").css('padding', '0px 5px');
+    $('.fa-icon-picker').iconpicker(".fa-icon-picker");
   }
 </script>

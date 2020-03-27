@@ -47,6 +47,7 @@
     width: 44px;
     left: -44px;
     position: relative;
+    cursor: pointer;
   }
 
   #icon-upload-input {
@@ -68,6 +69,11 @@
     top: -7px;
     left: 22px;
     font-size: small;
+  }
+
+  .image_picker_image {
+    height: 44px;
+    width: 44px;
   }
 </style>
 
@@ -150,7 +156,7 @@ function endsWith($haystack, $needle)
 
       <dt>Icon:</dt>
       <dd>
-        <img id="icon-upload-preview" src="/plugins/dynamix.docker.manager/images/question.png">
+        <img id="icon-upload-preview" src="/plugins/dynamix.docker.manager/images/question.png" onclick="iconPickerPopup()">
         <input id="icon-upload-input" class="setting" type="text" name="icon">
         <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
           <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
@@ -249,7 +255,7 @@ function endsWith($haystack, $needle)
 
             case "start_expanded":
               $(this).prop('checked', folders[folderName]['start_expanded'])
-            break;
+              break;
           }
         })
 
@@ -393,7 +399,11 @@ function endsWith($haystack, $needle)
 
   // event listen for icon input change. Sets preview
   $("#icon-upload-input").on("input", function() {
-    $("#icon-upload-preview").attr('src', $(this).val())
+    if ($(this).val() !== "") {
+      $("#icon-upload-preview").attr('src', $(this).val())
+    } else {
+      $("#icon-upload-preview").attr('src', '/plugins/dynamix.docker.manager/images/question.png')
+    }
   });
 
   function iconEncodeImageFileAsURL(element) {
