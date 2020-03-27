@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.03.24">
+<!ENTITY version   "2020.03.27">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "b3fb8fab433d7833c9a16a571aa22e60">
+<!ENTITY md5       "f78f70edf0f7babeda1f00f437531b8c">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.03.27
+- fix: missing getVal
+
 ###2020.03.24
 - added: better buttons
 - added: folders can now start expanded
