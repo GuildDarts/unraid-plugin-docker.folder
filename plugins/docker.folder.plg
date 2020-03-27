@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.03.27">
+<!ENTITY version   "2020.03.27a">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "f78f70edf0f7babeda1f00f437531b8c">
+<!ENTITY md5       "b9777c121ee5e0ed06383cedaaefe840">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.03.27a
+- added: choose a icon based on the current containers in the folder (thanks Roxedus)
+
 ###2020.03.27
 - fix: missing getVal
 
