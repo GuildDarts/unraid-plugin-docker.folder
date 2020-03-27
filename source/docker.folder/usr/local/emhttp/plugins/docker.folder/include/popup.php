@@ -1,6 +1,5 @@
 <?php
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-require_once "$docroot/plugins/dynamix.docker.manager/include/DockerClient.php";
 require_once "$docroot/plugins/dynamix.docker.manager/include/Helpers.php";
 require_once "$docroot/webGui/include/Helpers.php";
 ?>
@@ -393,5 +392,14 @@ require_once "$docroot/webGui/include/Helpers.php";
     $(`#ConfigNum-${num}`).find('dd > input').on('input', function() {
       $(`#ConfigNum-${num}`).find('input[name="confCMD[]"]').val($(this).val())
     });
+  }
+
+  function getVal(el, name) {
+    var el = $(el).find("*[name="+name+"]");
+    if (el.length) {
+      return ($(el).attr('type') == 'checkbox') ? ($(el).is(':checked') ? "on" : "off") : $(el).val();
+    } else {
+      return "";
+    }
   }
 </script>
