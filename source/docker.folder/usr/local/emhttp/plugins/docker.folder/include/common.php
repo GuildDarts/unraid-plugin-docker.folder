@@ -1,3 +1,20 @@
+<?php
+require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerClient.php");
+$DockerClient    = new DockerClient();
+$containers      = $DockerClient->getDockerContainers();
+
+$dockerIds = new stdClass;
+
+foreach ($containers as $ct) {
+    $name = $ct['Name'];
+    $id = $ct['Id'];
+
+    $dockerIds->$name = $id;
+}
+
+echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
+?>
+
 <style type="text/css">
     .docker-folder-hide {
         display: none;
@@ -62,7 +79,7 @@
         dropdown.empty()
 
         dropdown.addClass('docker-dropdown-menu')
-
+        
         for (const button of folders[folderName]['buttons']) {
             dropdownButton(dropdown, folderName, button['type'], button['name'], button['icon'], button['cmd'])
         }
@@ -84,21 +101,12 @@
 
         switch (name) {
             case "Edit Folder":
-                $(dropdown).find(`li > a[name ="${name}"]`).mouseover(
-                    function() {
-                        removeSubMenu()
-                    })
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     editFolder(folderName)
                 })
-                return
                 break;
 
             case "Remove Folder":
-                $(dropdown).find(`li > a[name ="${name}"]`).mouseover(
-                    function() {
-                        removeSubMenu()
-                    })
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     swal({
                         title: "Are you sure?",
@@ -109,7 +117,6 @@
                         folderRemove(folderName)
                     });
                 })
-                return
                 break;
         }
 
@@ -118,7 +125,6 @@
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     dockerDefaultCmd(folderName, cmd)
                 })
-                return
                 break;
 
             case "WebUI":
@@ -134,21 +140,23 @@
                 break
 
             case "Docker_Sub_Menu":
+                // get dropdown-id
+                var id = dockerIds[cmd]
                 $(dropdown).find(`li > a`).each(function() {
                     if ($(this).find('i').hasClass('fa-docker')) {
                         $(this).hover(
                             function() {
                                 removeSubMenu()
-                                addSubMenu($(this), cmd)
+                                addSubMenu($(this), id)
                             },
                             function() {
                                 var dropdownHover = false
-                                $(`#dropdown-${cmd}`).hover(
+                                $(`#dropdown-${id}`).hover(
                                     function() {
                                         dropdownHover = true
                                     },
                                     function() {
-                                        removeSubMenu(cmd)
+                                        removeSubMenu(id)
                                     }
                                 )
                             }
@@ -160,6 +168,13 @@
                     }
                 })
                 break
+        }
+
+        // remove docker sub menu when hover over any other button
+        if (type !== 'Docker_Sub_Menu') {
+            $(dropdown).find(`li > a[name ="${name}"]`).mouseover(function() {
+                removeSubMenu()
+            })
         }
     }
 
@@ -220,9 +235,9 @@
 
     }
 
-    function addSubMenu(e, cmd) {
+    function addSubMenu(e, id) {
         var offset = e.offset();
-        $(`#dropdown-${cmd}`).css({
+        $(`#dropdown-${id}`).css({
             position: 'absolute',
             left: offset.left + e.width() + 35,
             top: offset.top,
@@ -230,8 +245,8 @@
         }).removeClass('dropdown-context').addClass('sub-dropdown-context')
     }
 
-    function removeSubMenu(cmd) {
-        if (cmd == null) {
+    function removeSubMenu(id) {
+        if (id == null) {
             $(`[id*="dropdown-"]`).each(function() {
                 if (!$(this).hasClass('docker-dropdown-menu')) {
                     $(this).hide()
@@ -240,7 +255,7 @@
             return
         }
 
-        $(`#dropdown-${cmd}`).css({
+        $(`#dropdown-${id}`).css({
             display: 'none'
         })
     }
@@ -278,7 +293,7 @@
             }
         }
         // check foldersVersion run migration
-        if (folders['foldersVersion'] == null || folders['foldersVersion'] < 2) {
+        if (folders['foldersVersion'] == null || folders['foldersVersion'] < 2.1) {
             console.log("Docker Folder: migration")
             await $.post("/plugins/docker.folder/scripts/migration.php");
             folders = await read_folders()

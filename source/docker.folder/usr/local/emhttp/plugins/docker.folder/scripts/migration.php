@@ -1,5 +1,5 @@
 <?php
-    $GLOBALS['newFoldersVersion'] = 2;
+    $GLOBALS['newFoldersVersion'] = 2.1;
     init();
     function init() {
         $path = '/boot/config/plugins/docker.folder/';
@@ -17,6 +17,9 @@
 
             if ($folders['foldersVersion'] == null) {
                 $folders = migration_1($folders);
+            }
+            if ($folders['foldersVersion'] < 2.1) {
+                $folders = migration_2($folders);
             }
 
             $folders['foldersVersion'] = $GLOBALS['newFoldersVersion'];
@@ -64,5 +67,17 @@
         return $folders;
     }
 
+    function migration_2($folders) {
+        echo("migration_2");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+            foreach ($folder['buttons'] as $buttonKey => &$button) {
+                // Docker_Sub_Menu set cmd val = name val
+                if ($button['type'] == 'Docker_Sub_Menu') {
+                    $button['cmd'] = $button['name'];
+                }
+            }
+        }
 
-    
+        return $folders;
+    }

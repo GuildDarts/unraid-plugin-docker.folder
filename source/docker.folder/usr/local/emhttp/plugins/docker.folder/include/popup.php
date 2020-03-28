@@ -105,7 +105,6 @@ require_once "$docroot/webGui/include/Helpers.php";
 
 <script>
   var confNum = 0;
-  var checkedContainerIds = [];
 
   String.prototype.format = function() {
     var args = arguments;
@@ -123,11 +122,11 @@ require_once "$docroot/webGui/include/Helpers.php";
     var title = 'Add Configuration';
     var popup = $("#dialogAddConfig");
 
-    // Load checkedContainerIds
-    loadCheckedDockers()
-
     // Load popup the popup with the template info
     popup.html($("#templatePopupConfig").html());
+
+    // Load Docker Sub Menu
+    loadDockerSubMenu(popup)
 
     // Load Mode field if needed and enable field
     toggleMode(popup.find("*[name=Type]:first"), false);
@@ -182,11 +181,11 @@ require_once "$docroot/webGui/include/Helpers.php";
     var popup = $("#dialogAddConfig");
     var index = $(`#ConfigNum-${num}`).index();
 
-    // Load checkedContainerIds
-    loadCheckedDockers()
-
     // Load popup the popup with the template info
     popup.html($("#templatePopupConfig").html());
+
+    // Load Docker Sub Menu
+    loadDockerSubMenu(popup)
 
     // Load existing config info
     var config = $("#ConfigNum-" + num);
@@ -297,30 +296,23 @@ require_once "$docroot/webGui/include/Helpers.php";
         cmd.hide()
         subMenu.show()
 
-        subMenu_input.prop("selectedIndex", -1)
-
+        subMenu_input.val(name_input.val())
         subMenu_input.change(function() {
           var index = $(this).prop('selectedIndex')
           name_input.val($(this).children("option:selected").text())
           icon_input.val('docker')
-          cmd_input.val(checkedContainerIds[index])
+          cmd_input.val($(this).children("option:selected").text())
         })
         break;
     }
   }
 
-
-
-  function loadCheckedDockers() {
-    checkedContainerIds = []
-    sub_menu = $('#templatePopupConfig').find('#popup-docker-sub-menu > dd > select')
+  function loadDockerSubMenu(popup) {
+    sub_menu = popup.find('#popup-docker-sub-menu > dd > select')
     sub_menu.empty()
-    $('#dockers > .containers > .container_item').each(function() {
+    $('div.container_item').each(function() {
       if ($(this).hasClass('checked')) {
         var name = $(this).find('.info > strong').text()
-        var id = $(this).find('.info > .container-id').text()
-
-        checkedContainerIds.push(id)
 
         sub_menu.append(`<option value="${name}">${name}</option>`);
       }
@@ -419,19 +411,16 @@ require_once "$docroot/webGui/include/Helpers.php";
     var title = 'Select Icon';
     var popup = $("#dialogAddConfig");
 
-    // Load checkedContainerIds
-    loadCheckedDockers()
-
     // Load popup the popup with the template info
     popup.html($("#templateIconPicker").html());
 
     // add images to imagePicker
-    for ([i, container] of checkedContainerIds.entries()) {
-      var img = $(`.container-id:contains('${container}')`).parent().find('.docker_img').attr('src')
+    $('div.container_item.checked').each(function(i){
+      var img = $(this).find('.docker_img').attr('src')
       if (img !== '/plugins/dynamix.docker.manager/images/question.png') {
         popup.find('select').append(`<option data-img-src="${img}" value="${i}"></option>`)
       }
-    }
+    })
 
     // Load imagePicker
     popup.find('.image-picker').imagepicker()
