@@ -20,9 +20,16 @@ async function apply_folder() {
 
         let folderId = folders[folderName]['id']
         edit_folder_base(folderName, folderId)
-        // add docker-folder-parent-
-        $(`#${folderId}`).parent().addClass(`docker-folder-parent-${folderName}`)
+        edit_folder_extra(folderName, folderId)
     }
+}
+
+function edit_folder_extra(folderName, folderId) {
+    // add docker-folder-parent-
+    $(`#${folderId}`).parent().addClass(`docker-folder-parent-${folderName}`)
+
+    // remove blue-text from docker folder
+    $(`.docker-folder-parent-${folderName}`).find('.inner > .blue-text').removeClass('blue-text')
 }
 
 </script>
