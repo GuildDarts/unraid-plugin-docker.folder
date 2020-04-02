@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.02">
+<!ENTITY version   "2020.04.02a">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "029e14484b6386ad3821fe167e1ba695">
+<!ENTITY md5       "2de99901efe6b224ff58e0440a84e54a">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.04.02a
+- fix: folders not saving on firefox (thanks NitroNine)
+
 ###2020.04.02
 - fix: fresh installs
 - fix: folderRemove maybe breaking things
