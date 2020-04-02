@@ -1,5 +1,5 @@
 <?php
-    $GLOBALS['newFoldersVersion'] = 2.1;
+    require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
     init();
     function init() {
         $path = '/boot/config/plugins/docker.folder/';
@@ -10,6 +10,7 @@
 
             // exit if there are no folders
             if (count($folders) == null || count($folders) < 2) {
+                finish($path, $folders);
                 exit();
             }
 
@@ -22,11 +23,15 @@
                 $folders = migration_2($folders);
             }
 
-            $folders['foldersVersion'] = $GLOBALS['newFoldersVersion'];
-
-            $jsonData = json_encode($folders, JSON_PRETTY_PRINT);
-            file_put_contents($path.'folders.json', $jsonData);
+            finish($path, $folders);
         }
+    }
+
+    function finish($path, $folders) {
+        $folders['foldersVersion'] = $GLOBALS['foldersVersion'];
+
+        $jsonData = json_encode($folders, JSON_PRETTY_PRINT);
+        file_put_contents($path.'folders.json', $jsonData);
     }
 
     function migration_1($folders) {

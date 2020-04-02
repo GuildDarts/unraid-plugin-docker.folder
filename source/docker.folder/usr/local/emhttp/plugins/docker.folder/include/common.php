@@ -1,4 +1,5 @@
 <?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
 require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerClient.php");
 $DockerClient    = new DockerClient();
 $containers      = $DockerClient->getDockerContainers();
@@ -13,6 +14,8 @@ foreach ($containers as $ct) {
 }
 
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
+// folderVersion var for javascript
+echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
 
 <style type="text/css">
@@ -293,7 +296,7 @@ echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
             }
         }
         // check foldersVersion run migration
-        if (folders['foldersVersion'] == null || folders['foldersVersion'] < 2.1) {
+        if (folders['foldersVersion'] == null || folders['foldersVersion'] < foldersVersion) {
             console.log("Docker Folder: migration")
             await $.post("/plugins/docker.folder/scripts/migration.php");
             folders = await read_folders()
@@ -313,10 +316,8 @@ echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
     }
 
     function folderRemove(folderName) {
-        delete folders[folderName]
-        let foldersSting = JSON.stringify(folders)
-        $.get("/plugins/docker.folder/scripts/remove_folder.php", {
-            folders: foldersSting
+        $.post("/plugins/docker.folder/scripts/remove_folder.php", {
+            folderName: folderName
         });
 
         $.get("/plugins/docker.folder/scripts/docker_folder_remove.php", {
