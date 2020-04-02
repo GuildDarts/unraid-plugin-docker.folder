@@ -382,13 +382,13 @@ function endsWith($haystack, $needle)
 
     console.log(settings)
 
-    let settingsSting = JSON.stringify(settings)
+    let settingsSting = JSON.stringify(await settings)
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
-      settings: settingsSting
+      settings: await settingsSting
+    },function(){
+      //lazy fck
+      location.replace(`/${location.href.split("/")[3]}`)
     });
-
-    //lazy fck
-    location.replace(`/${location.href.split("/")[3]}`)
   }
 
   async function createDocker(name) {
