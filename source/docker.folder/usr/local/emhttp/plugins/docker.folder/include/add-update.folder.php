@@ -235,33 +235,30 @@ function endsWith($haystack, $needle)
 
     });
 
+    if (editFolderName !== null) {
+      $('.setting').each(function() {
+        switch ($(this).attr('name')) {
+          case "name":
+            $(this).val(editFolderName)
+            $(this).attr("disabled", true)
+            break;
 
-    for (const folderName of folderNames) {
-      if (folderName == editFolderName) {
-        $('.setting').each(function() {
-          switch ($(this).attr('name')) {
-            case "name":
-              $(this).val(folderName)
-              $(this).attr("disabled", true)
-              break;
+          case "icon":
+            var icon = folders[editFolderName]['icon']
+            $(this).val(icon)
+            if (icon !== "") {
+              $('#icon-upload-preview').attr('src', icon)
+            }
+            break;
 
-            case "icon":
-              var icon = folders[folderName]['icon']
-              $(this).val(icon)
-              if (icon !== "") {
-                $('#icon-upload-preview').attr('src', icon)
-              }
-              break;
+          case "start_expanded":
+            $(this).prop('checked', folders[editFolderName]['start_expanded'])
+            break;
+        }
+      })
 
-            case "start_expanded":
-              $(this).prop('checked', folders[folderName]['start_expanded'])
-              break;
-          }
-        })
+      loadButtons(folders, editFolderName)
 
-        loadButtons(folders, folderName)
-
-      }
     }
 
     //make it green
@@ -324,14 +321,24 @@ function endsWith($haystack, $needle)
       settings[name] = value;
     });
 
-    settings["children"] = folder_children;
 
-    var folder_children = new Array();
+
+    if (editFolderName == null) {
+      var folder_children = new Array();
+    } else {
+      var folder_children = folders[editFolderName]['children']
+    }
     $(".settingC").each(function() {
       var value = $(this).prop("checked");
       var name = $(this).attr('name');
-      if (value == true) {
+      if (value == true && folder_children.includes(name) == false) {
         folder_children.push(name)
+      }
+      // remove value from array e.g removing a folder
+      if (value == false && folder_children.includes(name) == true) {
+        folder_children = folder_children.filter(function(elm) {
+          return elm != name
+        })
       }
 
 
@@ -373,6 +380,8 @@ function endsWith($haystack, $needle)
 
     let settings = await getSettings()
 
+    console.log(settings)
+
     if (editFolderName == null) {
       let dockerId = await createDocker(settings["name"])
       settings["id"] = dockerId
@@ -380,12 +389,10 @@ function endsWith($haystack, $needle)
       settings["id"] = folders[editFolderName]['id']
     }
 
-    console.log(settings)
-
     let settingsSting = JSON.stringify(await settings)
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
       settings: await settingsSting
-    },function(){
+    }, function() {
       //lazy fck
       location.replace(`/${location.href.split("/")[3]}`)
     });

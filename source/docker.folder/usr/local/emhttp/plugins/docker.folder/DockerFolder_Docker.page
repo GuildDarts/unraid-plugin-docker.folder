@@ -13,23 +13,22 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
     .docker-folder-child {
         display:none;
     }
-    
+    [class*="docker-folder-child-div-"]{
+        display: contents;
+    }
 </style>
 
 <script>
 
-var activeDropdowns = [];
-
 (async () => {
     folders = await read_folders()
-    cpuMemoryLoad()
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#docker_list" );
 })();
 
 
 
 
-async function apply_folder() {
+async function apply_folder(callback) {
     let folderNames = Object.keys(await folders)
     
     for (const folderName of folderNames) {
@@ -40,6 +39,7 @@ async function apply_folder() {
         edit_folder_extra(folderName, folderId)
         autoStartFolder(folderName)
     }
+    callback()
     // remove tianon/true orphan image element
     $('#183cb5fd5414').parent().parent().parent().remove()
 }
@@ -69,10 +69,46 @@ function edit_folder_extra(folderName, folderId) {
         });
     }
 
-    // start_expanded
+    // start_expanded - activeDropdowns
+    activeDropdowns = [];
     if (folders[folderName]['start_expanded'] == true) {
         activeDropdowns.push(folderName)
     }
+
+    // wrap children in table
+    $(`.docker-folder-child-${folderName}`).wrapAll(`<div class='docker-folder-child-div-${folderName}'></div>`)
+
+    // remove sortable from children and add new sortable
+    $(`.docker-folder-child-${folderName}`).each(function() {
+        $(this).removeClass("sortable").addClass(`sortable-child-${folderName}`)
+    })
+
+    // custom sortable helper for children
+    var sortableHelper2 = function(e,i){
+        i.children().each(function(){
+            $(this).width($(this).width());
+        });
+        return $(i).clone();
+    };
+
+    // make children sortable
+    $(`.docker-folder-child-div-${folderName}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
+    update:function(e,ui){
+        var children = []
+        $(`.docker-folder-child-div-${folderName} > tr`).each(function() {
+            var nam = $(this).find('.appname').text();
+            children.push(nam)
+        })
+        folders[folderName]['children'] = children
+        loadlistUpdate(e,ui)
+
+        // save new order to folders.json
+        let childrenSting = JSON.stringify(children)
+        $.post("/plugins/docker.folder/scripts/save_folder_children.php", {
+            folderName: folderName,
+            children: childrenSting
+        });
+    }})
 
     // open dropdown on loadlist
     for (const dropdown of activeDropdowns) {
@@ -83,6 +119,8 @@ function edit_folder_extra(folderName, folderId) {
         }
     }
 
+    // cpu / memory load 
+    cpuMemoryLoad(folderName)
 }
 
 
@@ -92,7 +130,7 @@ function childrenDropdown(outerTr, folderName) {
     $(outerTr).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
     
     if ($(outerTr).find("td > span > i").hasClass("fa-chevron-up")) {
-        $(`.docker-folder-child-${folderName}`).each(function() {
+        $(`.docker-folder-child-div-${folderName}`).each(function() {
             $(this).appendTo("#docker_list_storage")
         });
         // remove folderName from activeDropdowns
@@ -107,37 +145,35 @@ function childrenDropdown(outerTr, folderName) {
 }
 
 function childrenMove(folderName) {
+    $(`.docker-folder-child-div-${folderName}`).insertAfter(`.docker-folder-parent-${folderName}`)
+    /**
     for (const folder of folders[folderName]['children'].reverse()) {
         $(`.docker-folder-child-${folderName}`).each(function() {
             if (folder== $(this).find(".appname").text()) {
                 $(this).insertAfter(`.docker-folder-parent-${folderName}`);
             }
         });
-    }
+    }*/
 }
 
-function cpuMemoryLoad() {
-    $(`[class*="docker-folder-parent-"]`).each(function() {
-        var cpuLoad = 0.00
-        var memoryLoad = 0.00
-        var memoryMax = 0.00
-        let classFolderName = $(this).attr('class').split("-").pop()
+function cpuMemoryLoad(folderName) {
+    var cpuLoad = 0.00
+    var memoryLoad = 0.00
+    var memoryMax = 0.00
         
-        $(`.docker-folder-child-${classFolderName}`).each(function() {
-            cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
-            let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
-            //console.log(memory)
-            if (parseInt(memory[1]) > 0) {
-                memoryMax = memory[1]
-            }
-            memoryLoad += memoryCheck(memory[0])
-        });
-        $(this).children("td.advanced").children("[class*='cpu-']").text(cpuLoad.toFixed(2) + '%')
-        $(this).children("td.advanced").children("[class*='mem-']").text(`${memoryLoad}MiB / ${memoryMax}`)
-
+    $(`.docker-folder-child-${folderName}`).each(function() {
+        cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
+        let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
+        //console.log(memory)
+        if (parseInt(memory[1]) > 0) {
+            memoryMax = memory[1]
+        }
+        memoryLoad += memoryCheck(memory[0])
     });
+    $(`.docker-folder-parent-${folderName}`).children("td.advanced").children("[class*='cpu-']").text(cpuLoad.toFixed(2) + '%')
+    $(`.docker-folder-parent-${folderName}`).children("td.advanced").children("[class*='mem-']").text(`${memoryLoad}MiB / ${memoryMax}`)
 
-    setTimeout(cpuMemoryLoad , 2000)
+    setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
 }
 
 

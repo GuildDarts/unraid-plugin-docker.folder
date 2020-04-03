@@ -329,7 +329,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     function docker_hide(folderName, location) {
 
-        $(`#docker_list_storage > .docker-folder-child-${folderName}`).remove()
+        $(`#docker_list_storage > div.docker-folder-child-div-${folderName} >.docker-folder-child-${folderName}`).remove()
 
         if (location == "dashboard") {
             var selector = "#db-box3 > tbody > tr > td:nth-child(2) > span"
