@@ -82,7 +82,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         dropdown.empty()
 
         dropdown.addClass('docker-dropdown-menu')
-        
+
         for (const button of folders[folderName]['buttons']) {
             dropdownButton(dropdown, folderName, button['type'], button['name'], button['icon'], button['cmd'])
         }
@@ -274,7 +274,8 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         location = path + '/UpdateFolder?folderName=' + folderName;
     }
 
-    async function read_folders() {
+    async function read_folders(runscount) {
+        var runs = 1 + parseInt(runscount) || 0;
         postResult = await Promise.resolve($.ajax({
             url: "/plugins/docker.folder/scripts/read_folders.php",
             type: "get",
@@ -297,9 +298,20 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         }
         // check foldersVersion run migration
         if (folders['foldersVersion'] == null || folders['foldersVersion'] < foldersVersion) {
+            // check if to many runs
+            console.log(runs)
+            if (runs >= 5) {
+                swal({
+                    title: "read_folders error",
+                    text: "looks like migration is running wild. Please report this on the forums",
+                    type: "warning",
+                    showCancelButton: false
+                })
+                return
+            }
             console.log("Docker Folder: migration")
             await $.post("/plugins/docker.folder/scripts/migration.php");
-            folders = await read_folders()
+            folders = await read_folders(runs)
         }
         delete folders['foldersVersion']
         return await folders

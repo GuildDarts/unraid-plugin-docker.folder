@@ -161,6 +161,7 @@ function endsWith($haystack, $needle)
         <input id="icon-upload-input" class="setting" type="text" name="icon">
         <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
           <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
+        </label>
       </dd>
 
       <div class="advanced" style="display: none">

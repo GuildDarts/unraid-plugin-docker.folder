@@ -49,23 +49,21 @@ function edit_folder_extra(folderName, folderId) {
     // remoes extra info like container id
     $(`#${folderId}`).parent().parent().find("span.advanced").remove()
 
-    var outerTr = $(`#${folderId}`).parent().parent().parent()
-
-    // add docker-folder-parent- for cpuMemoryLoad
-    outerTr.addClass(`docker-folder-parent-${folderName}`)
+    // add docker-folder-parent-${folderName}
+    $(`#${folderId}`).parent().parent().parent().addClass(`docker-folder-parent-${folderName}`)
 
     // remove version network etc...
     var indexesToSelect = [1,2,6,7]
-    var elements = outerTr.find( "td" ).filter(function(i) {
+    var elements = $(`.docker-folder-parent-${folderName}`).find( "td" ).filter(function(i) {
       return $.inArray(i, indexesToSelect) > -1;
     });
     elements.empty();
 
     // add show children button
-    if ($(outerTr).find("td > span > i").length == 0) {
+    if ($(`.docker-folder-parent-${folderName}`).find("td > span > i").length == 0) {
         $(`#${folderId}`).parent().append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)
-        $(outerTr).find("td > span > i").click(function() {
-            childrenDropdown(outerTr, folderName)
+        $(`.docker-folder-parent-${folderName}`).find("td > span > i").click(function() {
+            childrenDropdown(folderName)
         });
     }
 
@@ -114,7 +112,7 @@ function edit_folder_extra(folderName, folderId) {
     for (const dropdown of activeDropdowns) {
         if (dropdown == folderName) {
             docker_toggle_visibility(folderName)
-            $(outerTr).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+            $(`.docker-folder-parent-${folderName}`).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
             childrenMove(folderName)
         }
     }
@@ -125,11 +123,11 @@ function edit_folder_extra(folderName, folderId) {
 
 
 
-function childrenDropdown(outerTr, folderName) {
+function childrenDropdown(folderName) {
     docker_toggle_visibility(folderName)
-    $(outerTr).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+    $(`.docker-folder-parent-${folderName}`).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
     
-    if ($(outerTr).find("td > span > i").hasClass("fa-chevron-up")) {
+    if ($(`.docker-folder-parent-${folderName}`).find("td > span > i").hasClass("fa-chevron-up")) {
         $(`.docker-folder-child-div-${folderName}`).each(function() {
             $(this).appendTo("#docker_list_storage")
         });
