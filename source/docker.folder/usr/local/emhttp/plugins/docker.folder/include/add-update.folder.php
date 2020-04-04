@@ -1,10 +1,10 @@
 <style>
-  .containers {
+  .containers, .folders {
     display: grid;
     grid-template-columns: auto auto auto;
   }
 
-  .container_item {
+  .container_item, .folder_item {
     border: 1px solid rgba(0, 0, 0, 0.8);
   }
 
@@ -16,7 +16,7 @@
     display: inline;
   }
 
-  .docker_img {
+  .docker_img, .folder_img {
     float: left;
     width: 48px;
     height: 48px;
@@ -84,6 +84,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerClient.php");
 
 require_once("/usr/local/emhttp/plugins/docker.folder/include/popup.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/import-export.php");
 
 function searchArray($array, $key, $value)
 {
@@ -433,11 +434,12 @@ function endsWith($haystack, $needle)
 
   }
 
+  // advanced - basic switch
   var this_tab = $('input[name$="tabs"]').length;
   $(function() {
     var content = "<div class='switch-wrapper'><input type='checkbox' class='advanced-switch'></div>";
     <? if (!$tabbed) : ?>
-      $("#docker_tabbed").html(content);
+      $("#docker_tabbed").prepend(content);
     <? else : ?>
       var last = $('input[name$="tabs"]').length;
       var elementId = "normalAdvanced";
@@ -467,4 +469,7 @@ function endsWith($haystack, $needle)
       toggleRows('advanced', status, 'basic');
     });
   });
+
+  // import - export
+  importExport()
 </script>
