@@ -2,17 +2,21 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.04a">
+<!ENTITY version   "2020.04.04b">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "c148a753bd26cbdb66a1d6cc6d2d705c">
+<!ENTITY md5       "c9decde6c637bc801b4186ea7f0e3ade">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.04.04b
+- fix: import folders
+- add: WebUI open in new tab
+
 ###2020.04.04a
 - fix: Fing windows 7 (LF no CR LF)
 
