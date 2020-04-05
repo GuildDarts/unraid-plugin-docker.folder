@@ -134,6 +134,10 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd)
                 break;
 
+            case "WebUI_New_Tab":
+                $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd).attr('target', '_blank')
+                break;
+
             case "Bash":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     let title = `${name}: ${folderName}`;

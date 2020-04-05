@@ -26,6 +26,7 @@ require_once "$docroot/webGui/include/Helpers.php";
     <dd>
       <select name="Type" onchange="toggleMode(this,false);">
         <option value="WebUI">WebUI</option>
+        <option value="WebUI_New_Tab">WebUI_New_Tab</option>
         <option value="Docker_Default">Docker_Default</option>
         <option value="Bash">Bash</option>
         <option value="Docker_Sub_Menu">Docker_Sub_Menu</option>
@@ -269,7 +270,11 @@ require_once "$docroot/webGui/include/Helpers.php";
         base.find('#dt3').text('URL:');
         icon_input.val('globe')
         break;
-      case 1: // Docker_Default
+      case 1: // WebUI_New_Tab
+        base.find('#dt3').text('URL:');
+        icon_input.val('globe')
+        break;
+      case 2: // Docker_Default
         name.hide()
         icon.hide()
         cmd.hide()
@@ -286,12 +291,12 @@ require_once "$docroot/webGui/include/Helpers.php";
         });
 
         break;
-      case 2: // Bash
+      case 3: // Bash
         icon.show()
         base.find('#dt3').text('CMD:');
         break;
 
-      case 3: // Docker_Sub_Menu
+      case 4: // Docker_Sub_Menu
         name.hide()
         cmd.hide()
         subMenu.show()
@@ -415,7 +420,7 @@ require_once "$docroot/webGui/include/Helpers.php";
     popup.html($("#templateIconPicker").html());
 
     // add images to imagePicker
-    $('div.container_item.checked').each(function(i){
+    $('div.container_item.checked').each(function(i) {
       var img = $(this).find('.docker_img').attr('src')
       if (img !== '/plugins/dynamix.docker.manager/images/question.png') {
         popup.find('select').append(`<option data-img-src="${img}" value="${i}"></option>`)
