@@ -28,19 +28,22 @@ foreach ($currentFolders as $cFolderKey => &$cFolder) {
 }
 
 // re-add the id to imports - check if id is null. if null create new container
-if (count((array) $folderIds) > 0) {
-    $ids = get_object_vars($folderIds);
-    foreach ($import as $folderKey => &$folder) {
-        $folder['id'] = $ids[$folderKey];
+$ids = get_object_vars($folderIds);
+foreach ($import as $folderKey => &$folder) {
+    $folder['id'] = $ids[$folderKey];
 
-        if ($folder['id'] == null) {
-            exec("docker create --name='$folderKey-folder' --net='none' 'tianon/true:latest' ");
-            exec("docker ps -a --filter 'name=$folderKey-folder' --format '{{.ID}}' ", $newId);
-            $folder['id'] = implode("",$newId);
-        }
+    echo $folder['id'];
+
+    if ($folder['id'] == null) {
+        $folder['id'] = newDocker($folderKey);
     }
 }
 
+function newDocker($folderKey) {
+    exec("docker create --name='$folderKey-folder' --net='none' 'tianon/true:latest' ");
+    exec("docker ps -a --filter 'name=$folderKey-folder' --format '{{.ID}}' ", $newId);
+    return implode("", $newId);
+}
 
 
 $obj_merged = (object) array_merge((array) $currentFolders, (array) $import);
