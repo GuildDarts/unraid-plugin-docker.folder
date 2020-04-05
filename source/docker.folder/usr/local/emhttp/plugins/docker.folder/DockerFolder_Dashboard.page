@@ -30,6 +30,9 @@ function edit_folder_extra(folderName, folderId) {
 
     // remove blue-text from docker folder
     $(`.docker-folder-parent-${folderName}`).find('.inner > .blue-text').removeClass('blue-text')
+
+    // show folder (fixes started only)
+    $(`.docker-folder-parent-${folderName}`).show()
 }
 
 </script>
