@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.04c">
+<!ENTITY version   "2020.04.14">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "9c0fa143a3f25436f9250a58d2af7943">
+<!ENTITY md5       "419afd801f9f1661cec89b15aa1cb586">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.04.14
+- add: update status for folder
+- fix: remove docker from folder on remove
+- fix: dont reset folder position on edit
+
 ###2020.04.04c
 - fix: dashboard "started only" hiding folders
 
