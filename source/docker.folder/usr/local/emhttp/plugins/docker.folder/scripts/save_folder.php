@@ -38,8 +38,10 @@
     $path = "/boot/config/plugins/dockerMan/userprefs.cfg";
 
     $userprefs = parse_ini_file($path,true);
-    array_unshift($userprefs, $name .= "-folder");
-    write_php_ini($userprefs, $path);
+    if (in_array($name .= "-folder", $userprefs) == null) {
+        array_unshift($userprefs, $name .= "-folder");
+        write_php_ini($userprefs, $path);
+    }
 
 
 
