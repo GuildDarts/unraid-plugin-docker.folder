@@ -118,6 +118,24 @@ function edit_folder_extra(folderName, folderId) {
         }
     }
 
+    // folder update status
+    var upToDate = true
+    for (const child of folders[folderName]['children']) {
+        for (const dock of docker) {
+            if (child == dock['name']) {
+                if (dock['update'] == 1) {
+                    upToDate = false
+                }
+            }
+        }
+    }
+    if (upToDate == true) {
+        var updateConf = `<span class="green-text" style="white-space:nowrap;"><i class="fa fa-check fa-fw"></i> up-to-date</span>`
+    } else {
+        var updateConf = `<span class="orange-text" style="white-space:nowrap;"><i class="fa fa-flash fa-fw"></i> update ready</span>`
+    }
+    $(`.docker-folder-parent-${folderName}`).find('td.updatecolumn').html(updateConf)
+
     // cpu / memory load 
     cpuMemoryLoad(folderName)
 }
@@ -126,9 +144,9 @@ function edit_folder_extra(folderName, folderId) {
 
 function childrenDropdown(folderName) {
     docker_toggle_visibility(folderName)
-    $(`.docker-folder-parent-${folderName}`).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+    $(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").toggleClass("fa-chevron-down fa-chevron-up")
     
-    if ($(`.docker-folder-parent-${folderName}`).find("td > span > i").hasClass("fa-chevron-up")) {
+    if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").hasClass("fa-chevron-up")) {
         $(`.docker-folder-child-div-${folderName}`).each(function() {
             $(this).appendTo("#docker_list_storage")
         });
