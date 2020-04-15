@@ -2,17 +2,21 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.14">
+<!ENTITY version   "2020.04.15">
 <!ENTITY launch    "Utilities/DockerFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "419afd801f9f1661cec89b15aa1cb586">
+<!ENTITY md5       "d628c4a4d5c275fdd48aec4793f12958">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2020.04.15
+- fix: fix any docker action removing it from folder
+- fix: fix activeDropdowns being a bit wonky
+
 ###2020.04.14
 - add: update status for folder
 - fix: remove docker from folder on remove
