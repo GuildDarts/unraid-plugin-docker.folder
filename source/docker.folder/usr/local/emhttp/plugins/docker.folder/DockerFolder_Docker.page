@@ -24,6 +24,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 (async () => {
     folders = await read_folders()
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#docker_list" );
+    activeDropdowns = [];
 })();
 
 
@@ -61,16 +62,15 @@ function edit_folder_extra(folderName, folderId) {
     elements.empty();
 
     // add show children button
-    if ($(`.docker-folder-parent-${folderName}`).find("td > span > i").length == 0) {
+    if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").length == 0) {
         $(`#${folderId}`).parent().append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)
-        $(`.docker-folder-parent-${folderName}`).find("td > span > i").click(function() {
+        $(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").click(function() {
             childrenDropdown(folderName)
         });
     }
 
     // start_expanded - activeDropdowns
-    activeDropdowns = [];
-    if (folders[folderName]['start_expanded'] == true) {
+    if (folders[folderName]['start_expanded'] == true && !activeDropdowns.includes(folderName)) {
         activeDropdowns.push(folderName)
     }
 
@@ -113,7 +113,7 @@ function edit_folder_extra(folderName, folderId) {
     for (const dropdown of activeDropdowns) {
         if (dropdown == folderName) {
             docker_toggle_visibility(folderName)
-            $(`.docker-folder-parent-${folderName}`).find("td > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+            $(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").toggleClass("fa-chevron-down fa-chevron-up")
             childrenMove(folderName)
         }
     }
