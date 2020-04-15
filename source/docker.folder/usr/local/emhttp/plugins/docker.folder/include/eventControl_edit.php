@@ -2,7 +2,7 @@
     var remove_fix = `
     var folderNames = Object.keys(folders)
 
-    if (params['container']) {
+    if (params['container'] && (params['action'] == 'remove_container' || params['action'] == 'remove_all') ) {
         for (const [dockerName, dockerId] of Object.entries(dockerIds)) {
             if (dockerId == params['container']) {
                 for (const folderName of folderNames) {
