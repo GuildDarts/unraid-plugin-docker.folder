@@ -322,15 +322,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     }
 
-    async function read_userprefs() {
-        postResult = await Promise.resolve($.ajax({
-            url: "/plugins/docker.folder/scripts/read_userprefs.php",
-            type: "get",
-            async: true
-        }));
-        return await JSON.parse(postResult)
-    }
-
     function folderRemove(folderName) {
         $.post("/plugins/docker.folder/scripts/remove_folder.php", {
             folderName: folderName
@@ -370,7 +361,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     }
 
     async function docker_toggle_visibility(folderName, location) {
-        let userprefs = await read_userprefs()
 
         if (location == "dashboard") {
             var selector = "#db-box3 > tbody > tr > td:nth-child(2) > span"
