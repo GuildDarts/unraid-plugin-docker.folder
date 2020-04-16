@@ -165,8 +165,13 @@ function endsWith($haystack, $needle)
       </dd>
 
       <div class="advanced" style="display: none">
-        <dt>Start expanded</dt>
+        <dt>Start expanded:</dt>
         <dd><input class="basic-switch setting" name="start_expanded" type="checkbox" /></dd>
+      </div>
+
+      <div class="advanced" style="display: none">
+        <dt>Status icon autostart:</dt>
+        <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
       </div>
 
       <div id="dialogAddConfig" style="display:none"></div>
@@ -256,6 +261,10 @@ function endsWith($haystack, $needle)
           case "start_expanded":
             $(this).prop('checked', folders[editFolderName]['start_expanded'])
             break;
+
+          case "status_icon_autostart":
+            $(this).prop('checked', folders[editFolderName]['status_icon_autostart'])
+            break;
         }
       })
 
@@ -307,6 +316,7 @@ function endsWith($haystack, $needle)
     $(".setting").each(function() {
       var value = $(this).val();
       var name = $(this).attr('name');
+      var type = $(this).attr('type')
       if ((typeof value != "string")) {
         var value = "something really went wrong here";
       }
@@ -316,7 +326,7 @@ function endsWith($haystack, $needle)
       value = value.trim();
 
       // get true/false for checkbox input
-      if (name == 'start_expanded') {
+      if (type == 'checkbox') {
         value = $(this).prop('checked')
       }
 

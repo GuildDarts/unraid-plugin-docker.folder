@@ -2,18 +2,25 @@
 require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
 require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerClient.php");
 $DockerClient    = new DockerClient();
+$DockerTemplates = new DockerTemplates();
 $containers      = $DockerClient->getDockerContainers();
+$allInfo         = $DockerTemplates->getAllInfo();
 
 $dockerIds = new stdClass;
+$dockerAutostart = new stdClass;
 
 foreach ($containers as $ct) {
     $name = $ct['Name'];
     $id = $ct['Id'];
+    $info = &$allInfo[$name];
+    $is_autostart = $info['autostart'] ? 'true':'false';
 
     $dockerIds->$name = $id;
+    $dockerAutostart->$name = $is_autostart;
 }
 
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
+echo "<script>var dockerAutostart = " . json_encode($dockerAutostart) . ';</script>';
 // folderVersion var for javascript
 echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
@@ -71,6 +78,24 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         } else {
             selector.addClass("fa started fa-square orange-text")
             selector.parent().parent().switchClass("stopped", "started")
+        }
+
+        // status_icon_autostart
+        if (folders[folderName]['status_icon_autostart'] && selector.hasClass('orange-text')) {
+            var autoStarted = true
+            
+            $(`.docker-folder-child-${folderName}`).each(function() {
+                var childName = $(this).find('.inner > span:first-child').text()
+                if ($(this).find("i.fa").hasClass("stopped") && dockerAutostart[childName] == 'true') {
+                    autoStarted = false
+                    return
+                }
+            });
+
+            if (autoStarted) {
+                selector.removeClass()
+                selector.addClass("fa started fa-play green-text")
+            }
         }
 
         selector.find("span.state").remove()
