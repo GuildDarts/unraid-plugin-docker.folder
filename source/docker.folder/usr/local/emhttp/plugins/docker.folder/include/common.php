@@ -174,10 +174,11 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             case "Docker_Sub_Menu":
                 // get dropdown-id
                 var id = dockerIds[cmd]
-                $(dropdown).find(`li > a`).each(function() {
+                $(dropdown).find(`li > a[name ="${name}"]`).each(function() {
                     if ($(this).find('i').hasClass('fa-docker')) {
                         $(this).hover(
                             function() {
+                                console.log(id)
                                 removeSubMenu()
                                 addSubMenu($(this), id)
                             },
