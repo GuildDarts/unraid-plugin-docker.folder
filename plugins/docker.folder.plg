@@ -3,14 +3,14 @@
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
 <!ENTITY version   "2020.04.16">
-<!ENTITY launch    "Utilities/DockerFolder">
+<!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 <!ENTITY md5       "813e4dba74091811c9a539e7c8d1a966">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
 ###2020.04.16
