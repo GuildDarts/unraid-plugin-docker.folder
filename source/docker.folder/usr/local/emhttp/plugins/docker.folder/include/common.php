@@ -1,6 +1,8 @@
 <?php
-require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
-require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerClient.php");
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+require_once("$docroot/plugins/docker.folder/include/folderVersion.php");
+require_once("$docroot/plugins/dynamix.docker.manager/include/DockerClient.php");
+
 $DockerClient    = new DockerClient();
 $DockerTemplates = new DockerTemplates();
 $containers      = $DockerClient->getDockerContainers();
@@ -13,7 +15,7 @@ foreach ($containers as $ct) {
     $name = $ct['Name'];
     $id = $ct['Id'];
     $info = &$allInfo[$name];
-    $is_autostart = $info['autostart'] ? 'true':'false';
+    $is_autostart = $info['autostart'] ? 'true' : 'false';
 
     $dockerIds->$name = $id;
     $dockerAutostart->$name = $is_autostart;
@@ -21,6 +23,11 @@ foreach ($containers as $ct) {
 
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
 echo "<script>var dockerAutostart = " . json_encode($dockerAutostart) . ';</script>';
+
+// load network variables if needed.
+if (!isset($eth0)) extract(parse_ini_file("$docroot/state/network.ini", true));
+$host = $eth0['IPADDR:0'] ?? '0.0.0.0';
+
 // folderVersion var for javascript
 echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
@@ -83,7 +90,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         // status_icon_autostart
         if (folders[folderName]['status_icon_autostart'] && selector.hasClass('orange-text')) {
             var autoStarted = true
-            
+
             $(`.docker-folder-child-${folderName}`).each(function() {
                 var childName = $(this).find('.inner > span:first-child').text()
                 if ($(this).find("i.fa").hasClass("stopped") && dockerAutostart[childName] == 'true') {
@@ -156,11 +163,11 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 break;
 
             case "WebUI":
-                $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd)
+                $(dropdown).find(`li > a[name ='${name}']`).attr('href', webUIMatch(cmd))
                 break;
 
             case "WebUI_New_Tab":
-                $(dropdown).find(`li > a[name ='${name}']`).attr('href', cmd).attr('target', '_blank')
+                $(dropdown).find(`li > a[name ='${name}']`).attr('href', webUIMatch(cmd)).attr('target', '_blank')
                 break;
 
             case "Bash":
@@ -209,6 +216,20 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 removeSubMenu()
             })
         }
+
+        function webUIMatch(url) {
+            // why does it not work without "|| []" *hmmm
+            var ipRegex = /\[IP\]/g
+            var portRegex = /\[PORT:(\d+)\]/g
+            var portMatch = portRegex.exec(url) || []
+            var port = portMatch[1]
+
+            url = url.replace(portRegex, port)
+            url = url.replace(ipRegex, "<?= $host ?>")
+
+            return url
+        }
+
     }
 
     function edit_folder_base(folderName, folderId) {
