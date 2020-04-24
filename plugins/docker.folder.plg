@@ -2,17 +2,23 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.22">
+<!ENTITY version   "2020.04.24">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "3278a239c0587864e01e8275ddb11171">
+<!ENTITY md5       "758e077c16edfbc4b3a218ef0be60662">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.04.24
+- Added: Dashboard expanded
+- Added: Unraid Docker WebUI construct
+- Change: Allow folder renaming
+- Change: Only restart started dockers
+
 ###2020.04.22
 - fix: Docker_Sub_Menu
 - changed: plg launch
