@@ -28,6 +28,12 @@
 
     $tempObj->$name = $response;
 
+    // remove old key if renaming folder
+    $rename = $_POST["rename"];
+    if (isset($rename)) {
+        unset($tempObj->$rename);
+    }
+
     $jsonData = json_encode($tempObj, JSON_PRETTY_PRINT);
     file_put_contents('/boot/config/plugins/docker.folder/folders.json', $jsonData);
 ?>

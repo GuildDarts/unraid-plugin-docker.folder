@@ -252,7 +252,6 @@ function endsWith($haystack, $needle)
         switch ($(this).attr('name')) {
           case "name":
             $(this).val(editFolderName)
-            $(this).attr("disabled", true)
             break;
 
           case "icon":
@@ -411,8 +410,14 @@ function endsWith($haystack, $needle)
     }
 
     let settingsSting = JSON.stringify(await settings)
+
+    if (settings['name'] !== editFolderName) {
+      var rename = editFolderName
+    }
+
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
-      settings: await settingsSting
+      settings: await settingsSting,
+      rename: await rename
     }, function() {
       //lazy fck
       location.replace(`/${location.href.split("/")[3]}`)
