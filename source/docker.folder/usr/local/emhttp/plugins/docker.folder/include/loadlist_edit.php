@@ -1,6 +1,10 @@
 <script>
     var userperfs_fix = `
     var indexPlusNr = 0;
+    // fix for moving expanded docker thats in index 0 (should fix this by attaching children to parent docker)
+    if ($(row).attr('class').includes('docker-folder-child-')) {
+        row = $(row).parent()
+    }
     row.parent().children().find('td.ct-name').each(function() {
         var folderNames = Object.keys(folders)
         var nam = $(this).find('.appname').text();
