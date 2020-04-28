@@ -1,4 +1,4 @@
 <?php
 // a single file for folderVersion so im less likly to forget and change it  (like i did *sigh)
-$GLOBALS['foldersVersion'] = 2.1;
+$GLOBALS['foldersVersion'] = 2.2;
 ?>

@@ -402,13 +402,6 @@ function endsWith($haystack, $needle)
 
     console.log(settings)
 
-    if (editFolderName == null) {
-      let dockerId = await createDocker(settings["name"])
-      settings["id"] = dockerId
-    } else {
-      settings["id"] = folders[editFolderName]['id']
-    }
-
     let settingsSting = JSON.stringify(await settings)
 
     if (settings['name'] !== editFolderName) {
@@ -422,12 +415,6 @@ function endsWith($haystack, $needle)
       //lazy fck
       location.replace(`/${location.href.split("/")[3]}`)
     });
-  }
-
-  async function createDocker(name) {
-    return postResult = await Promise.resolve($.get("/plugins/docker.folder/scripts/docker_folder_create.php", {
-      name: name
-    }));
   }
 
   // event listen for icon input change. Sets preview

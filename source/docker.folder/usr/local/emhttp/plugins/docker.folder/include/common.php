@@ -3,6 +3,11 @@ $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/docker.folder/include/folderVersion.php");
 require_once("$docroot/plugins/dynamix.docker.manager/include/DockerClient.php");
 
+$user_prefs      = $dockerManPaths['user-prefs'];
+if (file_exists($user_prefs)) {
+    $prefs = json_encode(parse_ini_file($user_prefs));
+}
+
 $DockerClient    = new DockerClient();
 $DockerTemplates = new DockerTemplates();
 $containers      = $DockerClient->getDockerContainers();
@@ -65,8 +70,8 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
 
 <script>
-    function checkStatus(item, folderName) {
-        var selector = $(item).find("span.inner > i")
+    function checkStatus(folderName) {
+        var selector = $(`.docker-folder-parent-${folderName}`).find("span.inner > i")
         var max = folders[folderName]["children"].length
         var cur = 0
 
@@ -109,8 +114,11 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         selector.parent().find("span.state").before(`<span class="state">${cur}/${max}</span>`)
     }
 
-    function loadDropdownButtons(folderId, folderName) {
-        let dropdown = $(`#dropdown-${folderId}`)
+    function loadDropdownButtons(folderName) {
+
+        context.attach(`#folder-${folderName}`, [{}]);
+
+        let dropdown = $(`#dropdown-folder-${folderName}`)
         dropdown.empty()
 
         dropdown.addClass('docker-dropdown-menu')
@@ -232,23 +240,63 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     }
 
-    function edit_folder_base(folderName, folderId) {
-        let foldersChildrenLength = folders[folderName]['children'].length
+    function edit_folder_base(folderName) {
+        // add folder element
+        folderChildren = folderChildren.concat(folders[folderName]['children'])
+
+        if (location.pathname == "/Dashboard") {
+            var selector = "#db-box3 > tbody.docker_view > tr > td:nth-child(2)"
+            var selectorType = "span"
+            var folderTemplate = `<span class="outer solid apps stopped docker-folder-parent-${folderName}"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span>`
+        } else {
+            var selector = "#docker_list"
+            var selectorType = "tr"
+            var folderTemplate = `<tr class="sortable docker-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px"><span class="outer"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname ">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td></td><td style="white-space:nowrap"></td><td style="word-break:break-all"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></td><td></td><td></td></tr>`
+        }
+
+        var perfs = <?= $prefs ?>;
+        var insertIndex = 0
+        // insert at start if not in perfs
+        if (!perfs.includes(`${folderName}-folder`)) {
+            insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
+        } else {
+            for (i = 0; i < perfs.length; i++) {
+                if (perfs[i] == `${folderName}-folder`) {
+                    insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
+                    break
+                }
+                if (folderChildren.includes(perfs[i]) && location.pathname !== "/Dashboard") {
+                    continue
+                }
+                // continue incase folder does not get remove from userprefs (better safe than sorry)
+                let folderNames = Object.keys(folders)
+                if (perfs[i].includes('-folder') && !folderNames.includes(perfs[i].slice(0, -7))) {
+                    continue
+                }
+                insertIndex++
+            }
+
+        }
 
         // set icon
         if (folders[folderName]["icon"] !== "") {
-            $(`#${folderId}`).find("img").attr("src", folders[folderName]["icon"])
+            $(`.docker-folder-parent-${folderName}`).find("img").attr("src", folders[folderName]["icon"])
         }
 
-        // changes the stopped/started text to folder
-        $(`#${folderId}`).parent().find("span.inner > span.state").text("folder")
+        docker_hide(folderName)
+        loadDropdownButtons(folderName)
+        checkStatus(folderName)
 
-        // remove -folder from the name
-        $(`#${folderId}`).parent().find("span.inner > span").first().text(folderName)
+    }
 
-        loadDropdownButtons(folderId, folderName)
-        checkStatus($(`#${folderId}`).parent(), folderName)
+    function insertAtIndex(i, template, selector, selectorType) {
+        if (i === 0) {
+            $(selector).prepend($(template));
+            return;
+        }
 
+
+        $(`${selector} > ${selectorType}:nth-child(${i})`).after($(template));
     }
 
     function dockerDefaultCmd(folderName, action) {
@@ -326,7 +374,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     }
 
     async function read_folders(runscount) {
-        var runs = 1 + parseInt(runscount) || 0;
+        var runs = 1 + (parseInt(runscount) || 0);
         postResult = await Promise.resolve($.ajax({
             url: "/plugins/docker.folder/scripts/read_folders.php",
             type: "get",
@@ -361,9 +409,20 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 return
             }
             console.log("Docker Folder: migration")
-            await $.post("/plugins/docker.folder/scripts/migration.php");
-            folders = await read_folders(runs)
+            $.post("/plugins/docker.folder/scripts/migration.php",function() {
+                read_folders(runs)
+            });
         }
+
+        if (runs > 1) {
+            swal({
+                title: "docker.folder migration",
+                text: "looks like migration just ran. You should only see this once after an update. (you should refresh browser)",
+                type: "info",
+                showCancelButton: false
+            })
+        }
+
         delete folders['foldersVersion']
         return await folders
 
@@ -372,21 +431,17 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     function folderRemove(folderName) {
         $.post("/plugins/docker.folder/scripts/remove_folder.php", {
             folderName: folderName
-        });
-
-        $.get("/plugins/docker.folder/scripts/docker_folder_remove.php", {
-            name: folderName
         }, function() {
-            loadlist();
+            location.reload()
         });
     }
 
-    function docker_hide(folderName, location) {
+    function docker_hide(folderName) {
 
         $(`#docker_list_storage > div.docker-folder-child-div-${folderName} >.docker-folder-child-${folderName}`).remove()
 
-        if (location == "dashboard") {
-            var selector = "#db-box3 > tbody > tr > td:nth-child(2) > span"
+        if (location.pathname == "/Dashboard") {
+            var selector = "#db-box3 > tbody.docker_view > tr > td:nth-child(2) > span"
             var selectorName = "span.inner > span:first-child"
         } else {
             var selector = "#docker_list > tr.sortable"

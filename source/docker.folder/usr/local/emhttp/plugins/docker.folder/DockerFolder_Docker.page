@@ -32,38 +32,22 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 
 async function apply_folder(callback) {
     let folderNames = Object.keys(await folders)
+    folderChildren = []
     
     for (const folderName of folderNames) {
-        docker_hide(folderName, "docker")
-
-        let folderId = folders[folderName]['id']
-        edit_folder_base(folderName, folderId)
-        edit_folder_extra(folderName, folderId)
+        edit_folder_base(folderName)
+        edit_folder_extra(folderName)
         autoStartFolder(folderName)
     }
     callback()
-    // remove tianon/true orphan image element
-    $('#183cb5fd5414').parent().parent().parent().remove()
 }
 
 
-function edit_folder_extra(folderName, folderId) {
-    // remoes extra info like container id
-    $(`#${folderId}`).parent().parent().find("span.advanced").remove()
-
-    // add docker-folder-parent-${folderName}
-    $(`#${folderId}`).parent().parent().parent().addClass(`docker-folder-parent-${folderName}`)
-
-    // remove version network etc...
-    var indexesToSelect = [1,2,6,7]
-    var elements = $(`.docker-folder-parent-${folderName}`).find( "td" ).filter(function(i) {
-      return $.inArray(i, indexesToSelect) > -1;
-    });
-    elements.empty();
+function edit_folder_extra(folderName) {
 
     // add show children button
     if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").length == 0) {
-        $(`#${folderId}`).parent().append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)
+        $(`.docker-folder-parent-${folderName}`).find('span.outer').append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)
         $(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").click(function() {
             childrenDropdown(folderName)
         });
@@ -187,8 +171,9 @@ function cpuMemoryLoad(folderName) {
         }
         memoryLoad += memoryCheck(memory[0])
     });
-    $(`.docker-folder-parent-${folderName}`).children("td.advanced").children("[class*='cpu-']").text(cpuLoad.toFixed(2) + '%')
-    $(`.docker-folder-parent-${folderName}`).children("td.advanced").children("[class*='mem-']").text(`${memoryLoad}MiB / ${memoryMax}`)
+    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
+    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
+    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${memoryLoad}MiB / ${memoryMax}`)
 
     setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
 }
