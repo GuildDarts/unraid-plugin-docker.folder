@@ -1,39 +1,56 @@
 <?php
     require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
-    init();
-    function init() {
-        $path = '/boot/config/plugins/docker.folder/';
-        $foldersFile = $path.'folders.json';
-        if ( file_exists($foldersFile ) ) {
-            $folders_file = file_get_contents($path.'folders.json');
-            $folders = json_decode($folders_file, true);
 
-            // exit if there are no folders
-            if (count($folders) == null || count($folders) < 2) {
-                finish($path, $folders);
-                exit();
-            }
+    $path = '/boot/config/plugins/docker.folder/';
+    $foldersFile = $path.'folders.json';
+    $folders_file = file_get_contents($path.'folders.json');
 
-            file_put_contents($path.'folders.backup.json', $folders_file);
-
-            if ($folders['foldersVersion'] == null) {
-                $folders = migration_1($folders);
-            }
-            if ($folders['foldersVersion'] < 2.1) {
-                $folders = migration_2($folders);
-            }
-            if ($folders['foldersVersion'] < 2.2) {
-                $folders = migration_3($folders);
-            }
-
-            finish($path, $folders);
+    if ( file_exists($foldersFile ) ) {
+        if (isset($_POST['importFolder'])) {
+            init($path, $folders_file, $_POST['importFolder'], true);
+        } else {
+            init($path, $folders_file, $folders_file, false);
         }
     }
 
-    function finish($path, $folders) {
+    function init($path, $folders_file, $import, $isImport) {
+        
+        $folders = json_decode($import, true);
+
+        // exit if there are no folders
+            if (count($folders) == null || count($folders) < 2) {
+            finish($path, $folders);
+            exit();
+        }
+
+        file_put_contents($path.'folders.backup.json', $folders_file);
+
+        if ($folders['foldersVersion'] == null) {
+            $folders = migration_1($folders);
+        }
+        if ($folders['foldersVersion'] < 2.1) {
+            $folders = migration_2($folders);
+        }
+        if ($folders['foldersVersion'] < 2.2) {
+            $folders = migration_3($folders);
+        }
+
+        finish($path, $folders, $folders_file, $isImport);
+        
+    }
+
+    function finish($path, $folders, $folders_file, $isImport) {
         $folders['foldersVersion'] = $GLOBALS['foldersVersion'];
 
-        $jsonData = json_encode($folders, JSON_PRETTY_PRINT);
+        if ($isImport) {
+            unset($folders['foldersVersion']);
+            $currentFolders = json_decode($folders_file, true);
+            $output = (object) array_merge((array) $currentFolders, (array) $folders);
+        } else {
+            $output = $folders;
+        }
+
+        $jsonData = json_encode($output, JSON_PRETTY_PRINT);
         file_put_contents($path.'folders.json', $jsonData);
     }
 

@@ -72,15 +72,17 @@ $foldersSettings .= "</div>";
             }
           });
       } else if (result['foldersVersion'] < foldersVersion) {
-        swal({
-            title: "foldersVersion not latest",
-            text: "looks like you're trying to import an older folder. This i corrently not supported (should be fairly soon™)",
-            type: "warning",
+        var resultString = JSON.stringify(result);
+        $.post("/plugins/docker.folder/scripts/migration.php", {
+          importFolder: resultString
+        }, function() {
+          swal({
+            title: "Folder Import Done (migration)",
+            text: "Import is done, check that everything imported correctly if not please report it on the forums :)",
+            type: "success",
             showCancelButton: false
-          },
-          function(inputValue) {
-            output = inputValue
-          });
+          })
+        })
       } else {
         importUpload(result)
       }
