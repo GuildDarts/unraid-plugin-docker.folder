@@ -2,17 +2,25 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.04.24">
+<!ENTITY version   "2020.04.30">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "758e077c16edfbc4b3a218ef0be60662">
+<!ENTITY md5       "837650a6b734e0e08a8193156fea956c">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.04.30
+- Change: No more hidden docker
+- Change: Allow import of old folders
+- Added: Dashboard expanded button
+- Fixed: Moving expanded folder not saving
+- Fixed: Dashboard expanded
+
+
 ###2020.04.24
 - Added: Dashboard expanded
 - Added: Unraid Docker WebUI construct
