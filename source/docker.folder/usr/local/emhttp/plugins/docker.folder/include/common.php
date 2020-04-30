@@ -265,7 +265,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                     insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
                     break
                 }
-                if (folderChildren.includes(perfs[i]) && location.pathname !== "/Dashboard") {
+                if (folderChildren.includes(perfs[i])) {
                     continue
                 }
                 // continue incase folder does not get remove from userprefs (better safe than sorry)

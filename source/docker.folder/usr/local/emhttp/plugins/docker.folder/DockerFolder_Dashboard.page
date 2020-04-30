@@ -10,6 +10,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 
 (async () => {
     folders = await read_folders()
+    $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#db-box3 > .docker_view" );
 })();
 
 async function apply_folder() {
@@ -31,8 +32,6 @@ function dashboard_expanded() {
         if (folders[folderName]['dashboard_expanded']) {
 
             var spaces_template = `<span class="outer solid apps docker-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
-
-            $(`.docker-folder-child-${folderName}`).removeClass('docker-folder-hide')
             
             // add fake index to all
             var fakeIndex = 0
@@ -48,7 +47,7 @@ function dashboard_expanded() {
                 if ($(this).hasClass(`docker-folder-parent-${folderName}`)) {
                     var addCountStart = 0
                     var addCountEnd = 0
-                    var index = $(this).attr('fake-index')
+                    var index = i+1
 
                     while (index == 0 || Number.isInteger(index/3) == false) {
                         addCountStart++
@@ -60,6 +59,9 @@ function dashboard_expanded() {
                         addCountEnd++
                         index++
                     }
+
+                    childrenMove(folderName)
+                    $(`.docker-folder-child-${folderName}`).removeClass('docker-folder-hide')
 
                     // add spaces at start
                     for (i=1; i <= addCountStart; i++) {
@@ -86,6 +88,16 @@ function dashboard_expanded() {
                 }
             })
         }
+    }
+}
+
+function childrenMove(folderName) {
+    for (const folder of folders[folderName]['children'].reverse()) {
+        $(`.docker-folder-child-${folderName}`).each(function() {
+            if (folder== $(this).find("span.inner > span:first-child").text()) {
+                $(this).insertAfter(`.docker-folder-parent-${folderName}`);
+            }
+        });
     }
 }
 
