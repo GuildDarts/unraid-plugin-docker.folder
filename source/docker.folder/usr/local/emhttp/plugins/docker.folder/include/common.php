@@ -42,6 +42,10 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         display: none;
     }
 
+    [class*="docker-folder-child-div-"]{
+        display: contents;
+    }
+
     .sub-dropdown-context:before {
         transform: rotate(-90deg);
         position: absolute;

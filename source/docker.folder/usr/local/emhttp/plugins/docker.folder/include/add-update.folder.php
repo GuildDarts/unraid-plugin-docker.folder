@@ -175,6 +175,11 @@ function endsWith($haystack, $needle)
       </div>
 
       <div class="advanced" style="display: none">
+        <dt>Expanded on Dashboard button:</dt>
+        <dd><input class="basic-switch setting" name="dashboard_expanded_button" type="checkbox" /></dd>
+      </div>
+
+      <div class="advanced" style="display: none">
         <dt>Status icon autostart:</dt>
         <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
       </div>
@@ -272,6 +277,10 @@ function endsWith($haystack, $needle)
 
           case "status_icon_autostart":
             $(this).prop('checked', folders[editFolderName]['status_icon_autostart'])
+            break;
+
+          case "dashboard_expanded_button":
+            $(this).prop('checked', folders[editFolderName]['dashboard_expanded_button'])
             break;
         }
       })

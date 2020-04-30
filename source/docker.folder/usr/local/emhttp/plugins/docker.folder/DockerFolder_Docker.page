@@ -14,9 +14,6 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
     .docker-folder-child {
         display:none;
     }
-    [class*="docker-folder-child-div-"]{
-        display: contents;
-    }
 </style>
 
 <script>
