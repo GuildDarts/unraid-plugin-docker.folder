@@ -19,7 +19,7 @@
 
         // exit if there are no folders
             if (count($folders) == null || count($folders) < 2) {
-            finish($path, $folders);
+            finish($path, $folders, $folders_file, $isImport);
             exit();
         }
 
