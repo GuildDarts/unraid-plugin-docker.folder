@@ -442,12 +442,12 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     function docker_hide(folderName) {
 
-        $(`#docker_list_storage > div.docker-folder-child-div-${folderName} >.docker-folder-child-${folderName}`).remove()
-
         if (location.pathname == "/Dashboard") {
+            $(`#docker_list_storage > .docker-folder-child-${folderName}`).remove()
             var selector = "#db-box3 > tbody.docker_view > tr > td:nth-child(2) > span"
             var selectorName = "span.inner > span:first-child"
         } else {
+            $(`#docker_list_storage > div.docker-folder-child-div-${folderName} > .docker-folder-child-${folderName}`).remove()
             var selector = "#docker_list > tr.sortable"
             var selectorName = "td.ct-name > span.outer > span.inner > span.appname"
         }
