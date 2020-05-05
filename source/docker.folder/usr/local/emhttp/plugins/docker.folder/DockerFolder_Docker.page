@@ -42,6 +42,11 @@ async function apply_folder(callback) {
 
 function edit_folder_extra(folderName) {
 
+    // advanced view fix
+    if (!$('input.advancedview').prop('checked')) {
+        $(`.docker-folder-parent-${folderName}`).children('td.advanced').hide()
+    }
+
     // add show children button
     if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").length == 0) {
         $(`.docker-folder-parent-${folderName}`).find('span.outer').append(`<br><i class="fa fa-fw fa-chevron-up""></i>`)

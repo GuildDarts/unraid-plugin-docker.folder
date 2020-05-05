@@ -20,6 +20,7 @@ async function apply_folder() {
     
     for (const folderName of folderNames) {
         edit_folder_base(folderName)
+        edit_folder_extra(folderName)
     }
 
     // dashboard expanded
@@ -41,6 +42,13 @@ async function apply_folder() {
                 dashboard_expanded(folderName)
             }
         }
+    }
+}
+
+function edit_folder_extra(folderName) {
+    // started only fix
+    if ($('#apps').prop('checked') && $(`.docker-folder-parent-${folderName}`).find("span.inner > i").hasClass('stopped')) {
+        $(`.docker-folder-parent-${folderName}`).hide()
     }
 }
 
