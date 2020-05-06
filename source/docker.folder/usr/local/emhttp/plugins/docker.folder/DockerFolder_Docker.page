@@ -3,7 +3,6 @@ Icon="server"
 ---
 <?php
 require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
-require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 ?>
 
