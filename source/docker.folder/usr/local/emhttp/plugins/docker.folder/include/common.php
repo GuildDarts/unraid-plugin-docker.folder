@@ -6,6 +6,8 @@ require_once("$docroot/plugins/dynamix.docker.manager/include/DockerClient.php")
 $user_prefs      = $dockerManPaths['user-prefs'];
 if (file_exists($user_prefs)) {
     $prefs = json_encode(parse_ini_file($user_prefs));
+} else {
+    $prefs = json_encode([]);
 }
 
 $DockerClient    = new DockerClient();
