@@ -116,7 +116,11 @@ function dashboard_expanded(folderName) {
             })
 
             // add line at end
-            var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
+            if (addCountEnd === 0) {
+                var lastIndex = $(`.docker-folder-child-${folderName}`).last().index()
+            } else {
+                var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
+            }
             for(i=0; i < addCountEnd+3-addCountEnd; i++) {
                 $('tbody.docker_view > tr > td:nth-child(2)').children().eq(lastIndex-i).css('border-bottom', 'solid')
             }
