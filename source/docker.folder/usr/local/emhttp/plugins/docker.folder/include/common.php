@@ -2,7 +2,6 @@
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/docker.folder/include/folderVersion.php");
 require_once("$docroot/plugins/dynamix.docker.manager/include/DockerClient.php");
-require_once("$docroot/plugins/docker.folder/include/eventControl_edit.php");
 
 $user_prefs      = $dockerManPaths['user-prefs'];
 if (file_exists($user_prefs)) {
