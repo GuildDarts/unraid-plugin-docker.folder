@@ -458,6 +458,11 @@ function endsWith($haystack, $needle)
   // advanced - basic switch
   var this_tab = $('input[name$="tabs"]').length;
   $(function() {
+    if ($.cookie('dockerFolder_view_mode') == 'advanced') {
+      $('.advanced').show();
+      $('.basic').hide();
+    }
+
     var content = "<div class='switch-wrapper'><input type='checkbox' class='advanced-switch'></div>";
     <? if (!$tabbed) : ?>
       $("#docker_tabbed").prepend(content);
@@ -483,10 +488,14 @@ function endsWith($haystack, $needle)
     $('.advanced-switch').switchButton({
       labels_placement: "left",
       on_label: 'Advanced View',
-      off_label: 'Basic View'
+      off_label: 'Basic View',
+      checked: $.cookie('dockerFolder_view_mode') == 'advanced'
     });
     $('.advanced-switch').change(function() {
       var status = $(this).is(':checked');
+      $.cookie('dockerFolder_view_mode', $('.advanced-switch').is(':checked') ? 'advanced' : 'basic', {
+        expires: 3650
+      });
       toggleRows('advanced', status, 'basic');
     });
   });
