@@ -167,27 +167,43 @@ function cpuMemoryLoad(folderName) {
     $(`.docker-folder-child-${folderName}`).each(function() {
         cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
         let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
-        //console.log(memory)
+
         if (parseInt(memory[1]) > 0) {
             memoryMax = memory[1]
+            memoryLoad += formatToBytes(memory[0])
         }
-        memoryLoad += memoryCheck(memory[0])
     });
+
     $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
     $(`.docker-folder-parent-${folderName}`).find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
-    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${memoryLoad}MiB / ${memoryMax}`)
+    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${formatBytes(memoryLoad)} / ${memoryMax}`)
 
     setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
 }
 
 
-function memoryCheck(mem) {
-    let nr
-    let type
-    mib = mem.match(/(\d*\.?\d+)/g)
-    return parseInt(mib)
+function formatToBytes(mem) {
+    const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    const match = /(\d*\.?.+\d+)(\w+)/g.exec(mem) || []
+    let num = parseFloat(match[1])
+    const size = match[2]
+
+    num *= (1024**sizes.indexOf(size))
+
+    return num
 }
 
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + '' + sizes[i];
+}
 
 function autoStartFolder(folderName) {
 
