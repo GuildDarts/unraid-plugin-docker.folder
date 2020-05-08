@@ -31,10 +31,6 @@ foreach ($containers as $ct) {
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
 echo "<script>var dockerAutostart = " . json_encode($dockerAutostart) . ';</script>';
 
-// load network variables if needed.
-if (!isset($eth0)) extract(parse_ini_file("$docroot/state/network.ini", true));
-$host = $eth0['IPADDR:0'] ?? '0.0.0.0';
-
 // folderVersion var for javascript
 echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
@@ -121,7 +117,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     }
 
     function loadDropdownButtons(folderName) {
-
         context.attach(`#folder-${folderName}`, [{}]);
 
         let dropdown = $(`#dropdown-folder-${folderName}`)
@@ -199,7 +194,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                     if ($(this).find('i').hasClass('fa-docker')) {
                         $(this).hover(
                             function() {
-                                console.log(id)
                                 removeSubMenu()
                                 addSubMenu($(this), id)
                             },
@@ -431,7 +425,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
         delete folders['foldersVersion']
         return await folders
-
     }
 
     function folderRemove(folderName) {

@@ -39,7 +39,6 @@ async function apply_folder(callback) {
     callback()
 }
 
-
 function edit_folder_extra(folderName) {
 
     // advanced view fix
@@ -126,8 +125,6 @@ function edit_folder_extra(folderName) {
     cpuMemoryLoad(folderName)
 }
 
-
-
 function childrenDropdown(folderName) {
     docker_toggle_visibility(folderName)
     $(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").toggleClass("fa-chevron-down fa-chevron-up")
@@ -149,14 +146,6 @@ function childrenDropdown(folderName) {
 
 function childrenMove(folderName) {
     $(`.docker-folder-child-div-${folderName}`).insertAfter(`.docker-folder-parent-${folderName}`)
-    /**
-    for (const folder of folders[folderName]['children'].reverse()) {
-        $(`.docker-folder-child-${folderName}`).each(function() {
-            if (folder== $(this).find(".appname").text()) {
-                $(this).insertAfter(`.docker-folder-parent-${folderName}`);
-            }
-        });
-    }*/
 }
 
 function cpuMemoryLoad(folderName) {
@@ -180,7 +169,6 @@ function cpuMemoryLoad(folderName) {
 
     setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
 }
-
 
 function formatToBytes(mem) {
     const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
@@ -206,7 +194,6 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 function autoStartFolder(folderName) {
-
     // set the init state for folder autostart
     if (checkFolderSwitch()) {
         var initState = 'checked'
@@ -246,7 +233,6 @@ function autoStartFolder(folderName) {
 
 }
 
-
 $('<input/>', {
     type: 'button',
     onclick: 'addFolder()',
@@ -260,8 +246,5 @@ function addFolder() {
   if (x!=-1) path = path.substring(0,x);
   location = path+'/AddFolder';
 }
-
-
-
 
 </script>
