@@ -24,19 +24,18 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     activeDropdowns = [];
 })();
 
-
-
-
 async function apply_folder(callback) {
-    let folderNames = Object.keys(await folders)
-    folderChildren = []
-    
-    for (const folderName of folderNames) {
-        edit_folder_base(folderName)
-        edit_folder_extra(folderName)
-        autoStartFolder(folderName)
-    }
-    callback()
+    waitForGlobal("folders", async function() {
+        let folderNames = Object.keys(await folders)
+        folderChildren = []
+        
+        for (const folderName of folderNames) {
+            edit_folder_base(folderName)
+            edit_folder_extra(folderName)
+            autoStartFolder(folderName)
+        }
+        callback()
+    });
 }
 
 function edit_folder_extra(folderName) {
@@ -106,13 +105,15 @@ function edit_folder_extra(folderName) {
     // folder update status
     var upToDate = true
     for (const child of folders[folderName]['children']) {
-        for (const dock of docker) {
-            if (child == dock['name']) {
-                if (dock['update'] == 1) {
-                    upToDate = false
+        waitForGlobal("docker", function() {
+            for (const dock of docker) {
+                if (child == dock['name']) {
+                    if (dock['update'] == 1) {
+                        upToDate = false
+                    }
                 }
             }
-        }
+        })
     }
     if (upToDate == true) {
         var updateConf = `<span class="green-text" style="white-space:nowrap;"><i class="fa fa-check fa-fw"></i> up-to-date</span>`

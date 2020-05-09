@@ -16,34 +16,36 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 })();
 
 async function apply_folder() {
-    let folderNames = Object.keys(await folders)
-    folderChildren = []
-    
-    for (const folderName of folderNames) {
-        edit_folder_base(folderName)
-        edit_folder_extra(folderName)
-    }
-
-    // dashboard expanded
-    for (const folderName of folderNames) {
-        if (folders[folderName]['dashboard_expanded_button']) {
-            dashboard_expanded_button(folderName)
+    waitForGlobal("folders", async function() {
+        let folderNames = Object.keys(await folders)
+        folderChildren = []
+        
+        for (const folderName of folderNames) {
+            edit_folder_base(folderName)
+            edit_folder_extra(folderName)
         }
 
-        // dashboard_expanded - activeDropdowns
-        if (folders[folderName]['dashboard_expanded'] && !activeDropdowns.includes(folderName)) {
-            activeDropdowns.push(folderName)
-        }
+        // dashboard expanded
+        for (const folderName of folderNames) {
+            if (folders[folderName]['dashboard_expanded_button']) {
+                dashboard_expanded_button(folderName)
+            }
 
-        // open dropdown on loadlist
-        for (const dropdown of activeDropdowns) {
-            if (dropdown == folderName) {
-                docker_toggle_visibility(folderName)
-                $(`.docker-folder-parent-${folderName}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
-                dashboard_expanded(folderName)
+            // dashboard_expanded - activeDropdowns
+            if (folders[folderName]['dashboard_expanded'] && !activeDropdowns.includes(folderName)) {
+                activeDropdowns.push(folderName)
+            }
+
+            // open dropdown on loadlist
+            for (const dropdown of activeDropdowns) {
+                if (dropdown == folderName) {
+                    docker_toggle_visibility(folderName)
+                    $(`.docker-folder-parent-${folderName}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
+                    dashboard_expanded(folderName)
+                }
             }
         }
-    }
+    })
 }
 
 function edit_folder_extra(folderName) {

@@ -40,7 +40,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         display: none;
     }
 
-    [class*="docker-folder-child-div-"]{
+    [class*="docker-folder-child-div-"] {
         display: contents;
     }
 
@@ -409,7 +409,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 return
             }
             console.log("Docker Folder: migration")
-            $.post("/plugins/docker.folder/scripts/migration.php",function() {
+            $.post("/plugins/docker.folder/scripts/migration.php", function() {
                 read_folders(runs)
             });
         }
@@ -473,4 +473,14 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             $(this).toggleClass("docker-folder-hide");
         });
     }
+
+    var waitForGlobal = function(key, callback) {
+        if (window[key]) {
+            callback();
+        } else {
+            setTimeout(function() {
+                waitForGlobal(key, callback);
+            }, 100);
+        }
+    };
 </script>
