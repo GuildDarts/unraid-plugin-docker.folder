@@ -2,19 +2,25 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.05.07">
+<!ENTITY version   "2020.05.09">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "fe2612662d6676701f6e32f8e17ca89c">
+<!ENTITY md5       "fa15d6ededf78525eaa813b0b1e88e95">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
 ###2020.05.07
-- Fixed: eventControl
+- Change: Improve memory display
+- Change: Save advanced view mode
+- Fixed: Wait for folders to load
+- Fixed: Dashboard Expanded work with other than 3 rows
+
+###2020.05.07
+- Fixed: EventControl
 
 ###2020.05.06
 - Fixed: Prefs not existing wrecking hell
