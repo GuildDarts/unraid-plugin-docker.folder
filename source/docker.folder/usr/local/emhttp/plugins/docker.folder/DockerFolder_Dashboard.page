@@ -86,14 +86,27 @@ function dashboard_expanded(folderName) {
             var addCountStart = 0
             var addCountEnd = 0
             var index = i+1
+            var rows = 3
 
-            while (index == 0 || Number.isInteger(index/3) == false) {
+            // get rows count (should find a better way)
+            let dockerViewWidth = $('tbody.docker_view > tr > td:nth-child(2)').width()
+            if (dockerViewWidth >= 1092) {
+                rows = 6
+            }else if (dockerViewWidth >= 910) {
+                rows = 5
+            } else if (dockerViewWidth >= 728) {
+                rows = 4
+            } else if (dockerViewWidth <= 545) {
+                rows = 2
+            }
+
+            while (index == 0 || Number.isInteger(index/rows) == false) {
                 addCountStart++
                 index++
             }
 
             index = index+folders[folderName]['children'].length
-            while (index == 0 || Number.isInteger(index/3) == false) {
+            while (index == 0 || Number.isInteger(index/rows) == false) {
                 addCountEnd++
                 index++
             }
@@ -113,7 +126,7 @@ function dashboard_expanded(folderName) {
 
             // add line at start
             $(`.docker-folder-child-${folderName}`).each(function(i){
-                if (i < 3) {
+                if (i < rows) {
                     $(this).css('border-top', 'inset').css('margin-bottom', '16px')
                 }
             })
@@ -124,7 +137,7 @@ function dashboard_expanded(folderName) {
             } else {
                 var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
             }
-            for(i=0; i < addCountEnd+3-addCountEnd; i++) {
+            for(i=0; i < addCountEnd+rows-addCountEnd; i++) {
                 $('tbody.docker_view > tr > td:nth-child(2)').children().eq(lastIndex-i).css('border-bottom', 'solid')
             }
         }
