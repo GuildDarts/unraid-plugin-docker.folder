@@ -34,17 +34,19 @@ async function apply_folder() {
             // dashboard_expanded - activeDropdowns
             if (folders[folderName]['dashboard_expanded'] && !activeDropdowns.includes(folderName)) {
                 activeDropdowns.push(folderName)
-            }
-
-            // open dropdown on loadlist
-            for (const dropdown of activeDropdowns) {
-                if (dropdown == folderName) {
-                    docker_toggle_visibility(folderName)
-                    $(`.docker-folder-parent-${folderName}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
-                    dashboard_expanded(folderName)
-                }
-            }
+            }            
         }
+
+        // open dropdown on loadlist
+        $('[class*="docker-folder-parent-"]').each(function() {
+            var name = $(this).find('span.inner > span:first-child').text()
+            if (activeDropdowns.includes(name) && $(this).attr('dashboard_expanded') !== 'true') {
+                $(this).attr('dashboard_expanded', true)
+                docker_toggle_visibility(name)
+                $(`.docker-folder-parent-${name}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
+                dashboard_expanded(name)
+            }
+        })
     })
 }
 
@@ -64,6 +66,15 @@ function dashboard_expanded_button(folderName) {
         $(`.docker-folder-parent-${folderName}`).css('position', 'relative').prepend(`<i class="fa fa-fw fa-chevron-up"" style="position: absolute; top: 22px; left: -16px;"></i>`)
         $(`.docker-folder-parent-${folderName}`).children("i").click(function() {
             childrenDropdown(folderName)
+            var selectionIndex = $(`.docker-folder-parent-${folderName}`).index()
+            $('[class*="docker-folder-parent-"]').each(function() {
+                var name = $(this).find('span.inner > span:first-child').text()
+                var index = $(this).index()
+                if (activeDropdowns.includes(name) && name !== folderName && index > selectionIndex) {
+                    childrenDropdown(name)
+                    childrenDropdown(name)
+                }
+            })
         });
     }
 }
@@ -71,77 +82,64 @@ function dashboard_expanded_button(folderName) {
 function dashboard_expanded(folderName) {
     var spaces_template = `<span class="outer solid apps docker-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
   
-    // add fake index to all
-    var fakeIndex = 0
-    $('tbody.docker_view > tr > td:nth-child(2)').children().each(function(){
-        if($(this).hasClass('docker-folder-hide') == false) {
-            fakeIndex++
-            $(this).attr('fake-index', fakeIndex)
-        }
-    })
-
     // main logic
-    $('tbody.docker_view > tr > td:nth-child(2)').children().each(function(i){
-        if ($(this).hasClass(`docker-folder-parent-${folderName}`)) {
-            var addCountStart = 0
-            var addCountEnd = 0
-            var index = i+1
-            var rows = 3
+    var addCountStart = 0
+    var addCountEnd = 0
+    var index = $(`.docker-folder-parent-${folderName}`).index()+1
+    var rows = 3
 
-            // get rows count (should find a better way)
-            let dockerViewWidth = $('tbody.docker_view > tr > td:nth-child(2)').width()
-            if (dockerViewWidth >= 1092) {
-                rows = 6
-            }else if (dockerViewWidth >= 910) {
-                rows = 5
-            } else if (dockerViewWidth >= 728) {
-                rows = 4
-            } else if (dockerViewWidth <= 545) {
-                rows = 2
-            }
+    // get rows count (should find a better way)
+    let dockerViewWidth = $('tbody.docker_view > tr > td:nth-child(2)').width()
+    if (dockerViewWidth >= 1092) {
+        rows = 6
+    }else if (dockerViewWidth >= 910) {
+        rows = 5
+    } else if (dockerViewWidth >= 728) {
+        rows = 4
+    } else if (dockerViewWidth <= 545) {
+        rows = 2
+    }
 
-            while (index == 0 || Number.isInteger(index/rows) == false) {
-                addCountStart++
-                index++
-            }
+    while (index == 0 || Number.isInteger(index/rows) == false) {
+        addCountStart++
+        index++
+    }
 
-            index = index+folders[folderName]['children'].length
-            while (index == 0 || Number.isInteger(index/rows) == false) {
-                addCountEnd++
-                index++
-            }
+    index = index+folders[folderName]['children'].length
+    while (index == 0 || Number.isInteger(index/rows) == false) {
+        addCountEnd++
+        index++
+    }
 
-            childrenMove(folderName)
-            $(`.docker-folder-child-${folderName}`).removeClass('docker-folder-hide')
+    childrenMove(folderName)
+    $(`.docker-folder-child-${folderName}`).removeClass('docker-folder-hide')
 
-            // add spaces at start
-            for (i=1; i <= addCountStart; i++) {
-                $(spaces_template).insertAfter($(`.docker-folder-parent-${folderName}`))
-            }
+    // add spaces at start
+    for (i=1; i <= addCountStart; i++) {
+        $(spaces_template).insertAfter($(`.docker-folder-parent-${folderName}`))
+    }
 
-            // add spaces at end
-            for (i=1; i <= addCountEnd; i++) {
-                $(spaces_template).insertAfter($(`.docker-folder-child-${folderName}`).last())
-            }
+    // add spaces at end
+    for (i=1; i <= addCountEnd; i++) {
+        $(spaces_template).insertAfter($(`.docker-folder-child-${folderName}`).last())
+    }
 
-            // add line at start
-            $(`.docker-folder-child-${folderName}`).each(function(i){
-                if (i < rows) {
-                    $(this).css('border-top', 'inset').css('margin-bottom', '16px')
-                }
-            })
-
-            // add line at end
-            if (addCountEnd === 0) {
-                var lastIndex = $(`.docker-folder-child-${folderName}`).last().index()
-            } else {
-                var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
-            }
-            for(i=0; i < addCountEnd+rows-addCountEnd; i++) {
-                $('tbody.docker_view > tr > td:nth-child(2)').children().eq(lastIndex-i).css('border-bottom', 'solid')
-            }
+    // add line at start
+    $(`.docker-folder-child-${folderName}`).each(function(i){
+        if (i < rows) {
+            $(this).css('border-top', 'inset').css('margin-bottom', '16px')
         }
     })
+
+    // add line at end
+    if (addCountEnd === 0) {
+        var lastIndex = $(`.docker-folder-child-${folderName}`).last().index()
+    } else {
+        var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
+    }
+    for(i=0; i < addCountEnd+rows-addCountEnd; i++) {
+        $('tbody.docker_view > tr > td:nth-child(2)').children().eq(lastIndex-i).css('border-bottom', 'solid')
+    }
 }
 
 function childrenDropdown(folderName) {
