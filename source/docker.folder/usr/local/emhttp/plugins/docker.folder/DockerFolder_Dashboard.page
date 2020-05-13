@@ -130,6 +130,15 @@ function dashboard_expanded(folderName) {
             $(this).css('border-top', 'inset').css('margin-bottom', '16px')
         }
     })
+    let childrenLength = $(`.docker-folder-child-${folderName}`).length
+    if (childrenLength < rows) {
+        $(`.docker-folder-spacer-${folderName}`).each(function() {
+            let sIndex = $(this).index()
+            if (sIndex > $(`.docker-folder-child-${folderName}`).last().index()) {
+                $(this).css('border-top', 'inset').css('margin-bottom', '16px')
+            }
+        })
+    }
 
     // add line at end
     if (addCountEnd === 0) {
