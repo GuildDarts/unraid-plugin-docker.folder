@@ -34,6 +34,9 @@
         if ($folders['foldersVersion'] < 2.2) {
             $folders = migration_3($folders);
         }
+        if ($folders['foldersVersion'] < 2.3) {
+            $folders = migration_4($folders);
+        }
 
         finish($path, $folders, $folders_file, $isImport);
         
@@ -120,6 +123,17 @@
 
         // remove tianon/true docker image (goodbye old friend ♥)
         exec("docker images -a | grep 'tianon/true' | awk '{print $3}' | xargs docker rmi");
+
+        return $folders;
+    }
+
+    function migration_4($folders) {
+        echo("migration_4");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+            // add docker_expanded_style
+            $folder['docker_expanded_style'] = 'bottom';
+        }
 
         return $folders;
     }

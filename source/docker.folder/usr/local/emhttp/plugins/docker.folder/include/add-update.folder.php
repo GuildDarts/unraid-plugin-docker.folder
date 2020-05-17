@@ -165,6 +165,16 @@ function endsWith($haystack, $needle)
       </dd>
 
       <div class="advanced" style="display: none">
+        <dt>Docker expand button style:</dt>
+        <dd>
+          <select class="setting" name="docker_expanded_style">
+            <option value="bottom">Bottom (Default)</option>
+            <option value="right">Right</option>
+          </select>
+        </dd>
+      </div>
+
+      <div class="advanced" style="display: none">
         <dt>Start expanded:</dt>
         <dd><input class="basic-switch setting" name="start_expanded" type="checkbox" /></dd>
       </div>
@@ -265,6 +275,10 @@ function endsWith($haystack, $needle)
             if (icon !== "") {
               $('#icon-upload-preview').attr('src', icon)
             }
+            break;
+
+          case "docker_expanded_style":
+            $(this).val(folders[editFolderName]['docker_expanded_style'])
             break;
 
           case "start_expanded":
