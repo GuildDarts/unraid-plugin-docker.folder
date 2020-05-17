@@ -133,6 +133,10 @@
             if($folderKey == 'foldersVersion') {continue;};
             // add docker_expanded_style
             $folder['docker_expanded_style'] = 'bottom';
+
+            // rename start_expanded
+            $folder['docker_start_expanded'] = $folder['start_expanded'];
+            unset($folder['start_expanded']);
         }
 
         return $folders;

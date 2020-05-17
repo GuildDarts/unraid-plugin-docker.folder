@@ -64,8 +64,8 @@ function edit_folder_extra(folderName) {
         });
     }
 
-    // start_expanded - activeDropdowns
-    if (folders[folderName]['start_expanded'] == true && !activeDropdowns.includes(folderName)) {
+    // docker_start_expanded - activeDropdowns
+    if (folders[folderName]['docker_start_expanded'] == true && !activeDropdowns.includes(folderName)) {
         activeDropdowns.push(folderName)
     }
 

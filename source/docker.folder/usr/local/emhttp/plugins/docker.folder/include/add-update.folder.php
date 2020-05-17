@@ -175,8 +175,8 @@ function endsWith($haystack, $needle)
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Start expanded:</dt>
-        <dd><input class="basic-switch setting" name="start_expanded" type="checkbox" /></dd>
+        <dt>Start expanded on Docker:</dt>
+        <dd><input class="basic-switch setting" name="docker_start_expanded" type="checkbox" /></dd>
       </div>
 
       <div class="advanced" style="display: none">
@@ -281,8 +281,8 @@ function endsWith($haystack, $needle)
             $(this).val(folders[editFolderName]['docker_expanded_style'])
             break;
 
-          case "start_expanded":
-            $(this).prop('checked', folders[editFolderName]['start_expanded'])
+          case "docker_start_expanded":
+            $(this).prop('checked', folders[editFolderName]['docker_start_expanded'])
             break;
 
           case "dashboard_expanded":
