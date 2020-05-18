@@ -1,6 +1,10 @@
 <?php
     require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
 
+    function logger($string) {
+        shell_exec("logger 'Docker Folder: $string'");
+    }
+
     $path = '/boot/config/plugins/docker.folder/';
     $foldersFile = $path.'folders.json';
     $folders_file = file_get_contents($path.'folders.json');
@@ -59,6 +63,7 @@
 
     function migration_1($folders) {
         echo("migration_1");
+        logger("migration_1");
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion');
             foreach ($folder['buttons'] as $buttonKey => &$button) {
@@ -97,6 +102,7 @@
 
     function migration_2($folders) {
         echo("migration_2");
+        logger("migration_2");
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             foreach ($folder['buttons'] as $buttonKey => &$button) {
@@ -112,6 +118,7 @@
 
     function migration_3($folders) {
         echo("migration_3");
+        logger("migration_3");
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             // remove hidden docker
@@ -129,6 +136,7 @@
 
     function migration_4($folders) {
         echo("migration_4");
+        logger("migration_4");
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             // add docker_expanded_style
