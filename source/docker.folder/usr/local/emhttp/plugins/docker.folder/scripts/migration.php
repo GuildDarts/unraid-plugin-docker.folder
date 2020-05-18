@@ -137,6 +137,9 @@
             // rename start_expanded
             $folder['docker_start_expanded'] = $folder['start_expanded'];
             unset($folder['start_expanded']);
+
+            // add docker_expanded_style
+            $folder['docker_preview'] = 'none';
         }
 
         return $folders;

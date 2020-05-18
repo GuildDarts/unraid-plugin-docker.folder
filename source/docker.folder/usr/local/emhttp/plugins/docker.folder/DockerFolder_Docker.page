@@ -23,6 +23,35 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         padding: 5px;
         position: absolute;
     }
+    .dockerPreview-no-icon-container {
+        display: grid;
+        grid-template-columns: max-content repeat(6, min-content );
+        color: #7c7c7c;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 5px;
+    }
+    .dockerPreview-no-icon-container > div {
+        padding-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .dockerPreview-no-icon-container > .header {
+        font-size: 30px;
+        grid-area: 1 / 1 / span 2 / span 1;
+        border-right: solid;
+        border-width: 1px;
+        padding-right: 15px;
+    }
+    .dockerPreview-icon-container td{
+        padding: 0px 8px 0px 8px !important;
+    }
+    .dockerPreview-icon-container img{
+        white-space: nowrap;
+        overflow: hidden;
+        filter: grayscale(100%);
+        opacity: 0.9;
+    }
 </style>
 
 <script>
@@ -42,6 +71,7 @@ async function apply_folder(callback) {
             edit_folder_base(folderName)
             edit_folder_extra(folderName)
             autoStartFolder(folderName)
+            dockerPreview(folderName)
         }
         callback()
     });
@@ -243,6 +273,36 @@ function autoStartFolder(folderName) {
     }
 
 
+}
+
+function dockerPreview(folderName) {
+    const dockerPreview = $(`.docker-folder-parent-${folderName} > .dockerPreview`)
+
+    switch (folders[folderName]['docker_preview']) {
+        case 'no-icon':
+            dockerPreview.append(`<div class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></div>`)
+            for (const [i, child] of folders[folderName]['children'].entries()) {
+                if (i < 12) {
+                    let row = ((2+i) % 2 == 0) ? 1 : 2
+                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<div>- ${child}</div>`)
+                    dockerPreview.find('.dockerPreview-no-icon-container > div:last-of-type').css('grid-area', `${row}`)
+                }
+            }
+            break;
+
+        case 'icon':
+            dockerPreview.append(`<div class="dockerPreview-icon-container"></div>`)
+            var dockerPreviewWidth = dockerPreview.width()
+            var widthTotal = 0
+            for (const child of folders[folderName]['children']) {
+                if (widthTotal < dockerPreviewWidth) {
+                    let id = dockerIds[child]
+                    let width = $(`#${id}`).parent().parent().clone().appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
+                    widthTotal += width
+                }
+            }
+            break;
+    }
 }
 
 $('<input/>', {
