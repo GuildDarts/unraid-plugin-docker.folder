@@ -194,21 +194,23 @@ function cpuMemoryLoad(folderName) {
     var cpuLoad = 0.00
     var memoryLoad = 0.00
     var memoryMax = 0.00
-        
-    $(`.docker-folder-child-${folderName}`).each(function() {
-        cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
-        let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
 
-        if (parseInt(memory[1]) > 0) {
-            memoryMax = memory[1]
-            memoryLoad += formatToBytes(memory[0])
-        }
-    });
+    if ($('input.advancedview').prop('checked')) {
+        $(`.docker-folder-child-${folderName}`).each(function() {
+            cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
+            let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
 
-    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
-    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
-    $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${formatBytes(memoryLoad)} / ${memoryMax}`)
+            if (parseInt(memory[1]) > 0) {
+                memoryMax = memory[1]
+                memoryLoad += formatToBytes(memory[0])
+            }
+        });
 
+        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
+        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
+        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${formatBytes(memoryLoad)} / ${memoryMax}`)
+    }
+    
     setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
 }
 
