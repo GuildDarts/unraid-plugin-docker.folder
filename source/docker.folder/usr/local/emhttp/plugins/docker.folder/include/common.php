@@ -68,6 +68,20 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         border-left: 6px solid transparent;
         content: '';
     }
+
+    .dropdown-subMenu > a:after {
+        display: block;
+        float: right;
+        width: 0;
+        height: 0;
+        margin-top: 5px;
+        margin-right: -10px;
+        border-color: transparent;
+        border-left-color: #cccccc;
+        border-style: solid;
+        border-width: 5px 0 5px 5px;
+        content: " ";
+    }
 </style>
 
 
@@ -192,6 +206,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 var id = dockerIds[cmd]
                 $(dropdown).find(`li > a[name ="${name}"]`).each(function() {
                     if ($(this).find('i').hasClass('fa-docker')) {
+                        $(this).parent().addClass('dropdown-subMenu')
                         $(this).hover(
                             function() {
                                 removeSubMenu()
