@@ -438,6 +438,18 @@ function endsWith($haystack, $needle)
 
     let settings = await getSettings()
 
+    let dockerIdsKeys = Object.keys(dockerIds)
+    for (const docker of dockerIdsKeys) {
+      if (settings['name'] === docker) {
+        swal({
+          title: "Same Name",
+          text: "The Folder has the same name as an existing docker \n (note is case sensitive)",
+          type: "warning"
+        })
+        return
+      }
+    }
+
     console.log(settings)
 
     let settingsSting = JSON.stringify(await settings)
