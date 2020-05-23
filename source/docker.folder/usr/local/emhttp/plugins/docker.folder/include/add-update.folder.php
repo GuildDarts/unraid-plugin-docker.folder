@@ -205,6 +205,11 @@ function endsWith($haystack, $needle)
         <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
       </div>
 
+      <div class="advanced" style="display: none">
+        <dt>Regex:</dt>
+        <dd><input class="setting" name="regex" type="text" /></dd>
+      </div>
+
       <div id="dialogAddConfig" style="display:none"></div>
       <div id="buttonLocation"></div>
 
@@ -310,6 +315,10 @@ function endsWith($haystack, $needle)
 
           case "dashboard_expanded_button":
             $(this).prop('checked', folders[editFolderName]['dashboard_expanded_button'])
+            break;
+
+          case "regex":
+            $(this).val(folders[editFolderName]['regex'])
             break;
         }
       })

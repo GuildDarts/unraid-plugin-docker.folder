@@ -125,13 +125,6 @@ function edit_folder_extra(folderName) {
         })
         folders[folderName]['children'] = children
         loadlistUpdate(e,ui)
-
-        // save new order to folders.json
-        let childrenSting = JSON.stringify(children)
-        $.post("/plugins/docker.folder/scripts/save_folder_children.php", {
-            folderName: folderName,
-            children: childrenSting
-        });
     }})
 
     // open dropdown on loadlist

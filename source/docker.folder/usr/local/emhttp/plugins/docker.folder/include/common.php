@@ -256,6 +256,17 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     }
 
     function edit_folder_base(folderName) {
+        // regex
+        if (!(folders[folderName]['regex'] == '' || folders[folderName]['regex'] == null)) {
+            let dockerIdsKeys = Object.keys(dockerIds)
+            let regex = new RegExp(folders[folderName]['regex'])
+            for (const docker of dockerIdsKeys) {
+                if (docker.match(regex) && !folders[folderName]['children'].includes(docker)) {
+                    folders[folderName]['children'].push(docker)
+                }
+            }
+        }
+
         // add folder element
         folderChildren = folderChildren.concat(folders[folderName]['children'])
 
