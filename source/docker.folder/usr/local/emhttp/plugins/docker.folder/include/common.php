@@ -244,13 +244,31 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             // why does it not work without "|| []" *hmmm
             var ipRegex = /\[IP\]/g
             var portRegex = /\[PORT:(\d+)\]/g
+            var dockerRegex = /\[DOCKER:([\w\-]+)\]/g
+
             var portMatch = portRegex.exec(url) || []
             var port = portMatch[1]
+
+            var dockerMatch = dockerRegex.exec(url) || []
+            var docker = dockerMatch[1]
 
             url = url.replace(portRegex, port)
             url = url.replace(ipRegex, "<?= $host ?>")
 
+            if (docker !== undefined) {
+                url = getDockerWebUI(docker)
+            }
+
             return url
+
+            function getDockerWebUI(docker) {
+                let id = dockerIds[docker]
+                let href = $(`#dropdown-${id}`).find('li:first-child > a').attr('href')
+                
+                if (href !== '#') {
+                    return href
+                }
+            }
         }
 
     }
