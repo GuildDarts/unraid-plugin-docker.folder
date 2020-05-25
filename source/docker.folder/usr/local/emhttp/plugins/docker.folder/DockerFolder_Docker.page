@@ -23,13 +23,24 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         padding: 5px;
         position: absolute;
     }
+    [class*="docker-folder-child-div-"] > tr{
+        border-bottom: 1px solid #c4c4c4;
+    }
+
     .dockerPreview-no-icon-container {
         display: grid;
-        grid-template-columns: max-content repeat(6, min-content );
-        color: #7c7c7c;
+        grid-template-columns: max-content repeat(6, max-content );
+        color: #626262;
         border-style: solid;
+        border-color: #c4c4c4;
         border-width: 1px;
         border-radius: 5px;
+        margin-block-start: initial;
+        margin-block-end: initial;
+        margin-inline-start: initial;
+        margin-inline-end: initial;
+        padding-inline-start: initial;
+        list-style-position: inside;
     }
     .dockerPreview-no-icon-container > div {
         padding-left: 10px;
@@ -37,16 +48,35 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         overflow: hidden;
     }
     .dockerPreview-no-icon-container > .header {
-        font-size: 30px;
+        font-size: 14px;
+        font-weight: bold;
         grid-area: 1 / 1 / span 2 / span 1;
         border-right: solid;
         border-width: 1px;
+        border-color: #c4c4c4;
         padding-right: 15px;
+        padding-top: 6px;
     }
-    .dockerPreview-icon-container td{
-        padding: 0px 8px 0px 8px !important;
+    .dockerPreview-no-icon-container li {
+        padding-left: 4px;
     }
-    .dockerPreview-icon-container img{
+
+    .dockerPreview-icon-container img.img {
+        margin-right: 6px;
+    }
+    .dockerPreview-icon-container td {
+        width: auto;
+        padding-right: 4px !important;
+        border-right: 1px solid #b9b7b7;
+        white-space: nowrap;
+    }
+    .dockerPreview-icon-container td:not(:first-child) {
+        padding-left: 4px;
+    }
+    .dockerPreview-icon-container td:last-child {
+        border-right: 0px;
+    }
+    .dockerPreview-icon-container img.img {
         white-space: nowrap;
         overflow: hidden;
         filter: grayscale(100%);
@@ -275,12 +305,12 @@ function dockerPreview(folderName) {
 
     switch (folders[folderName]['docker_preview']) {
         case 'no-icon':
-            dockerPreview.append(`<div class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></div>`)
+            dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></ul>`)
             for (const [i, child] of folders[folderName]['children'].entries()) {
                 if (i < 12) {
                     let row = ((2+i) % 2 == 0) ? 1 : 2
-                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<div>- ${child}</div>`)
-                    dockerPreview.find('.dockerPreview-no-icon-container > div:last-of-type').css('grid-area', `${row}`)
+                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li><span style='position: relative; left: -10px;'>${child}</span></li>`)
+                    dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
                 }
             }
             break;
@@ -292,7 +322,7 @@ function dockerPreview(folderName) {
             for (const child of folders[folderName]['children']) {
                 if (widthTotal < dockerPreviewWidth) {
                     let id = dockerIds[child]
-                    let width = $(`#${id}`).parent().parent().clone().appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
+                    let width = $(`#${id}`).parent().parent().clone().removeAttr("style").appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
                     widthTotal += width
                 }
             }
