@@ -329,7 +329,9 @@ function dockerPreview(folderName) {
             var widthTotal = 0
             $(`.docker-folder-child-div-${folderName}`).children().each(function() {
                 if (widthTotal < dockerPreviewWidth) {
-                    let width = $(this).children('.ct-name').clone().removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
+                    let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
+                        clone.children('.advanced').remove()
+                    let width = clone.width()
                     widthTotal += width
                 }
             })
