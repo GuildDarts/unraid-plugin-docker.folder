@@ -381,6 +381,18 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     }
 
+    function showContextMenu(e, id) {
+        setTimeout(function(){
+            let height = $(`#dropdown-${id}`).height()
+            $(`#dropdown-${id}`).css({
+                position: 'absolute',
+                top: e.pageY + 10,
+                left: e.pageX - 13,
+                display: 'block'
+            })
+        }, 1)
+    }
+
     function addSubMenu(e, id) {
         var offset = e.offset();
         $(`#dropdown-${id}`).css({

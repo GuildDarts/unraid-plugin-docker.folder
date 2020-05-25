@@ -309,9 +309,16 @@ function dockerPreview(folderName) {
             $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
                 if (i < 12) {
                     let child = $(this).find('.appname').text()
+                    let id = $(this).find('.hand').attr('id')
+
                     let row = ((2+i) % 2 == 0) ? 1 : 2
-                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li><span style='position: relative; left: -10px;'>${child}</span></li>`)
+                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li class="docker-preview-id-${id}"><span style='position: relative; left: -10px;'>${child}</span></li>`)
                     dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
+
+                    // add context menu
+                    dockerPreview.find(`.dockerPreview-no-icon-container > li.docker-preview-id-${id}`).click(function(e) {
+                        showContextMenu(e, id)
+                    })
                 }
             })
             break;
