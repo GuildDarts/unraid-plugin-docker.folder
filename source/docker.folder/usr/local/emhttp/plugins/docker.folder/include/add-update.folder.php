@@ -10,10 +10,12 @@
 
   .settingC-box {
     float: right;
+    transform: translateY(20px);
   }
 
   .info {
     display: inline;
+    line-height: initial;
   }
 
   .docker_img, .folder_img {
@@ -126,11 +128,11 @@ foreach ($containerNames as $container) {
   $repository = ($index === false) ? "Unknown" : $moreInfo[$index]['Image'];
   $id = ($index === false) ? "Unknown" : $moreInfo[$index]['Id'];
   $dockerSettings .= "<div class='container_item'>";
-  $dockerSettings .= "<div class='info'><img class='docker_img' src='" . $img . "'>";
+  $dockerSettings .= "<div class='info'><span><img class='docker_img' src='" . $img . "'></span>";
 
-  $dockerSettings .= "<strong>$container</strong><br>$repository";
+  $dockerSettings .= "<span><strong>$container</strong><br>$repository";
 
-  $dockerSettings .= "<div class='container-id' style='display:none;'>$id</div></div>";
+  $dockerSettings .= "</span></div>";
 
   $dockerSettings .= "<div class='settingC-box'><input class='settingC' type='checkbox' name='$container'></div>";
 
@@ -326,6 +328,22 @@ function endsWith($haystack, $needle)
       loadButtons(folders, editFolderName)
 
     }
+
+    // add what folder a docker is in
+    $('#dockers > .containers').children().each(function() {
+      let name = $(this).find('.info > span:last-child > strong').text()
+      $(this).find('.info > span:last-child').css('display', 'inline-block').append(`<br><span class="current-folder">Folder: None</span>`)
+      mainLoop:
+      for (const folderName of folderNames) {
+        let folderChildren = folders[folderName]['children']
+        for (const child of folderChildren) {
+          if (child === name) {
+            $(this).find('.current-folder').text(`Folder: ${folderName}`)
+            break mainLoop
+          }
+        }
+      }
+    })
 
     //make it green
     $('.container_item > .settingC-box > input[type="checkbox"]').change(function() {
