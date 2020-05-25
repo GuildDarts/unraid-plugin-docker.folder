@@ -306,26 +306,26 @@ function dockerPreview(folderName) {
     switch (folders[folderName]['docker_preview']) {
         case 'no-icon':
             dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></ul>`)
-            for (const [i, child] of folders[folderName]['children'].entries()) {
+            $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
                 if (i < 12) {
+                    let child = $(this).find('.appname').text()
                     let row = ((2+i) % 2 == 0) ? 1 : 2
                     dockerPreview.find('.dockerPreview-no-icon-container').append(`<li><span style='position: relative; left: -10px;'>${child}</span></li>`)
                     dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
                 }
-            }
+            })
             break;
 
         case 'icon':
             dockerPreview.append(`<div class="dockerPreview-icon-container"></div>`)
             var dockerPreviewWidth = dockerPreview.width()
             var widthTotal = 0
-            for (const child of folders[folderName]['children']) {
+            $(`.docker-folder-child-div-${folderName}`).children().each(function() {
                 if (widthTotal < dockerPreviewWidth) {
-                    let id = dockerIds[child]
-                    let width = $(`#${id}`).parent().parent().clone().removeAttr("style").appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
+                    let width = $(this).children('.ct-name').clone().removeAttr('style').appendTo(dockerPreview.children('.dockerPreview-icon-container')).width()
                     widthTotal += width
                 }
-            }
+            })
             break;
     }
 }
