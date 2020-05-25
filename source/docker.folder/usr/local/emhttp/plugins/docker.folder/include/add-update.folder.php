@@ -265,7 +265,6 @@ function endsWith($haystack, $needle)
         let folderChild = folders[folderName]['children']
         for (const child of folderChild) {
           if ($(this).attr('name') == child && folderName !== editFolderName) {
-            $(this).prop("disabled", true)
             $(this).parent().parent().addClass("disabled")
           } else if (folderName == editFolderName && $(this).attr('name') == child) {
             $(this).prop("checked", true)
@@ -416,8 +415,14 @@ function endsWith($haystack, $needle)
     $(".settingC").each(function() {
       var value = $(this).prop("checked");
       var name = $(this).attr('name');
-      if (value == true && folder_children.includes(name) == false) {
+      if (value == true && !folder_children.includes(name)) {
         folder_children.push(name)
+
+        // remove docker from old folder e.g docker is in folder but you check it in another folder and save
+        if ($(this).parent().parent().hasClass('disabled')) {
+          let oldFolder = $(this).parent().parent().find('.current-folder').text().replace('Folder: ', '')
+          $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {folderName: oldFolder, child: name});
+        }
       }
       // remove value from array e.g removing a folder
       if (value == false && folder_children.includes(name) == true) {
@@ -425,7 +430,6 @@ function endsWith($haystack, $needle)
           return elm != name
         })
       }
-
 
     });
     settings["buttons"] = buttonAdd()
