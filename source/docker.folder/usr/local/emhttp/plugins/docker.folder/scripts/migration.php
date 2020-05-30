@@ -41,6 +41,9 @@
         if ($folders['foldersVersion'] < 2.3) {
             $folders = migration_4($folders);
         }
+        if ($folders['foldersVersion'] < 2.4) {
+            $folders = migration_5($folders);
+        }
 
         finish($path, $folders, $folders_file, $isImport);
         
@@ -146,8 +149,20 @@
             $folder['docker_start_expanded'] = $folder['start_expanded'];
             unset($folder['start_expanded']);
 
-            // add docker_expanded_style
+            // add docker_preview
             $folder['docker_preview'] = 'none';
+        }
+
+        return $folders;
+    }
+
+    function migration_5($folders) {
+        echo("migration_5");
+        logger("migration_5");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+            // add docker_icon_style
+            $folder['docker_icon_style'] = 'docker';
         }
 
         return $folders;

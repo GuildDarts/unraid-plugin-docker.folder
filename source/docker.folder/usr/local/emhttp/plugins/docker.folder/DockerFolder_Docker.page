@@ -8,6 +8,9 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 ?>
 
 <style type="text/css">
+    :root {
+    --border-color: #c4c4c4;
+    }
     [class*="docker-folder-child-"] > td{
         padding-left: 30px !important;
     }
@@ -15,19 +18,45 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         display:none;
     }
     .expanded_right {
-        transform: translate(150px, -30px);
+        float: right;
+        transform: translate(-12px, 5px);
         color: #7c7c7c;
         border: solid;
         border-width: 1px;
         border-radius: 5px;
         padding: 5px;
-        position: absolute;
     }
     [class*="docker-folder-child-div-"] > tr:first-child{
-        border-top: 1px solid #c4c4c4;
+        border-top: 1px solid var(--border-color);
     }
     [class*="docker-folder-child-div-"] > tr{
-        border-bottom: 1px solid #c4c4c4;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .label-tab > .ct-name > div > .outer > .inner{
+        padding-top: 6px;
+    }
+    .label-tab > .ct-name, .dockerPreview {
+        padding: 4px !important;
+    }
+    .label-tab > .ct-name > div {
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+        box-shadow: -10px 0 0px -2px #91c8f0 inset;
+    }
+    .label-tab > .ct-name > div > .outer > .hand img {
+        height: 42px;
+        width: 42px;
+        border-right: solid;
+        border-width: 1px;
+        border-color: var(--border-color);
+        padding: 2px;
+        margin-right: 6px;
+    }
+    .label-tab .expanded_right {
+        transform: translate(-15px, 10px);
     }
 
     .dockerPreview-no-icon-container {
@@ -35,7 +64,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         grid-template-columns: max-content repeat(6, max-content );
         color: #626262;
         border-style: solid;
-        border-color: #c4c4c4;
+        border-color: var(--border-color);
         border-width: 1px;
         border-radius: 5px;
         margin-block-start: initial;
@@ -44,6 +73,9 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         margin-inline-end: initial;
         padding-inline-start: initial;
         list-style-position: inside;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        box-shadow: 10px 0 0px -2px #beddf5 inset;
     }
     .dockerPreview-no-icon-container > div {
         padding-left: 10px;
@@ -56,19 +88,40 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         grid-area: 1 / 1 / span 2 / span 1;
         border-right: solid;
         border-width: 1px;
-        border-color: #c4c4c4;
+        border-color: var(--border-color);
         padding-right: 15px;
-        padding-top: 6px;
+        padding-top: 12px;
+        margin-top: -6px;
+        margin-bottom: -6px;
     }
     .dockerPreview-no-icon-container li {
         padding-left: 4px;
     }
+    .dockerPreview-no-icon-container > li > span {
+        position: relative;
+        left: -10px;
+    }
+    /* chrome/firefox issue with bullet points */
+    @media screen and (min--moz-device-pixel-ratio:0) {
+        .dockerPreview-no-icon-container > li > span {
+            left: -5px;
+        }
+    }
 
+    .dockerPreview-icon-container {
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+        box-shadow: 10px 0 0px -2px #beddf5 inset;
+    }
     .dockerPreview-icon-container img.img {
         margin-right: 6px;
     }
     .dockerPreview-icon-container td {
         width: auto;
+        padding-top: 2px;
+        padding-bottom: 2px;
         padding-right: 4px !important;
         border-right: 1px solid #b9b7b7;
         white-space: nowrap;
@@ -118,11 +171,19 @@ function edit_folder_extra(folderName) {
     }
 
     // add show children button
-    if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").length == 0) {
+    if ($(`.docker-folder-parent-${folderName}`).find('.outer > i').length == 0) {
 
-        $(`.docker-folder-parent-${folderName}`).find('span.outer').append(`<br><i class="fa fa-fw fa-chevron-up expanded_${folders[folderName]['docker_expanded_style']}""></i>`)
+        switch (folders[folderName]['docker_expanded_style']) {
+            case 'bottom':
+                $(`.docker-folder-parent-${folderName}`).find('.outer').append(`<br><i class="fa fa-fw fa-chevron-up expanded_bottom""></i>`)
+                break;
 
-        $(`.docker-folder-parent-${folderName}`).find("td.ct-name  > span > i").click(function() {
+            case 'right':
+                $(`.docker-folder-parent-${folderName}`).find('.outer').append(`<i class="fa fa-fw fa-chevron-up expanded_right""></i>`)
+                break;
+        }
+
+        $(`.docker-folder-parent-${folderName}`).find('.outer > i').click(function() {
             childrenDropdown(folderName)
         });
     }
@@ -136,8 +197,12 @@ function edit_folder_extra(folderName) {
     $(`.docker-folder-child-${folderName}`).wrapAll(`<div class='docker-folder-child-div-${folderName}'></div>`)
 
     // remove sortable from children and add new sortable
+    // adjust child width (done to counter padding)
     $(`.docker-folder-child-${folderName}`).each(function() {
         $(this).removeClass("sortable").addClass(`sortable-child-${folderName}`)
+        $(this).children('.ct-name').css({
+            'width': '190'
+        })
     })
 
     // custom sortable helper for children
@@ -164,7 +229,7 @@ function edit_folder_extra(folderName) {
     for (const dropdown of activeDropdowns) {
         if (dropdown == folderName) {
             docker_toggle_visibility(folderName)
-            $(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+            $(`.docker-folder-parent-${folderName}`).find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
             childrenMove(folderName)
         }
     }
@@ -189,15 +254,18 @@ function edit_folder_extra(folderName) {
     }
     $(`.docker-folder-parent-${folderName}`).find('td.updatecolumn').html(updateConf)
 
+    // icon style
+    iconStyle(folderName)
+
     // cpu / memory load 
     cpuMemoryLoad(folderName)
 }
 
 function childrenDropdown(folderName) {
     docker_toggle_visibility(folderName)
-    $(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").toggleClass("fa-chevron-down fa-chevron-up")
+    $(`.docker-folder-parent-${folderName}`).find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
     
-    if ($(`.docker-folder-parent-${folderName}`).find("td.ct-name > span > i").hasClass("fa-chevron-up")) {
+    if ($(`.docker-folder-parent-${folderName}`).find('.outer > i').hasClass('fa-chevron-up')) {
         $(`.docker-folder-child-div-${folderName}`).each(function() {
             $(this).appendTo("#docker_list_storage")
         });
@@ -315,7 +383,7 @@ function dockerPreview(folderName) {
                     let id = $(this).find('.hand').attr('id')
 
                     let row = ((2+i) % 2 == 0) ? 1 : 2
-                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li class="docker-preview-id-${id}"><span style='position: relative; left: -10px;'>${child}</span></li>`)
+                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li class="docker-preview-id-${id}"><span>${child}</span></li>`)
                     dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
 
                     // add context menu
@@ -338,6 +406,20 @@ function dockerPreview(folderName) {
                     widthTotal += width
                 }
             })
+            break;
+    }
+}
+
+function iconStyle(folderName) {
+    switch (folders[folderName]['docker_icon_style']) {
+        case 'label-tab':
+            // blue text / bigger text size
+            $(`.docker-folder-parent-${folderName}`).find('.appname').addClass('blue-text').css({
+                'font-size': 'larger',
+                'font-weight': 'bold'
+            })
+
+            $(`.docker-folder-parent-${folderName}`).addClass('label-tab')
             break;
     }
 }

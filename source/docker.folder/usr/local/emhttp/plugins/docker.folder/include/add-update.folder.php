@@ -178,6 +178,16 @@ function endsWith($haystack, $needle)
       </div>
 
       <div class="advanced" style="display: none">
+        <dt>Docker icon style:</dt>
+        <dd>
+          <select class="setting" name="docker_icon_style">
+            <option value="label-tab">Label Tab (Default)</option>
+            <option value="docker">Docker</option>
+          </select>
+        </dd>
+      </div>
+
+      <div class="advanced" style="display: none">
         <dt>Docker expand button style:</dt>
         <dd>
           <select class="setting" name="docker_expanded_style">
@@ -296,6 +306,10 @@ function endsWith($haystack, $needle)
 
           case "docker_preview":
             $(this).val(folders[editFolderName]['docker_preview'])
+            break;
+
+          case "docker_icon_style":
+            $(this).val(folders[editFolderName]['docker_icon_style'])
             break;
 
           case "docker_expanded_style":

@@ -295,7 +295,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         } else {
             var selector = "#docker_list"
             var selectorType = "tr"
-            var folderTemplate = `<tr class="sortable docker-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px"><span class="outer"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname ">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></td><td></td><td></td></tr>`
+            var folderTemplate = `<tr class="sortable docker-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname ">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td></td><td></td></tr>`
         }
 
         var perfs = <?= $prefs ?>;
