@@ -213,6 +213,11 @@ function endsWith($haystack, $needle)
       </div>
 
       <div class="advanced" style="display: none">
+        <dt>Only animate icon on hover:</dt>
+        <dd><input class="basic-switch setting" name="icon_animate_hover" type="checkbox" /></dd>
+      </div>
+
+      <div class="advanced" style="display: none">
         <dt>Status icon autostart:</dt>
         <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
       </div>
@@ -322,6 +327,10 @@ function endsWith($haystack, $needle)
 
           case "dashboard_expanded":
             $(this).prop('checked', folders[editFolderName]['dashboard_expanded'])
+            break;
+
+          case "icon_animate_hover":
+            $(this).prop('checked', folders[editFolderName]['icon_animate_hover'])
             break;
 
           case "status_icon_autostart":

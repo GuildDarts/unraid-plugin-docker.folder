@@ -49,11 +49,20 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     .label-tab > .ct-name > div > .outer > .hand img {
         height: 42px;
         width: 42px;
+        margin-right: 0px;
+    }
+    .label-tab > .ct-name > div > .outer > .hand > :first-child {
+        height: 42px;
+        width: 42px;
         border-right: solid;
         border-width: 1px;
         border-color: var(--border-color);
         padding: 2px;
         margin-right: 6px;
+    }
+    .ff-container > .ff-canvas {
+        top: 2px;
+        left: 2px;
     }
     .label-tab .expanded_right {
         transform: translate(-15px, 10px);

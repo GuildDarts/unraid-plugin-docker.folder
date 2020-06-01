@@ -163,6 +163,9 @@
             if($folderKey == 'foldersVersion') {continue;};
             // add docker_icon_style
             $folder['docker_icon_style'] = 'docker';
+
+            // add icon_animate_hover
+            $folder['icon_animate_hover'] = false;
         }
 
         return $folders;

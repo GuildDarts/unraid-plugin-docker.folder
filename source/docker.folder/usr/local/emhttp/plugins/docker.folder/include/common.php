@@ -36,6 +36,15 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
 
 <style type="text/css">
+    .img {
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+        border: none;
+        text-decoration: none;
+        vertical-align: middle;
+    }
+
     .docker-folder-hide {
         display: none;
     }
@@ -84,7 +93,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
     }
 </style>
 
-
+<script src="/plugins/docker.folder/include/freezeframe.min.js"></script>
 <script>
     function checkStatus(folderName) {
         var selector = $(`.docker-folder-parent-${folderName}`).find("span.inner > i")
@@ -322,13 +331,65 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
         }
 
+        loadDropdownButtons(folderName)
+
         // set icon
-        if (folders[folderName]["icon"] !== "") {
-            $(`.docker-folder-parent-${folderName}`).find("img").attr("src", folders[folderName]["icon"])
+        let icon = folders[folderName]['icon']
+        if (icon !== '') {
+            if ( (icon.slice(icon.length - 3) === 'svg' || icon.includes('image\/svg+xml')) && folders[folderName]['icon_animate_hover'] ) {
+
+                const decodedSVG = atob(icon.replace('data:image\/svg+xml;base64,', ''));
+
+                if (decodedSVG.includes('keyframes')) {
+                    $(`.docker-folder-parent-${folderName}`).find('img').replaceWith(decodedSVG)
+
+                    const svgElement = $(`.docker-folder-parent-${folderName}`).find('svg')
+                    const svgId = svgElement.attr('id')
+                    svgElement.addClass('img')
+
+                    svgElement.find('style')[0].sheet.insertRule(`#${svgId} * {animation-play-state: paused !important}`, 0)
+
+                    $(`.docker-folder-parent-${folderName},.docker-folder-child-div-${folderName},#dropdown-folder-${folderName}`).hover(
+                        function() {
+                            setSvgPlayState('running')
+                        }, function() {
+                            setSvgPlayState('paused')
+                        }
+                    );
+
+                    function setSvgPlayState(state) {
+                        svgElement.find('style')[0].sheet.cssRules[0].style['cssText'] = `animation-play-state: ${state} !important`
+                    }
+                    
+                } else {
+                    $(`.docker-folder-parent-${folderName}`).find('img').attr('src', icon)
+                }
+
+            } else {
+                $(`.docker-folder-parent-${folderName}`).find('img').attr('src', icon)
+
+                if ( (icon.slice(icon.length - 3) === 'gif' || icon.includes('image\/gif')) && folders[folderName]['icon_animate_hover'] ) {
+                    let element = $(`.docker-folder-parent-${folderName}`).find('img').addClass('freezeframe')
+                    const iconFreeze = new Freezeframe({
+                        selector: element,
+                        trigger: false,
+                        overlay: false,
+                        responsive: false,
+                        warnings: false
+                    });
+
+                    $(`.docker-folder-parent-${folderName},.docker-folder-child-div-${folderName},#dropdown-folder-${folderName}`).hover(
+                        function() {
+                            iconFreeze.start()
+                        }, function() {
+                            iconFreeze.stop()
+                        }
+                    );
+                }
+            }
         }
 
         docker_hide(folderName)
-        loadDropdownButtons(folderName)
         checkStatus(folderName)
 
     }
