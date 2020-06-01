@@ -169,12 +169,43 @@ function endsWith($haystack, $needle)
       <div class="advanced" style="display: none">
         <dt>Docker preview:</dt>
         <dd>
-          <select class="setting" name="docker_preview">
+          <select class="setting" name="docker_preview" onchange="dockerPreview_change(this)">
             <option value="none">None (Default)</option>
             <option value="icon">Icon</option>
             <option value="no-icon">No icon</option>
           </select>
+          <script>
+            function dockerPreview_change(e) {
+              if (typeof e === 'string') {
+                var val = e
+              } else {
+                var val = $(e).val()
+              }
+
+              switch (val) {
+                case 'none':
+                  $('#setting-docker_preview_icon_grayscale').hide()
+                  break;
+
+                case 'icon':
+                  $('#setting-docker_preview_icon_grayscale').show()
+                  break;
+
+                case 'no-icon':
+                  $('#setting-docker_preview_icon_grayscale').hide()
+                  break;
+              }
+            }
+          </script>
         </dd>
+
+          <li id="setting-docker_preview_icon_grayscale">
+            <dt>Preview icons grayscaled:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_icon_grayscale" type="checkbox" />
+            </dd>
+          </li>
+        </ul>
       </div>
 
       <div class="advanced" style="display: none">
@@ -311,6 +342,11 @@ function endsWith($haystack, $needle)
 
           case "docker_preview":
             $(this).val(folders[editFolderName]['docker_preview'])
+            dockerPreview_change(folders[editFolderName]['docker_preview'])
+            break;
+
+          case "docker_preview_icon_grayscale":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_grayscale'])
             break;
 
           case "docker_icon_style":

@@ -141,7 +141,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     .dockerPreview-icon-container td:last-child {
         border-right: 0px;
     }
-    .dockerPreview-icon-container img.img {
+    .dockerPreview-grayscale {
         white-space: nowrap;
         overflow: hidden;
         filter: grayscale(100%);
@@ -415,6 +415,11 @@ function dockerPreview(folderName) {
                     widthTotal += width
                 }
             })
+
+            // grayscale
+            if (folders[folderName]['docker_preview_icon_grayscale']) {
+                dockerPreview.children('.dockerPreview-icon-container').find('img').addClass('dockerPreview-grayscale')
+            }
             break;
     }
 }
