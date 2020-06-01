@@ -233,8 +233,8 @@ function endsWith($haystack, $needle)
         <dt>Docker expand button style:</dt>
         <dd>
           <select class="setting" name="docker_expanded_style">
-            <option value="bottom">Bottom (Default)</option>
-            <option value="right">Right</option>
+            <option value="right">Right (Default)</option>
+            <option value="bottom">Bottom</option>
           </select>
         </dd>
       </div>
