@@ -167,6 +167,9 @@
             // add icon_animate_hover
             $folder['icon_animate_hover'] = false;
 
+            // add docker_preview_hover_only
+            $folder['docker_preview_hover_only'] = false;
+
             // add docker_preview_icon_grayscale
             $folder['docker_preview_icon_grayscale'] = true;
         }

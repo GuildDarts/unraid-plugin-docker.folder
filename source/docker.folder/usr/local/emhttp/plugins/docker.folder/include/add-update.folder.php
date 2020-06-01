@@ -184,20 +184,31 @@ function endsWith($haystack, $needle)
 
               switch (val) {
                 case 'none':
+                  $('#setting-docker_preview_hover_only').hide()
                   $('#setting-docker_preview_icon_grayscale').hide()
                   break;
 
                 case 'icon':
+                  $('#setting-docker_preview_hover_only').show()
                   $('#setting-docker_preview_icon_grayscale').show()
                   break;
 
                 case 'no-icon':
+                  $('#setting-docker_preview_hover_only').show()
                   $('#setting-docker_preview_icon_grayscale').hide()
                   break;
               }
             }
           </script>
         </dd>
+
+        <ul>
+          <li id="setting-docker_preview_hover_only">
+            <dt>Only show preview on hover:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_hover_only" type="checkbox" />
+            </dd>
+          </li>
 
           <li id="setting-docker_preview_icon_grayscale">
             <dt>Preview icons grayscaled:</dt>
@@ -343,6 +354,10 @@ function endsWith($haystack, $needle)
           case "docker_preview":
             $(this).val(folders[editFolderName]['docker_preview'])
             dockerPreview_change(folders[editFolderName]['docker_preview'])
+            break;
+
+          case "docker_preview_hover_only":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_hover_only'])
             break;
 
           case "docker_preview_icon_grayscale":

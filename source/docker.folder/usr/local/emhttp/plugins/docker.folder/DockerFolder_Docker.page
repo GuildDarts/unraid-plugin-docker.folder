@@ -401,6 +401,8 @@ function dockerPreview(folderName) {
                     })
                 }
             })
+
+            hoverOnly(folderName)
             break;
 
         case 'icon':
@@ -420,7 +422,25 @@ function dockerPreview(folderName) {
             if (folders[folderName]['docker_preview_icon_grayscale']) {
                 dockerPreview.children('.dockerPreview-icon-container').find('img').addClass('dockerPreview-grayscale')
             }
+
+            hoverOnly(folderName)
             break;
+    }
+
+    function hoverOnly(folderName) {
+        if (folders[folderName]['docker_preview_hover_only']) {
+            $(`.docker-folder-parent-${folderName} > .dockerPreview > :first-child`).css('visibility', 'hidden').fadeTo(0, 0)
+
+            $(`.docker-folder-parent-${folderName} > .dockerPreview`).hover(
+                function() {
+                    $(this).children(':first-child').css('visibility', 'initial').fadeTo(500, 1)
+                }, function() {
+                    $(this).children(':first-child').fadeTo(500, 0, function(){
+                        $(this).css('visibility', 'hidden')
+                    })
+                }
+            );
+        }
     }
 }
 
