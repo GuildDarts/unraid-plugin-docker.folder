@@ -249,7 +249,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             })
         }
 
-        function webUIMatch(url) {
+        function webUIMatch(url = '') {
             // why does it not work without "|| []" *hmmm
             var ipRegex = /\[IP\]/g
             var portRegex = /\[PORT:(\d+)\]/g

@@ -155,7 +155,7 @@ function endsWith($haystack, $needle)
   <form id="form" onsubmit="return false">
     <dl>
       <dt>Name:</dt>
-      <dd><input class="setting" type="text" name="name" pattern="[^\s]+" title="no spaces please :)" required></dd>
+      <dd><input class="setting" type="text" name="name" pattern="[A-Za-z0-9_\-.]+" title="Only a-z nubers and ._- sorry" required></dd>
 
       <dt>Icon:</dt>
       <dd>
