@@ -2,17 +2,26 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.05.25">
+<!ENTITY version   "2020.06.02">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "a5a735caab30c99a83c22ea748138f85">
+<!ENTITY md5       "2b1474be268ad474e706447565cc0d3c">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.06.02
+- Added: New icon style label-tab (thanks hernandito)
+- Added: Only animate icon on hover
+- Added: Preview icons grayscaled as option
+- Added: Preview display only on hover
+- Change: Expand button style default
+- Fixed: Prevent a bit more bad input
+- Fixed: Improve dashboard expanded started only
+
 ###2020.05.25
 - Added: preview no-icon context-menu
 - Added: regex docker selection
