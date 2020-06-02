@@ -79,17 +79,40 @@ function dashboard_expanded_button(folderName) {
     }
 }
 
+$('#apps').change(function() {
+    let tmpActiveDropdowns = []
+    $('[class*="docker-folder-parent-"]').each(function() {
+        let name = $(this).find('span.inner > span:first-child').text()
+        let stopped = $(this).find('.inner > i').hasClass('stopped')
+        if (activeDropdowns.includes(name)) {
+            childrenDropdown(name)
+            if (!stopped) {
+                tmpActiveDropdowns.push(name)
+            }
+        }
+    })
+    setTimeout(() => {
+        $('[class*="docker-folder-parent-"]').each(function() {
+            let name = $(this).find('span.inner > span:first-child').text()
+            if (tmpActiveDropdowns.includes(name)) {
+                childrenDropdown(name)
+            }
+        })
+    }, 200);
+})
+
 function dashboard_expanded(folderName) {
-    var spaces_template = `<span class="outer solid apps docker-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
-  
+    const spaces_template = `<span class="outer solid apps docker-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
+    const dashboardElement = $('tbody.docker_view > tr > td:nth-child(2)')
+
     // main logic
     var addCountStart = 0
     var addCountEnd = 0
-    var index = $(`.docker-folder-parent-${folderName}`).index()+1
+    var index = dashboardElement.children('span:visible').index(dashboardElement.children(`.docker-folder-parent-${folderName}`))+1
     var rows = 3
 
     // get rows count (should find a better way)
-    let dockerViewWidth = $('tbody.docker_view > tr > td:nth-child(2)').width()
+    let dockerViewWidth = dashboardElement.width()
     if (dockerViewWidth >= 1092) {
         rows = 6
     }else if (dockerViewWidth >= 910) {
@@ -105,7 +128,15 @@ function dashboard_expanded(folderName) {
         index++
     }
 
-    index = index+folders[folderName]['children'].length
+    // get children count
+    let childrenCount = 0
+    $(`.docker-folder-child-${folderName}`).each(function() {
+        if ($(this).css('display') !== 'none') {
+            childrenCount++
+        }
+    })
+
+    index = index+childrenCount
     while (index == 0 || Number.isInteger(index/rows) == false) {
         addCountEnd++
         index++
@@ -121,7 +152,7 @@ function dashboard_expanded(folderName) {
 
     // add spaces at end
     for (i=1; i <= addCountEnd; i++) {
-        $(spaces_template).insertAfter($(`.docker-folder-child-${folderName}`).last())
+        $(spaces_template).insertAfter(dashboardElement.children(`.docker-folder-child-${folderName}:visible:last`))
     }
 
     // add line at start
@@ -130,11 +161,10 @@ function dashboard_expanded(folderName) {
             $(this).css('border-top', 'inset').css('margin-bottom', '16px')
         }
     })
-    let childrenLength = $(`.docker-folder-child-${folderName}`).length
-    if (childrenLength < rows) {
+    if (childrenCount < rows) {
         $(`.docker-folder-spacer-${folderName}`).each(function() {
             let sIndex = $(this).index()
-            if (sIndex > $(`.docker-folder-child-${folderName}`).last().index()) {
+            if (sIndex > dashboardElement.children(`.docker-folder-child-${folderName}`).index()) {
                 $(this).css('border-top', 'inset').css('margin-bottom', '16px')
             }
         })
