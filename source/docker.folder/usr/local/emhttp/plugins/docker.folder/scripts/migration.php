@@ -44,6 +44,9 @@
         if ($folders['foldersVersion'] < 2.4) {
             $folders = migration_5($folders);
         }
+        if ($folders['foldersVersion'] < 2.5) {
+            $folders = migration_6($folders);
+        }
 
         finish($path, $folders, $folders_file, $isImport);
         
@@ -172,6 +175,19 @@
 
             // add docker_preview_icon_grayscale
             $folder['docker_preview_icon_grayscale'] = true;
+        }
+
+        return $folders;
+    }
+
+    function migration_6($folders) {
+        echo("migration_6");
+        logger("migration_6");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+
+            // add docker_preview_hover_only
+            $folder['docker_preview_icon_show_log'] = false;
         }
 
         return $folders;

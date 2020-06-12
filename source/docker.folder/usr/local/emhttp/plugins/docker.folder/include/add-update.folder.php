@@ -186,16 +186,19 @@ function endsWith($haystack, $needle)
                 case 'none':
                   $('#setting-docker_preview_hover_only').hide()
                   $('#setting-docker_preview_icon_grayscale').hide()
+                  $('#setting-docker_preview_icon_show_log').hide()
                   break;
 
                 case 'icon':
                   $('#setting-docker_preview_hover_only').show()
                   $('#setting-docker_preview_icon_grayscale').show()
+                  $('#setting-docker_preview_icon_show_log').show()
                   break;
 
                 case 'no-icon':
                   $('#setting-docker_preview_hover_only').show()
                   $('#setting-docker_preview_icon_grayscale').hide()
+                  $('#setting-docker_preview_icon_show_log').hide()
                   break;
               }
             }
@@ -203,17 +206,24 @@ function endsWith($haystack, $needle)
         </dd>
 
         <ul>
-          <li id="setting-docker_preview_hover_only">
+          <li id="setting-docker_preview_hover_only" style="display: none;">
             <dt>Only show preview on hover:</dt>
             <dd>
               <input class="basic-switch setting" name="docker_preview_hover_only" type="checkbox" />
             </dd>
           </li>
 
-          <li id="setting-docker_preview_icon_grayscale">
+          <li id="setting-docker_preview_icon_grayscale" style="display: none;">
             <dt>Preview icons grayscaled:</dt>
             <dd>
               <input class="basic-switch setting" name="docker_preview_icon_grayscale" type="checkbox" />
+            </dd>
+          </li>
+
+          <li id="setting-docker_preview_icon_show_log" style="display: none;">
+            <dt>Add show log icon:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_icon_show_log" type="checkbox" checked/>
             </dd>
           </li>
         </ul>
@@ -362,6 +372,10 @@ function endsWith($haystack, $needle)
 
           case "docker_preview_icon_grayscale":
             $(this).prop('checked', folders[editFolderName]['docker_preview_icon_grayscale'])
+            break;
+
+          case "docker_preview_icon_show_log":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_log'])
             break;
 
           case "docker_icon_style":
