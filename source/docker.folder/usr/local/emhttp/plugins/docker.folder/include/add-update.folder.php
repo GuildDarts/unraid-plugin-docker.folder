@@ -1,4 +1,8 @@
 <style>
+  dl {
+    padding-left: 0px;
+  }
+
   .containers, .folders {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -77,6 +81,15 @@
     height: 44px;
     width: 44px;
   }
+
+  .fake-list-item {
+    display: list-item;
+    margin-left: 30px;
+  }
+  .fake-list-item + dd {
+    margin-left: 50%;
+    transform: translateX(-30%);
+  }
 </style>
 
 
@@ -153,130 +166,195 @@ function endsWith($haystack, $needle)
 <div id="docker_tabbed" style="float:right;margin-top:-55px"></div>
 <div>
   <form id="form" onsubmit="return false">
-    <dl>
-      <dt>Name:</dt>
-      <dd><input class="setting" type="text" name="name" pattern="[A-Za-z0-9_\-.]+" title="Only a-z nubers and ._- sorry" required></dd>
+    <dl style="padding-left: 12px;">
+      <div>
+        <dl>
+          <dt>Name:</dt>
+          <dd><input class="setting" type="text" name="name" pattern="[A-Za-z0-9_\-.]+" title="Only a-z nubers and ._- sorry" required></dd>
+        </dl>
+      </div>
 
-      <dt>Icon:</dt>
-      <dd>
-        <img id="icon-upload-preview" src="/plugins/dynamix.docker.manager/images/question.png" onclick="iconPickerPopup()">
-        <input id="icon-upload-input" class="setting" type="text" name="icon">
-        <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
-          <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
-        </label>
-      </dd>
+      <div>
+        <dl>
+          <dt>Icon:</dt>
+          <dd>
+            <img id="icon-upload-preview" src="/plugins/dynamix.docker.manager/images/question.png" onclick="iconPickerPopup()">
+            <input id="icon-upload-input" class="setting" type="text" name="icon">
+            <label id="icon-upload-label" for="icon-upload" class="fa fa-upload fa-lg" aria-hidden="true">
+              <input id="icon-upload" type="file" onchange="iconEncodeImageFileAsURL(this)" />
+            </label>
+          </dd>
+        </dl>
+        <blockquote class="inline_help">
+          <p>You can click the folder icon for a menu of icons from the dockers currently inside the folder</p>
+        </blockquote>
+      </div>
 
       <div class="advanced" style="display: none">
-        <dt>Docker preview:</dt>
-        <dd>
-          <select class="setting" name="docker_preview" onchange="dockerPreview_change(this)">
-            <option value="none">None (Default)</option>
-            <option value="icon">Icon</option>
-            <option value="no-icon">No icon</option>
-          </select>
-          <script>
-            function dockerPreview_change(e) {
-              if (typeof e === 'string') {
-                var val = e
-              } else {
-                var val = $(e).val()
-              }
+        <div>
+          <dl>
+            <dt>Docker preview:</dt>
+            <dd>
+              <select class="setting" name="docker_preview" onchange="dockerPreview_change(this)">
+                <option value="none">None (Default)</option>
+                <option value="icon">Icon</option>
+                <option value="no-icon">No icon</option>
+              </select>
+              <script>
+                function dockerPreview_change(e) {
+                  if (typeof e === 'string') {
+                    var val = e
+                  } else {
+                    var val = $(e).val()
+                  }
 
-              switch (val) {
-                case 'none':
-                  $('#setting-docker_preview_hover_only').hide()
-                  $('#setting-docker_preview_icon_grayscale').hide()
-                  $('#setting-docker_preview_icon_show_log').hide()
-                  break;
+                  switch (val) {
+                    case 'none':
+                      $('#setting-docker_preview_hover_only').hide()
+                      $('#setting-docker_preview_icon_grayscale').hide()
+                      $('#setting-docker_preview_icon_show_log').hide()
+                      break;
 
-                case 'icon':
-                  $('#setting-docker_preview_hover_only').show()
-                  $('#setting-docker_preview_icon_grayscale').show()
-                  $('#setting-docker_preview_icon_show_log').show()
-                  break;
+                    case 'icon':
+                      $('#setting-docker_preview_hover_only').show()
+                      $('#setting-docker_preview_icon_grayscale').show()
+                      $('#setting-docker_preview_icon_show_log').show()
+                      break;
 
-                case 'no-icon':
-                  $('#setting-docker_preview_hover_only').show()
-                  $('#setting-docker_preview_icon_grayscale').hide()
-                  $('#setting-docker_preview_icon_show_log').hide()
-                  break;
-              }
-            }
-          </script>
-        </dd>
+                    case 'no-icon':
+                      $('#setting-docker_preview_hover_only').show()
+                      $('#setting-docker_preview_icon_grayscale').hide()
+                      $('#setting-docker_preview_icon_show_log').hide()
+                      break;
+                  }
+                }
+              </script>
+            </dd>
+          </dl>
+        </div>
 
-        <ul>
-          <li id="setting-docker_preview_hover_only" style="display: none;">
-            <dt>Only show preview on hover:</dt>
+        <div id="setting-docker_preview_hover_only" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Only show preview on hover:</dt>
             <dd>
               <input class="basic-switch setting" name="docker_preview_hover_only" type="checkbox" />
             </dd>
-          </li>
+          </dl>
+          <blockquote class="inline_help">
+            <p>Will make the preview only show when mouse is hovering over</p>
+          </blockquote>
+          </div>
 
-          <li id="setting-docker_preview_icon_grayscale" style="display: none;">
-            <dt>Preview icons grayscaled:</dt>
+        <div id="setting-docker_preview_icon_grayscale" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Preview icons grayscaled:</dt>
             <dd>
               <input class="basic-switch setting" name="docker_preview_icon_grayscale" type="checkbox" />
             </dd>
-          </li>
+          </dl>
+          <blockquote class="inline_help">
+            <p>Will make the preview icons grayscaled</p>
+          </blockquote>
+        </div>
 
-          <li id="setting-docker_preview_icon_show_log" style="display: none;">
-            <dt>Add show log icon:</dt>
+        <div id="setting-docker_preview_icon_show_log" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Add show log icon:</dt>
             <dd>
               <input class="basic-switch setting" name="docker_preview_icon_show_log" type="checkbox" checked/>
             </dd>
-          </li>
-        </ul>
+          </dl>
+          <blockquote class="inline_help">
+            <p>Will add a little log icon that opens the log menu</p>
+          </blockquote>
+        </div>
+
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Docker icon style:</dt>
-        <dd>
-          <select class="setting" name="docker_icon_style">
-            <option value="label-tab">Label Tab (Default)</option>
-            <option value="docker">Docker</option>
-          </select>
-        </dd>
+        <dl>
+          <dt>Docker icon style:</dt>
+          <dd>
+            <select class="setting" name="docker_icon_style">
+              <option value="label-tab">Label Tab (Default)</option>
+              <option value="docker">Docker</option>
+            </select>
+          </dd>
+        </dl>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Docker expand button style:</dt>
-        <dd>
-          <select class="setting" name="docker_expanded_style">
-            <option value="right">Right (Default)</option>
-            <option value="bottom">Bottom</option>
-          </select>
-        </dd>
+        <dl>
+          <dt>Docker expand button style:</dt>
+          <dd>
+            <select class="setting" name="docker_expanded_style">
+              <option value="right">Right (Default)</option>
+              <option value="bottom">Bottom</option>
+            </select>
+          </dd>
+        </dl>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Start expanded on Docker:</dt>
-        <dd><input class="basic-switch setting" name="docker_start_expanded" type="checkbox" /></dd>
+        <dl>
+          <dt>Start expanded on Docker:</dt>
+          <dd><input class="basic-switch setting" name="docker_start_expanded" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>Will make the folder start expanded on the docker tab</p>
+        </blockquote>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Start expanded on Dashboard:</dt>
-        <dd><input class="basic-switch setting" name="dashboard_expanded" type="checkbox" /></dd>
+        <dl>
+          <dt>Start expanded on Dashboard:</dt>
+          <dd><input class="basic-switch setting" name="dashboard_expanded" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>Will make the folder start expanded on the docker dashboard</p>
+        </blockquote>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Expanded on Dashboard button:</dt>
-        <dd><input class="basic-switch setting" name="dashboard_expanded_button" type="checkbox" /></dd>
+        <dl>
+          <dt>Expanded on Dashboard button:</dt>
+          <dd><input class="basic-switch setting" name="dashboard_expanded_button" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>Will add a button to expanded the folder on the dashboard</p>
+        </blockquote>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Only animate icon on hover:</dt>
-        <dd><input class="basic-switch setting" name="icon_animate_hover" type="checkbox" /></dd>
+        <dl>
+          <dt>Only animate icon on hover:</dt>
+          <dd><input class="basic-switch setting" name="icon_animate_hover" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>Will pause animating GIF/SVG and play them when hovering over any part of the folder</p>
+            <p>SVG will only work if it's set to always animate</p>
+        </blockquote>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Status icon autostart:</dt>
-        <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
+        <dl>
+          <dt>Status icon autostart:</dt>
+          <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p><i class="fa fa-play green-text"></i> The green play icon will show when all docker inside the folder that are set to <strong>autostart</strong> are running</p>
+        </blockquote>
       </div>
 
       <div class="advanced" style="display: none">
-        <dt>Regex:</dt>
-        <dd><input class="setting" name="regex" type="text" /></dd>
+        <dl>
+          <dt>Regex:</dt>
+          <dd><input class="setting" name="regex" type="text" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>Any docker name the regex matches will be added to folder</p>
+            <p>Example for adding pterodactyl egg: \b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b</p>
+        </blockquote>
       </div>
 
       <div id="dialogAddConfig" style="display:none"></div>
