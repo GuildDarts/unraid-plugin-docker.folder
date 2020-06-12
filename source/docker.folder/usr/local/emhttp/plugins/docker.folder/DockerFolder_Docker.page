@@ -11,7 +11,10 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     :root {
     --border-color: #c4c4c4;
     }
-    [class*="docker-folder-child-"] > td{
+    [class*="docker-folder-parent-"] > .updatecolumn {
+        padding: 4px 0px 4px 6px;
+    }
+    [class*="docker-folder-child-"] > td {
         padding-left: 30px !important;
     }
     .docker-folder-child {
@@ -21,19 +24,20 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         float: right;
         transform: translate(-12px, 5px);
         color: #7c7c7c;
-        border: solid;
+        border-style: solid;
+        border-color: var(--border-color);
         border-width: 1px;
         border-radius: 5px;
         padding: 5px;
     }
-    [class*="docker-folder-child-div-"] > tr:first-child{
+    [class*="docker-folder-child-div-"] > tr:first-child {
         border-top: 1px solid var(--border-color);
     }
-    [class*="docker-folder-child-div-"] > tr{
+    [class*="docker-folder-child-div-"] > tr {
         border-bottom: 1px solid var(--border-color);
     }
 
-    .label-tab > .ct-name > div > .outer > .inner{
+    .label-tab > .ct-name > div > .outer > .inner {
         padding-top: 6px;
     }
     .label-tab > .ct-name, .dockerPreview {
@@ -98,13 +102,15 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         border-right: solid;
         border-width: 1px;
         border-color: var(--border-color);
-        padding-right: 15px;
+        padding-right: 6px;
         padding-top: 12px;
         margin-top: -6px;
         margin-bottom: -6px;
+        margin-left: 4px;
     }
     .dockerPreview-no-icon-container li {
         padding-left: 4px;
+        cursor: pointer;
     }
     .dockerPreview-no-icon-container > li > span {
         position: relative;
@@ -123,20 +129,25 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         border-width: 1px;
         border-radius: 5px;
         box-shadow: 10px 0 0px -2px #beddf5 inset;
+        padding: 2px;
     }
     .dockerPreview-icon-container img.img {
         margin-right: 6px;
     }
+    .dockerPreview-icon-container > td:first-child img.img {
+        padding-left: 4px;
+    }
+    .dockerPreview-icon-container .log > img {
+        display: inline-block;
+    }
     .dockerPreview-icon-container td {
         width: auto;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        padding-right: 4px !important;
-        border-right: 1px solid #b9b7b7;
+        padding-right: 6px !important;
         white-space: nowrap;
+        position: relative;
     }
     .dockerPreview-icon-container td:not(:first-child) {
-        padding-left: 4px;
+        padding-left: 6px;
     }
     .dockerPreview-icon-container td:last-child {
         border-right: 0px;
@@ -146,6 +157,14 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         overflow: hidden;
         filter: grayscale(100%);
         opacity: 0.9;
+    }
+
+    .border-right {
+        left: 100%;
+        top: 3px;
+        bottom: 3px;
+        position: absolute;
+        border-right: 1px solid #b9b7b7;
     }
 </style>
 
@@ -406,13 +425,17 @@ function dockerPreview(folderName) {
             break;
 
         case 'icon':
-            dockerPreview.append(`<div class="dockerPreview-icon-container"></div>`)
+            dockerPreview.append(`<div class="dockerPreview-icon-container"></div></div>`)
             var dockerPreviewWidth = dockerPreview.width()
             var widthTotal = 0
-            $(`.docker-folder-child-div-${folderName}`).children().each(function() {
+            var childrenCount = $(`.docker-folder-child-div-${folderName}`).children().length
+            $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
                 if (widthTotal < dockerPreviewWidth) {
                     let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
                         clone.children('.advanced').remove()
+                        if (i+1 < childrenCount) {
+                            clone.append('<div class="border-right">')
+                        }
                     let width = clone.width()
                     widthTotal += width
                 }
