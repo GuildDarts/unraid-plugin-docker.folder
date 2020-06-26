@@ -2,17 +2,23 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.06.12">
+<!ENTITY version   "2020.06.26">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "db81763276244e8bc3702725d8245987">
+<!ENTITY md5       "9c96656cb3af782932baa1fb5316ff1d">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.06.26
+- Added: Advanced context menu (thanks hernandito)
+- Fixed: Folders sometimes not loading
+- Fixed: Log icon not showing in advanced view
+- Fixed: Sort-order getting reset on sort
+
 ###2020.06.12
 - Added: Basic help info
 - Added: Preview log icon
