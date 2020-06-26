@@ -10,13 +10,6 @@ $DockerTemplates = new DockerTemplates();
 $containers      = $DockerClient->getDockerContainers();
 $allInfo         = $DockerTemplates->getAllInfo();
 
-if (file_exists($user_prefs)) {
-    $prefs = parse_ini_file($user_prefs); $sort = [];
-    foreach ($containers as $ct) $sort[] = array_search($ct['Name'],$prefs) ?? 999;
-    array_multisort($sort,SORT_NUMERIC,$containers);
-    unset($sort);
-}
-
 $dockers = [];
 $dockerIds = new stdClass;
 $dockerAutostart = new stdClass;
@@ -31,6 +24,15 @@ foreach ($containers as $ct) {
     $dockerAutostart->$name = $is_autostart;
 
     array_push($dockers, $name);
+}
+
+if (file_exists($user_prefs)) {
+    $prefs = parse_ini_file($user_prefs);
+    foreach ($prefs as $prefKey => &$pref) {
+        if (!strpos($pref, '-folder') && !in_array($pref, $dockers)) {
+            array_splice($prefs, $prefKey, 1);
+        }
+    }
 }
 
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
@@ -312,23 +314,24 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             var folderTemplate = `<tr class="sortable docker-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname ">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td></td><td></td></tr>`
         }
 
-        var dockers = <?= json_encode($dockers) ?>;
+        var prefs = <?= json_encode($prefs) ?>;
+
         var insertIndex = 0
-        // insert at start if not in dockers
-        if (!dockers.includes(`${folderName}-folder`)) {
+        // insert at start if not in prefs
+        if (!prefs.includes(`${folderName}-folder`)) {
             insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
         } else {
-            for (i = 0; i < dockers.length; i++) {
-                if (dockers[i] == `${folderName}-folder`) {
+            for (i = 0; i < prefs.length; i++) {
+                if (prefs[i] == `${folderName}-folder`) {
                     insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
                     break
                 }
-                if (folderChildren.includes(dockers[i])) {
+                if (folderChildren.includes(prefs[i])) {
                     continue
                 }
                 // continue incase folder does not get remove from userprefs (better safe than sorry)
                 let folderNames = Object.keys(folders)
-                if (dockers[i].includes('-folder') && !folderNames.includes(dockers[i].slice(0, -7))) {
+                if (prefs[i].includes('-folder') && !folderNames.includes(prefs[i].slice(0, -7))) {
                     continue
                 }
                 insertIndex++
