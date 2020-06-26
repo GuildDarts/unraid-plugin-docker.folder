@@ -647,6 +647,7 @@ function dockerPreview(folderName) {
                         }
                         if (folders[folderName]['docker_preview_icon_show_log']) {
                             let log = $(this).find('td:last-child > .log').clone(true)
+                                log.children('img').removeClass('basic')
                                 log.children('.advanced').remove()
                             clone.find('.outer > .inner').append(log)
                         }
