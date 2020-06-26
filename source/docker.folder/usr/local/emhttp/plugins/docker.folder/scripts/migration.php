@@ -47,6 +47,9 @@
         if ($folders['foldersVersion'] < 2.5) {
             $folders = migration_6($folders);
         }
+        if ($folders['foldersVersion'] < 2.6) {
+            $folders = migration_7($folders);
+        }
 
         finish($path, $folders, $folders_file, $isImport);
         
@@ -188,6 +191,25 @@
 
             // add docker_preview_hover_only
             $folder['docker_preview_icon_show_log'] = false;
+        }
+
+        return $folders;
+    }
+
+    function migration_7($folders) {
+        echo("migration_7");
+        logger("migration_7");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+
+            // add docker_preview_advanced_context_menu
+            $folder['docker_preview_advanced_context_menu'] = false;
+
+            // add docker_preview_advanced_context_menu_activation_mode
+            $folder['docker_preview_advanced_context_menu_activation_mode'] = 'click';
+
+            // add docker_preview_advanced_context_menu_graph_mode
+            $folder['docker_preview_advanced_context_menu_graph_mode'] = 'none';
         }
 
         return $folders;

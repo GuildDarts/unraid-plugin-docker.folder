@@ -90,6 +90,10 @@
     margin-left: 50%;
     transform: translateX(-30%);
   }
+  .fake-sub-list-item {
+    margin-left: 45px;
+    list-style: circle;
+  }
 </style>
 
 
@@ -213,18 +217,21 @@ function endsWith($haystack, $needle)
                       $('#setting-docker_preview_hover_only').hide()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
+                      $('#setting-docker_preview_advanced_context_menu').hide()
                       break;
 
                     case 'icon':
                       $('#setting-docker_preview_hover_only').show()
                       $('#setting-docker_preview_icon_grayscale').show()
                       $('#setting-docker_preview_icon_show_log').show()
+                      $('#setting-docker_preview_advanced_context_menu').show()
                       break;
 
                     case 'no-icon':
                       $('#setting-docker_preview_hover_only').show()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
+                      $('#setting-docker_preview_advanced_context_menu').show()
                       break;
                   }
                 }
@@ -266,6 +273,65 @@ function endsWith($haystack, $needle)
           </dl>
           <blockquote class="inline_help">
             <p>Will add a little log icon that opens the log menu</p>
+          </blockquote>
+        </div>
+
+        <div id="setting-docker_preview_advanced_context_menu" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Preview advanced context menu:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_advanced_context_menu" type="checkbox" onchange="advancedContext_change(this)"/>
+              <script>
+                function advancedContext_change(e) {
+                  if (typeof e === 'boolean') {
+                    var val = e
+                  } else {
+                    var val = $(e).prop('checked')
+                  }
+
+                  if (val) {
+                    $('#setting-docker_preview_advanced_context_menu_activation_mode').show()
+                    $('#setting-docker_preview_advanced_context_menu_graph_mode').show()
+                  } else {
+                    $('#setting-docker_preview_advanced_context_menu_activation_mode').hide()
+                    $('#setting-docker_preview_advanced_context_menu_graph_mode').hide()
+                  }
+                }
+              </script>
+            </dd>
+          </dl>
+          <blockquote class="inline_help">
+          <p>Adds extra info to the context menu, so you never have to open a folder again :P</p>
+          </blockquote>
+        </div>
+
+        <div id="setting-docker_preview_advanced_context_menu_activation_mode" style="display: none;">
+          <dl>
+            <dt class="fake-list-item fake-sub-list-item">Activation mode:</dt>
+            <dd>
+              <select class="setting" name="docker_preview_advanced_context_menu_activation_mode">
+                <option value="click">Click (Default)</option>
+                <option value="hover">Hover</option>
+              </select>
+            </dd>
+          </dl>
+        </div>
+
+        <div id="setting-docker_preview_advanced_context_menu_graph_mode" style="display: none;">
+          <dl>
+            <dt class="fake-list-item fake-sub-list-item">Graph mode:</dt>
+            <dd>
+              <select class="setting" name="docker_preview_advanced_context_menu_graph_mode">
+                <option value="none">None (Default)</option>
+                <option value="split">Split</option>
+                <option value="combined">Combined</option>
+              </select>
+            </dd>
+          </dl>
+          <blockquote class="inline_help">
+          <p>None: disabels graphs</p>
+          <p>Split: 2 separate graphs</p>
+          <p>Combined: 1 graph</p>
           </blockquote>
         </div>
 
@@ -454,6 +520,19 @@ function endsWith($haystack, $needle)
 
           case "docker_preview_icon_show_log":
             $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_log'])
+            break;
+
+          case "docker_preview_advanced_context_menu":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_advanced_context_menu'])
+            advancedContext_change(folders[editFolderName]['docker_preview_advanced_context_menu'])
+            break;
+
+          case "docker_preview_advanced_context_menu_activation_mode":
+            $(this).val(folders[editFolderName]['docker_preview_advanced_context_menu_activation_mode'])
+            break;
+
+          case "docker_preview_advanced_context_menu_graph_mode":
+            $(this).val(folders[editFolderName]['docker_preview_advanced_context_menu_graph_mode'])
             break;
 
           case "docker_icon_style":

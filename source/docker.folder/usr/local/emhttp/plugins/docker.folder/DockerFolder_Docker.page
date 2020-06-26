@@ -166,8 +166,200 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         position: absolute;
         border-right: 1px solid #b9b7b7;
     }
+
+    .dropdown-menu-advanced {
+        display: grid !important;
+        min-width: 540px;
+        min-height: 275px;
+        padding: 8px;
+        margin: 2px 0 0;
+        background-color: #FFF;
+        font-size: 1.3rem;
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding;
+        background-clip: padding-box;
+        text-align: left;
+
+        grid-template-areas: 'header-name header-info header-info'
+                             'naviagtion info info'
+                             'naviagtion info info'
+                             'extra-info info info';
+    }
+
+    .dropdown-menu-advanced td, .dropdown-menu-advanced th{
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .dropdown-menu-advanced > .header-name th:not(:first-child), .dropdown-menu-advanced > .header td:not(:first-child) {
+        padding-left: 8px;
+    }
+
+    .dropdown-menu-advanced > [class*="header-"] {
+        background-color: #f3f3f3;
+        height: 80px;
+        margin-bottom: 8px;
+    }
+
+    .dropdown-menu-advanced > .header-name {
+        grid-area: header-name;
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px 0px 0px 5px;
+        margin-right: -5px;
+    }
+
+    .dropdown-menu-advanced > .header-info {
+        grid-area: header-info;
+        border-style: solid solid solid none;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 0px 5px 5px 0px;
+        margin-left: 5px;
+    }
+
+    .dropdown-menu-advanced > .header-name > .ct-name {
+        padding-left: 8px;
+        padding-right: 4px;
+        padding-top: 10px;
+    }
+
+    .dropdown-menu-advanced > .header-name > .ct-name > .outer > .inner {
+        padding-top: 5px;
+        padding-left: 2px;
+    }
+
+    .dropdown-menu-advanced > .header-info th {
+        background-color: #CED1D3;
+    }
+
+    .dropdown-menu-advanced > .header-info th:first-child, .dropdown-menu-advanced > .header-info td:first-child {
+        padding-left: 8px;
+    }
+
+    .dropdown-menu-advanced > .header-name .hand > img {
+        height: 58px;
+        width: 58px;
+        margin-right: 4px;
+    }
+
+    .dropdown-menu-advanced > .naviagtion {
+        grid-area: naviagtion;
+        padding-bottom: 8px;
+    }
+
+    .dropdown-menu-advanced > .naviagtion > div {
+        display: inline-block;
+    }
+
+    .dropdown-menu-advanced > .naviagtion li {
+        display: block;
+        padding: 4px;
+    }
+
+    .dropdown-menu-advanced > .naviagtion li > a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .dropdown-menu-advanced > .info {
+        grid-area: info;
+        padding-left: 5px;
+        min-width: inherit;
+    }
+
+    .dropdown-menu-advanced > .info > * {
+        background: #F1F2F4;
+    }
+
+    .dropdown-menu-advanced > .info > div {
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+    }
+
+    .dropdown-menu-advanced > .info .ports {
+        border-bottom-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        padding-bottom: 10px;
+    }
+
+    .dropdown-menu-advanced > .info .mapping > div > :first-child {
+        float: left;
+    }
+
+    .dropdown-menu-advanced > .info .mapping > div > :last-child {
+        display: inline-block;
+    }
+
+    .dropdown-menu-advanced > .info button {
+        font-family: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        margin: 0px;
+        padding: 0px;
+        border: none;
+        color: inherit;
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+    }
+
+    .dropdown-menu-advanced > .info button:active {
+        font-family: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        margin: 0px;
+        padding: 0px;
+        border: none;
+        color: inherit;
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+    }
+
+    .dropdown-menu-advanced > .extra-info {
+        grid-area: extra-info;
+        white-space: nowrap;
+        background-color: #fff6de;
+        border-style: solid;
+        border-color: var(--border-color);
+        border-width: 1px;
+        border-radius: 5px;
+        padding: 8px;
+    }
+
+    .tooltipster-docker-folder {
+        width: initial !important;
+    }
+
+    .tooltipster-docker-folder > .tooltipster-box {
+        border: initial !important;
+        background: initial;
+    }
+
+    .tooltipster-docker-folder > .tooltipster-box > .tooltipster-content {
+        color: initial;
+        padding: initial;
+        overflow: initial;
+    }
 </style>
 
+<script src="/plugins/docker.folder/include/chart/Chart.bundle.min.js"></script>
+<script src="/plugins/docker.folder/include/chart/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="/plugins/docker.folder/include/chart/chartjs-plugin-streaming.min.js"></script>
 <script>
 
 (async () => {
@@ -184,8 +376,6 @@ async function apply_folder(callback) {
         for (const folderName of folderNames) {
             edit_folder_base(folderName)
             edit_folder_extra(folderName)
-            autoStartFolder(folderName)
-            dockerPreview(folderName)
         }
         callback()
     });
@@ -282,11 +472,20 @@ function edit_folder_extra(folderName) {
     }
     $(`.docker-folder-parent-${folderName}`).find('td.updatecolumn').html(updateConf)
 
+    // auto start folder
+    autoStartFolder(folderName)
+
+    // docker preview
+    dockerPreview(folderName)
+
     // icon style
     iconStyle(folderName)
 
     // cpu / memory load 
     cpuMemoryLoad(folderName)
+
+    // advanced context menu
+    advancedContextMenu(folderName)
 }
 
 function childrenDropdown(folderName) {
@@ -320,12 +519,9 @@ function cpuMemoryLoad(folderName) {
     if ($('input.advancedview').prop('checked')) {
         $(`.docker-folder-child-${folderName}`).each(function() {
             cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
-            let memory = $(this).find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
-
-            if (parseInt(memory[1]) > 0) {
-                memoryMax = memory[1]
-                memoryLoad += formatToBytes(memory[0])
-            }
+            let memory = getMemUsage($(this))
+                memoryLoad += memory['load']
+                memoryMax = (memory['max'] != 0) ? memory['max'] : memoryMax
         });
 
         $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
@@ -334,6 +530,15 @@ function cpuMemoryLoad(folderName) {
     }
     
     setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
+}
+
+function getMemUsage(childElement) {
+    let memory = childElement.find("td.advanced > [class*='mem-']").text().match(/(\d*\.?\d*(?:\w+))/g)
+
+    memoryMax = memory[1] || 0
+    memoryLoad = formatToBytes(memory[0]) || 0
+
+    return {load: memoryLoad, max: memoryMax}
 }
 
 function formatToBytes(mem) {
@@ -416,7 +621,7 @@ function dockerPreview(folderName) {
 
                     // add context menu
                     dockerPreview.find(`.dockerPreview-no-icon-container > li.docker-preview-id-${id}`).click(function(e) {
-                        showContextMenu(e, id)
+                        showContextMenu(e, id, folderName)
                     })
                 }
             })
@@ -433,6 +638,10 @@ function dockerPreview(folderName) {
                 if (widthTotal < dockerPreviewWidth) {
                     let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
                         clone.children('.advanced').remove()
+                        let idElement = clone.find('.outer > .hand')
+                        let id = idElement.attr('id')
+                        idElement.removeAttr('id')
+                        idElement.addClass(`docker-preview-id-${id}`)
                         if (i+1 < childrenCount) {
                             clone.append('<div class="border-right">')
                         }
@@ -443,6 +652,11 @@ function dockerPreview(folderName) {
                         }
                     let width = clone.width()
                     widthTotal += width
+
+                    // add context menu
+                    idElement.click(function(e) {
+                        showContextMenu(e, id, folderName)
+                    })
                 }
             })
 
@@ -483,6 +697,257 @@ function iconStyle(folderName) {
 
             $(`.docker-folder-parent-${folderName}`).addClass('label-tab')
             break;
+    }
+}
+
+function advancedContextMenu(folderName) {
+    if (folders[folderName]['docker_preview_advanced_context_menu']) {
+        for (const child of folders[folderName]['children']) {
+            let id = dockerIds[child]
+            const dropdownMenuAdvancedElement = `
+                <div class="dropdown-menu-advanced" id="dropdown-advanced-${id}">
+                    <div class="header-name">
+                    <div class="ct-name">
+                        </div>
+                    </div>
+                    <div class="header-info">
+                        <table style="display: contents; height: 100%; width: 100%; background-color: transparent; margin: 0px;">
+                            <thead>
+                                <tr>
+                                    <th>Version</th>
+                                    <th>CPU/MEM</th>
+                                    <th>Autostart</th>
+                                    <th>Log</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="version"></td>
+                                    <td class="cpu-mem"></td>
+                                    <td class="autostart">
+                                        <input type="checkbox" id="${id}-preview-auto" class="autostart" container="${child}">
+                                    <td class="log"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="naviagtion">
+                        <div class="buttons" style="min-height: 125px;"></div>
+                    </div>
+                    <div class="info">
+                        <button name="graphs">Graphs</button>
+                        <button name="mapping">Mapping</button>
+                        <div style="min-height: 170px; min-width: 100%;">
+                            <div class="graphs">
+                                <div class="chart-combined" style="float: left; position: relative; height: 170px; width: 540px;">
+                                    <canvas></canvas>
+                                </div>
+                                <div class="chart-cpu" style="float: left; position: relative; height: 170px; width: 270px;">
+                                    <canvas></canvas>
+                                </div>
+                                <div class="chart-mem" style="float: left; position: relative; height: 170px; width: 270px;">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+                            <div class="mapping" style="display: none; padding: 10px;">
+                                <div class="network">
+                                    <span class="blue-text" style="padding-right: 20px;">Network: </span>
+                                    <span>NETWORK-TYPE</span>
+                                </div>
+                                <div class="ports">
+                                    <span class="blue-text" style="padding-right: 36px;">Ports: </span>
+                                </div>
+                                <div class="paths" style="padding-top: 10px;">
+                                    <span class="blue-text" style="padding-right: 36px;">Paths: </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extra-info"></div>
+                </div>
+            `
+
+            // header
+            let clone = $(dropdownMenuAdvancedElement).clone(true)
+            let dockerElement = $(`#${id}`).parent().parent().parent().clone(true)       
+
+
+            let ctNameElement = dockerElement.children('.ct-name')
+                let extraInfo = ctNameElement.children('.advanced').remove()
+                ctNameElement.find('.outer > .inner > .appname').css({
+                    'font-size': 'larger',
+                    'font-weight': 'bold'
+                })
+            let dockerVersion = dockerElement.children('.updatecolumn')
+            let dockerCpuMem = dockerElement.children('.advanced')
+                dockerCpuMem.children('br').remove()
+            let dockerAutostart = dockerElement.children(':nth-last-child(2)')
+                dockerAutostart.find('[id*="-wait"]').css({
+                    'display': 'block',
+                    'float': 'initial',
+                    'transform': 'translateX(10px)'
+                })
+            let dockerLog = dockerElement.children(':last-child')
+                dockerLog.find('img').remove()
+                dockerLog.find('div').removeClass('advanced')
+
+            let trBody = clone.find('.header-info > table > tbody > tr')
+                clone.find('.header-name > div').html(ctNameElement.html())
+                trBody.children('td.version').html(dockerVersion.html())
+                trBody.children('td.cpu-mem').html(dockerCpuMem.html())
+                trBody.children('td.log').html(dockerLog.html())
+                trBody.children('td.autostart').append(dockerAutostart.find('[id*="-wait"]'))
+                let autostart = trBody.find(`td.autostart > #${id}-preview-auto`)
+                    autostart.switchButton({labels_placement: 'right', checked: $(`#${id}-auto`).prop('checked')})
+                    autostart.change(function() {
+                        $(`#${id}-auto`).next().click()
+                    })
+
+            // naviagtion
+            let dropdownElement = $(`#dropdown-${id}`).clone(true)
+                dropdownElement.children('.divider').remove()
+                dropdownElement.children().slice(0, 5).wrapAll('<div style="float: left; border-right-style: solid; border-color: var(--border-color); border-width: 1px;"></div>')
+                dropdownElement.children('li').wrapAll('<div style="float: right;"></div>')
+
+            clone.find('.naviagtion > .buttons').html(dropdownElement.html())
+
+            // info
+            let ports = dockerElement.find(':nth-child(4) > :first-child')
+            let network = dockerElement.children(':nth-child(3)').text()
+            let paths = dockerElement.find(':nth-child(5) > :first-child')
+
+            clone.find('.info .ports').append(ports)
+            clone.find('.info .network > span:last-child').text(network)
+            clone.find('.info .paths').append(paths)
+
+            clone.find('.extra-info').html(extraInfo.html())
+
+            // button
+            clone.find('.info > button').click(function() {
+                let name = $(this).attr('name')
+                let div = clone.find('.info > div')
+                if(name === 'graphs') {
+                    div.children('.graphs').show()
+                    div.children('.mapping').hide()
+                } else {
+                    div.children('.graphs').hide()
+                    div.children('.mapping').show()
+                }
+            })
+
+            // settings
+            cpuDataset = {
+                            label: 'CPU',
+                            borderColor: 'rgb(96, 151, 75)',
+                            backgroundColor: 'rgba(181, 210, 171, 0.7)',
+                            borderWidth: 0,
+                            data: []
+                        }
+
+            memDataset = {
+                            label: 'MEM',
+                            borderColor: 'rgb(82, 159, 211)',
+                            backgroundColor: 'rgba(192, 216, 233, 0.7)',
+                            borderWidth: 0,
+                            data: []
+                        }
+
+            switch (folders[folderName]['docker_preview_advanced_context_menu_graph_mode']) {
+                case 'none':
+                    clone.find('.info > button:first-child').hide()
+                    clone.find('.info > div > .graphs').hide()
+                    clone.find('.info > div > .mapping').show()
+                    break;
+
+                case 'split':
+                    clone.find('.info > div > .graphs > .chart-combined').hide()
+                    let cpuChartCtx = clone.find('.info .graphs > .chart-cpu > canvas')[0].getContext('2d');
+                    let memChartCtx = clone.find('.info .graphs > .chart-mem > canvas')[0].getContext('2d');
+                    makeChart(cpuChartCtx, [cpuDataset])
+                    makeChart(memChartCtx, [memDataset])
+                    break;
+
+                case 'combined':
+                    clone.find('.info > div > .graphs > .chart-cpu').hide()
+                    clone.find('.info > div > .graphs > .chart-mem').hide()
+                    let combinedChartCtx = clone.find('.info .graphs > .chart-combined > canvas')[0].getContext('2d');
+                    makeChart(combinedChartCtx, [cpuDataset, memDataset])
+                    break;
+            }
+
+            // charts
+            function makeChart(ctx, datasets) {
+                let cpuChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: datasets
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                type: 'realtime',
+                                realtime: {
+                                    duration: 300000,    // data in the past 20000 ms will be displayed
+                                    refresh: 5000,      // onRefresh callback will be called every 1000 ms
+                                    delay: 500,        // delay of 1000 ms, so upcoming values are known before plotting a line
+                                    pause: false,       // chart is not paused
+                                    ttl: undefined,     // data will be automatically deleted as it disappears off the chart
+                                    onRefresh: function(chart) {
+                                        chart.data.datasets.forEach(function(dataset) {
+                                            if (dataset['label'] === 'CPU') {
+                                                let usage = parseFloat($(`#${id}`).parent().parent().parent().find('.advanced > span:first-child').text())
+                                                dataset.data.push({
+                                                    x: Date.now(),
+                                                    y: usage
+                                                });
+                                            } else {
+                                                let memory = getMemUsage($(`#${id}`).parent().parent().parent())
+                                                let usage = memory['load'] / formatToBytes(memory['max']) * 100
+                                                dataset.data.push({
+                                                    x: Date.now(),
+                                                    y: usage
+                                                });
+                                            }
+                                        });
+                                    }
+                                },
+                                time: {
+                                    tooltipFormat:'dd MMM, yyyy, HH:mm:ss',
+                                    displayFormats: {
+                                        millisecond: 'H:mm:ss.SSS',
+                                        second: 'H:mm:ss',
+                                        minute: 'H:mm',
+                                        hour: 'H',
+                                        day: 'MMM D',
+                                        week: 'll',
+                                        month: 'MMM YYYY',
+                                        quarter: '[Q]Q - YYYY',
+                                        year: 'YYYY'
+                                    },
+                                },
+                                ticks: {
+                                    fontSize: 8
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    fontSize: 8
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+
+            $(`.docker-preview-id-${id}`).tooltipster({
+                interactive: true,
+                theme: ['tooltipster-docker-folder'],
+                content: clone,
+                trigger: folders[folderName]['docker_preview_advanced_context_menu_activation_mode'],
+            });
+        }
     }
 }
 

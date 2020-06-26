@@ -447,16 +447,18 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     }
 
-    function showContextMenu(e, id) {
-        setTimeout(function(){
-            let height = $(`#dropdown-${id}`).height()
-            $(`#dropdown-${id}`).css({
-                position: 'absolute',
-                top: e.pageY + 10,
-                left: e.pageX - 13,
-                display: 'block'
-            })
-        }, 1)
+    function showContextMenu(e, id, folderName) {
+        if (!folders[folderName]['docker_preview_advanced_context_menu']) {
+            setTimeout(function(){
+                let height = $(`#dropdown-${id}`).height()
+                $(`#dropdown-${id}`).css({
+                    position: 'absolute',
+                    top: e.pageY + 25,
+                    left: e.pageX - 13,
+                    display: 'block'
+                })
+            }, 1)
+        }
     }
 
     function addSubMenu(e, id) {
@@ -484,7 +486,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         })
     }
 
-    $('body').click(function() {
+    $('body > #template').click(function() {
         removeSubMenu()
     })
 
