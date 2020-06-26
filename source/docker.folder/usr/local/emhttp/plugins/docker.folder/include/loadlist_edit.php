@@ -20,11 +20,12 @@
                 names += nam + "-folder" + ';'
                 index += parseInt(ind + indexPlusNr) + ';'
                 var loopPlusNr = 0
-                for (const [i, folder] of folders[folderName]['children'].entries()) {
-                    names += folder + ";"
+                $('.docker-folder-child-' + folderName).each(function(i) {
+                    let childName = $(this).find('.appname').text()
+                    names += childName + ";"
                     index += parseInt(ind + indexPlusNr + i + 1) + ';'
                     loopPlusNr++
-                }
+                })
                 indexPlusNr = indexPlusNr + loopPlusNr
                 return
             }
