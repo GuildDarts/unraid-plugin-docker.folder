@@ -244,7 +244,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         padding-left: 8px;
     }
 
-    .dropdown-menu-advanced > .header-name .hand > img {
+    .dropdown-menu-advanced > .header-name span > img {
         height: 58px;
         width: 58px;
         margin-right: 4px;
@@ -778,6 +778,7 @@ function advancedContextMenu(folderName) {
 
             let ctNameElement = dockerElement.children('.ct-name')
                 let extraInfo = ctNameElement.children('.advanced').remove()
+                ctNameElement.find('.outer > .hand').removeAttr('id class')
                 ctNameElement.find('.outer > .inner > .appname').css({
                     'font-size': 'larger',
                     'font-weight': 'bold'
