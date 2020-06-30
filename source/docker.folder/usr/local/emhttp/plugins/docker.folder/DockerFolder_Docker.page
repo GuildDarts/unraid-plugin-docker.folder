@@ -692,7 +692,7 @@ function iconStyle(folderName) {
     switch (folders[folderName]['docker_icon_style']) {
         case 'label-tab':
             // blue text / bigger text size
-            $(`.docker-folder-parent-${folderName}`).find('.appname').addClass('blue-text').css({
+            $(`.docker-folder-parent-${folderName}`).find('.ct-name .appname').addClass('blue-text').css({
                 'font-size': 'larger',
                 'font-weight': 'bold'
             })
