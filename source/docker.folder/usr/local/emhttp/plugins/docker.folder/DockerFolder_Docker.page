@@ -3,6 +3,7 @@ Icon="server"
 ---
 <?php
 require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/listview_edit.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.php");
 ?>
@@ -703,6 +704,8 @@ function iconStyle(folderName) {
 
 function advancedContextMenu(folderName) {
     if (folders[folderName]['docker_preview_advanced_context_menu']) {
+        listview_edit()
+        $.post('/plugins/dynamix.docker.manager/include/UpdateConfig.php', {action:'docker_load_start'});
         for (const child of folders[folderName]['children']) {
             let id = dockerIds[child]
             const dropdownMenuAdvancedElement = `
