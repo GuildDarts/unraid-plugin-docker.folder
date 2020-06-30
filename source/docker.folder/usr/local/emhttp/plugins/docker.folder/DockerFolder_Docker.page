@@ -648,7 +648,7 @@ function dockerPreview(folderName) {
                         }
                         if (folders[folderName]['docker_preview_icon_show_log']) {
                             let log = $(this).find('td:last-child > .log').clone(true)
-                                log.children('img').removeClass('basic')
+                                log.children('img').removeClass('basic').removeAttr('style')
                                 log.children('.advanced').remove()
                             clone.find('.outer > .inner').append(log)
                         }
@@ -783,6 +783,7 @@ function advancedContextMenu(folderName) {
                     'font-weight': 'bold'
                 })
             let dockerVersion = dockerElement.children('.updatecolumn')
+                dockerVersion.children('.advanced').removeClass('advanced')
             let dockerCpuMem = dockerElement.children('.advanced')
                 dockerCpuMem.children('br').remove()
             let dockerAutostart = dockerElement.children(':nth-last-child(2)')
