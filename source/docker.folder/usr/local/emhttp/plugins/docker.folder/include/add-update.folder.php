@@ -223,6 +223,7 @@ function endsWith($haystack, $needle)
                   switch (val) {
                     case 'none':
                       $('#setting-docker_preview_hover_only').hide()
+                      $('#setting-docker_preview_text_update_color').hide()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
                       $('#setting-docker_preview_advanced_context_menu').hide()
@@ -230,6 +231,7 @@ function endsWith($haystack, $needle)
 
                     case 'icon':
                       $('#setting-docker_preview_hover_only').show()
+                      $('#setting-docker_preview_text_update_color').show()
                       $('#setting-docker_preview_icon_grayscale').show()
                       $('#setting-docker_preview_icon_show_log').show()
                       $('#setting-docker_preview_advanced_context_menu').show()
@@ -237,6 +239,7 @@ function endsWith($haystack, $needle)
 
                     case 'no-icon':
                       $('#setting-docker_preview_hover_only').show()
+                      $('#setting-docker_preview_text_update_color').show()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
                       $('#setting-docker_preview_advanced_context_menu').show()
@@ -258,7 +261,16 @@ function endsWith($haystack, $needle)
           <blockquote class="inline_help">
             <p>Will make the preview only show when mouse is hovering over</p>
           </blockquote>
-          </div>
+        </div>
+
+        <div id="setting-docker_preview_text_update_color" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Make text orange on update:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_text_update_color" type="checkbox" checked/>
+            </dd>
+          </dl>
+        </div>
 
         <div id="setting-docker_preview_icon_grayscale" style="display: none;">
           <dl>
@@ -520,6 +532,10 @@ function endsWith($haystack, $needle)
 
           case "docker_preview_hover_only":
             $(this).prop('checked', folders[editFolderName]['docker_preview_hover_only'])
+            break;
+
+          case "docker_preview_text_update_color":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_text_update_color'])
             break;
 
           case "docker_preview_icon_grayscale":

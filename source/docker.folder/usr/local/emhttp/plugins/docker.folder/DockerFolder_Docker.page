@@ -605,8 +605,12 @@ function dockerPreview(folderName) {
                     let id = $(this).find('.hand').attr('id')
 
                     let row = ((2+i) % 2 == 0) ? 1 : 2
-                    dockerPreview.find('.dockerPreview-no-icon-container').append(`<li class="docker-preview-id-${id}"><span>${child}</span></li>`)
+                    let element = $(`<li class="docker-preview-id-${id}"><span>${child}</span></li>`)
+                    dockerPreview.find('.dockerPreview-no-icon-container').append(element)
                     dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
+
+                    // make text orange on update
+                    updateText(folderName, id, element, 'no-icon')
 
                     // add context menu
                     dockerPreview.find(`.dockerPreview-no-icon-container > li.docker-preview-id-${id}`).click(function(e) {
@@ -646,6 +650,9 @@ function dockerPreview(folderName) {
                     clone.prev().children('.outer').append('<div class="border-right">')
                 }
 
+                // make text orange on update
+                updateText(folderName, id, clone, 'icon')
+
                 // add context menu
                 idElement.click(function(e) {
                     showContextMenu(e, id, folderName)
@@ -674,6 +681,32 @@ function dockerPreview(folderName) {
                     })
                 }
             );
+        }
+    }
+
+    function updateText(folderName, id, element, type) {
+        if (folders[folderName]['docker_preview_text_update_color']) {
+            waitForGlobal('docker', function() {
+                for (const dock of docker) {
+                    if (id === dock['id']) {
+                        if (dock['update'] === 1) {
+                            if (type === 'icon') {
+                                let appname = element.find('.outer > .inner > .appname')
+                                let appnameChild = appname.children('a')
+
+                                if (appnameChild.length > 0) {
+                                    appnameChild.addClass('orange-text')
+                                } else {
+                                    appname.addClass('orange-text')
+                                }
+                            } else {
+                                element.children('span').addClass('orange-text')
+                            }
+                            break
+                        }
+                    }
+                }
+            })
         }
     }
 }
