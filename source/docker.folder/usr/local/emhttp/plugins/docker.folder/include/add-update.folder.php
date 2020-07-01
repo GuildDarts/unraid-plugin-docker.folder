@@ -22,6 +22,14 @@
     line-height: initial;
   }
 
+  .info > span:last-child {
+    display: inline-block;
+    max-width: 330px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .docker_img, .folder_img {
     float: left;
     width: 48px;
@@ -576,7 +584,7 @@ function endsWith($haystack, $needle)
     // add what folder a docker is in
     $('#dockers > .containers').children().each(function() {
       let name = $(this).find('.info > span:last-child > strong').text()
-      $(this).find('.info > span:last-child').css('display', 'inline-block').append(`<br><span class="current-folder">Folder: None</span>`)
+      $(this).find('.info > span:last-child').append(`<br><span class="current-folder">Folder: None</span>`)
       mainLoop:
       for (const folderName of folderNames) {
         let folderChildren = folders[folderName]['children']
