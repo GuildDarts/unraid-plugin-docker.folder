@@ -624,30 +624,32 @@ function dockerPreview(folderName) {
             var widthTotal = 0
             var childrenCount = $(`.docker-folder-child-div-${folderName}`).children().length
             $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
-                if (widthTotal < dockerPreviewWidth) {
-                    let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
-                        clone.children('.advanced').remove()
-                        let idElement = clone.find('.outer > .hand')
-                        let id = idElement.attr('id')
-                        idElement.removeAttr('id')
-                        idElement.addClass(`docker-preview-id-${id}`)
-                        if (i+1 < childrenCount) {
-                            clone.append('<div class="border-right">')
-                        }
-                        if (folders[folderName]['docker_preview_icon_show_log']) {
-                            let log = $(this).find('td:last-child > .log').clone(true)
-                                log.children('img').removeClass('basic').removeAttr('style')
-                                log.children('.advanced').remove()
-                            clone.find('.outer > .inner').append(log)
-                        }
-                    let width = clone.width()
-                    widthTotal += width
+                let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
+                    clone.children('.advanced').remove()
+                    let idElement = clone.find('.outer > .hand')
+                    let id = idElement.attr('id')
+                    idElement.removeAttr('id')
+                    idElement.addClass(`docker-preview-id-${id}`)
+                    if (folders[folderName]['docker_preview_icon_show_log']) {
+                        let log = $(this).find('td:last-child > .log').clone(true)
+                            log.children('img').removeClass('basic').removeAttr('style')
+                            log.children('.advanced').remove()
+                        clone.find('.outer > .inner').append(log)
+                    }
+                let width = clone.width()
+                widthTotal += width
 
-                    // add context menu
-                    idElement.click(function(e) {
-                        showContextMenu(e, id, folderName)
-                    })
+                if (widthTotal >= dockerPreviewWidth) {
+                    clone.remove()
+                    return false
+                } else {
+                    clone.prev().children('.outer').append('<div class="border-right">')
                 }
+
+                // add context menu
+                idElement.click(function(e) {
+                    showContextMenu(e, id, folderName)
+                })
             })
 
             // grayscale
