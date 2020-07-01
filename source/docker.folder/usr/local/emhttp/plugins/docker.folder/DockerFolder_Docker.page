@@ -801,7 +801,7 @@ function advancedContextMenu(folderName) {
 
             let ctNameElement = dockerElement.children('.ct-name')
                 let extraInfo = ctNameElement.children('.advanced').remove()
-                ctNameElement.find('.outer > .hand').removeAttr('id class')
+                ctNameElement.find('.outer > .hand').removeAttr('class').attr('id', `advanced-context-${id}`)
                 ctNameElement.find('.outer > .inner > .appname').css({
                     'font-size': 'larger',
                     'font-weight': 'bold'
