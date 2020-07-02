@@ -33,6 +33,8 @@ if (file_exists($user_prefs)) {
             array_splice($prefs, $prefKey, 1);
         }
     }
+} else {	
+    $prefs = json_encode([]);	
 }
 
 echo "<script>var dockerIds = " . json_encode($dockerIds) . ';</script>';
