@@ -2,29 +2,32 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.07.01">
+<!ENTITY version   "2020.07.02">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "71dcd5b2ec5f4c32a3768d457c14bda4">
+<!ENTITY md5       "9c5e95de8155da84188e920644a2a97f">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.07.02
+- Fixed: Not loading if no prefs (again)
+
 ###2020.07.01
-- Added: preview update text
+- Added: Preview update text
 - Change: Click folder name to edit folder
-- Fixed: not getting data in basic view
-- Fixed: label-tab making preview bold
-- Fixed: items not showing in advanced/basic view
+- Fixed: Not getting data in basic view
+- Fixed: Label-tab making preview bold
+- Fixed: Items not showing in advanced/basic view
 - Fixed: Prevent opeing default context menu in advanced
 - Fixed: Advanced context style fixes
-- Fixed: preview icon causing horizontal scroll
-- Fixed: folder page text overflow
-- Fixed: preview/advanced context status not animating
-- Fixed: renaming folder reseting sort order
+- Fixed: Preview icon causing horizontal scroll
+- Fixed: Folder page text overflow
+- Fixed: Preview/advanced context status not animating
+- Fixed: Renaming folder reseting sort order
 
 ###2020.06.26a
 - Fixed: Folders not respecting sort-order
