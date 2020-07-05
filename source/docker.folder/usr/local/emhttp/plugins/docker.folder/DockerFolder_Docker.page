@@ -140,6 +140,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     }
     .dockerPreview-icon-container .log > img {
         display: inline-block;
+        padding-left: 3px;
     }
     .dockerPreview-icon-container td {
         width: auto;
