@@ -2,17 +2,24 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.07.02">
+<!ENTITY version   "2020.07.05">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "9c5e95de8155da84188e920644a2a97f">
+<!ENTITY md5       "dc7662b7d11f7b718d6a8635d1b79aad">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.07.05
+- Change: Improve chart performance a bit
+- Change: Make advanced context feel like default context
+- Change: Added padding to preview log icon
+- Fixed: Mapping tab only showing 2 ports and paths
+- Fixed: expanding folder shifting EVERYTHING (thanks bambi73)
+
 ###2020.07.02
 - Fixed: Not loading if no prefs (again)
 
