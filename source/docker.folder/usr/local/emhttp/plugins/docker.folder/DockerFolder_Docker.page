@@ -293,12 +293,16 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         padding-bottom: 10px;
     }
 
+    .dropdown-menu-advanced > .info .mapping > div {
+        display: flex;
+    }
+
     .dropdown-menu-advanced > .info .mapping > div > :first-child {
         float: left;
     }
 
     .dropdown-menu-advanced > .info .mapping > div > :last-child {
-        display: inline-block;
+        display: table;
     }
 
     .dropdown-menu-advanced > .info button {
@@ -764,7 +768,7 @@ function advancedContextMenu(folderName) {
                     <div class="info">
                         <button name="graphs">Graphs</button>
                         <button name="mapping">Mapping</button>
-                        <div style="min-height: 176px; min-width: 100%;">
+                        <div style="min-height: 176px; min-width: 100%; max-width: 540px;">
                             <div class="graphs">
                                 <div class="chart-combined" style="float: left; position: relative; height: 170px; width: 540px;">
                                     <canvas></canvas>
@@ -776,9 +780,9 @@ function advancedContextMenu(folderName) {
                                     <canvas></canvas>
                                 </div>
                             </div>
-                            <div class="mapping" style="display: none; padding: 10px;">
+                            <div class="mapping" style="display: none; padding: 10px; max-height: 150px; overflow-y: auto;">
                                 <div class="network">
-                                    <span class="blue-text" style="padding-right: 20px;">Network: </span>
+                                    <span class="blue-text" style="padding-right: 18px;">Network: </span>
                                     <span>NETWORK-TYPE</span>
                                 </div>
                                 <div class="ports">
@@ -841,9 +845,9 @@ function advancedContextMenu(folderName) {
             clone.find('.naviagtion > .buttons').html(dropdownElement.html())
 
             // info
-            let ports = dockerElement.find(':nth-child(4) > :first-child')
+            let ports = dockerElement.find(':nth-child(4) > :first-child').removeAttr('class')
             let network = dockerElement.children(':nth-child(3)').text()
-            let paths = dockerElement.find(':nth-child(5) > :first-child')
+            let paths = dockerElement.find(':nth-child(5) > :first-child').removeAttr('class')
 
             clone.find('.info .ports').append(ports)
             clone.find('.info .network > span:last-child').text(network)
