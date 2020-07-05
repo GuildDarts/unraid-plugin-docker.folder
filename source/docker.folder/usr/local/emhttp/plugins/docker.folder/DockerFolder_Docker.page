@@ -922,6 +922,7 @@ function advancedContextMenu(folderName) {
                             data: []
                         }
 
+            let charts = []
             switch (folders[folderName]['docker_preview_advanced_context_menu_graph_mode']) {
                 case 'none':
                     clone.find('.info > button:first-child').hide()
@@ -933,26 +934,33 @@ function advancedContextMenu(folderName) {
                     clone.find('.info > div > .graphs > .chart-combined').hide()
                     let cpuChartCtx = clone.find('.info .graphs > .chart-cpu > canvas')[0].getContext('2d');
                     let memChartCtx = clone.find('.info .graphs > .chart-mem > canvas')[0].getContext('2d');
-                    makeChart(cpuChartCtx, [cpuDataset])
-                    makeChart(memChartCtx, [memDataset])
+                    let cpuChart = makeChart(cpuChartCtx, [cpuDataset])
+                    let memChart = makeChart(memChartCtx, [memDataset])
+                    charts.push(cpuChart, memChart)
                     break;
 
                 case 'combined':
                     clone.find('.info > div > .graphs > .chart-cpu').hide()
                     clone.find('.info > div > .graphs > .chart-mem').hide()
                     let combinedChartCtx = clone.find('.info .graphs > .chart-combined > canvas')[0].getContext('2d');
-                    makeChart(combinedChartCtx, [cpuDataset, memDataset])
+                    let combinedChart = makeChart(combinedChartCtx, [cpuDataset, memDataset])
+                    charts.push(combinedChart)
                     break;
             }
 
             // charts
             function makeChart(ctx, datasets) {
-                let cpuChart = new Chart(ctx, {
+                let chart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         datasets: datasets
                     },
                     options: {
+                        plugins: {
+                            streaming: {
+                                frameRate: 1
+                            }
+                        },
                         maintainAspectRatio: false,
                         scales: {
                             xAxes: [{
@@ -1009,6 +1017,7 @@ function advancedContextMenu(folderName) {
                         }
                     }
                 });
+                return chart
             }
 
             $(`.docker-preview-id-${id}`).tooltipster({
@@ -1016,7 +1025,19 @@ function advancedContextMenu(folderName) {
                 theme: ['tooltipster-docker-folder'],
                 content: clone,
                 trigger: folders[folderName]['docker_preview_advanced_context_menu_activation_mode'],
-                zIndex: 90000
+                zIndex: 90000,
+                functionBefore: function() {
+                    for (const chart of charts) {
+                        chart.options.plugins.streaming.frameRate = 30
+                        chart.update();
+                    }
+                },
+                functionAfter: function() {
+                    for (const chart of charts) {
+                        chart.options.plugins.streaming.frameRate = 1
+                        chart.update();
+                    }
+                }
             });
         }
     }
