@@ -15,7 +15,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
     [class*="docker-folder-parent-"] > .updatecolumn {
         padding: 4px 0px 4px 6px;
     }
-    [class*="docker-folder-child-"] > td {
+    [class*="docker-folder-child-"] > td:first-child {
         padding-left: 30px !important;
     }
     .docker-folder-child {
