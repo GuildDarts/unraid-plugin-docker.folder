@@ -192,6 +192,39 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
                              'extra-info info info';
     }
 
+    .dropdown-menu-advanced > .naviagtion a {
+        display:block;
+    }
+
+    .dropdown-menu-advanced > .naviagtion li > a:hover, .dropdown-menu-advanced > .naviagtion li > a:focus {
+        color:#333;
+        text-decoration:none;
+        background-color:#0088cc;
+        background-color:#0081c2;
+        background-image:-moz-linear-gradient(top, #e1e1e1, #0077b3);
+        background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+        background-image:-webkit-linear-gradient(top, #0088cc, #0077b3);
+        background-image:-o-linear-gradient(top, #e1e1e1, #0077b3);
+        background-image:linear-gradient(to bottom, #e6e6e6, #e9e9e9);
+        background-repeat:repeat-x;
+        filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+    }
+
+    .dropdown-menu-advanced > .naviagtion .active > a, .dropdown-menu-advanced > .naviagtion .active > a:hover {
+        color:#ffffff;
+        text-decoration:none;
+        background-color:#0088cc;
+        background-color:#0081c2;
+        background-image:linear-gradient(to bottom, #0088cc, #0077b3);
+        background-image:-moz-linear-gradient(top, #0088cc, #0077b3);
+        background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+        background-image:-webkit-linear-gradient(top, #0088cc, #0077b3);
+        background-image:-o-linear-gradient(top, #0088cc, #0077b3);
+        background-repeat:repeat-x;
+        outline:0;
+        filter:progid:dximagetransform.microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+    }
+
     .dropdown-menu-advanced td, .dropdown-menu-advanced th{
         width: 1%;
         white-space: nowrap;
@@ -843,6 +876,10 @@ function advancedContextMenu(folderName) {
                 dropdownElement.children('li').wrapAll('<div style="float: right;"></div>')
 
             clone.find('.naviagtion > .buttons').html(dropdownElement.html())
+            // close tooltip on button click
+            clone.find('.naviagtion > .buttons > div > li > a').click(function() {
+                $(`.docker-preview-id-${id}`).tooltipster('close')
+            })
 
             // info
             let ports = dockerElement.find(':nth-child(4) > :first-child').removeAttr('class')
@@ -979,6 +1016,7 @@ function advancedContextMenu(folderName) {
                 theme: ['tooltipster-docker-folder'],
                 content: clone,
                 trigger: folders[folderName]['docker_preview_advanced_context_menu_activation_mode'],
+                zIndex: 90000
             });
         }
     }
