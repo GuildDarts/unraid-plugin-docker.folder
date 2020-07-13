@@ -59,7 +59,7 @@
   #icon-upload-preview {
     height: 44px;
     width: 44px;
-    left: -44px;
+    left: -48px;
     position: relative;
     cursor: pointer;
   }

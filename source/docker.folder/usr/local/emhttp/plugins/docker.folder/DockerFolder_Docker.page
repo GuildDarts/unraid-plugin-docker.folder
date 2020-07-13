@@ -197,7 +197,7 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         display:block;
     }
 
-    .dropdown-menu-advanced > .naviagtion li > a:hover, .dropdown-menu-advanced > .naviagtion li > a:focus {
+    .dropdown-menu-advanced > .naviagtion li:hover, .dropdown-menu-advanced > .naviagtion li:focus {
         color:#333;
         text-decoration:none;
         background-color:#0088cc;
@@ -366,10 +366,6 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
         border-width: 1px;
         border-radius: 5px;
         padding: 8px;
-    }
-
-    .tooltipster-docker-folder {
-        width: initial !important;
     }
 
     .tooltipster-docker-folder > .tooltipster-box {
