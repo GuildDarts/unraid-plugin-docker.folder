@@ -1,6 +1,6 @@
 <script>
-$(function() {
-    var remove_fix = `
+(function() {
+    let remove_fix = `
     var folderNames = Object.keys(folders)
 
     if (params['container'] && (params['action'] == 'remove_container' || params['action'] == 'remove_all') ) {
@@ -27,35 +27,22 @@ $(function() {
     `
 
 
-    var ec = eventControl.toString()
-
-    var args = ec.slice(ec.indexOf("(") + 1, ec.indexOf(")"))
+    let ec = eventControl.toString()
+    let args = ec.slice(ec.indexOf("(") + 1, ec.indexOf(")"))
     ec = ec.slice(ec.indexOf("{") + 1, ec.lastIndexOf("}"))
 
-    var str = "console.log('action: '+params['action']+' container: '+params['container']);"
-    var position = 1
+    let position = 1
     ec_final = ec.substring(0, position) + remove_fix + ec.substring(position);
 
 
 
     // fix status icon not animating in preview/advanced context
-    let dataArray = ec_final.split('\n'); // convert file data in an array
-    const searchKeyword = "$('#'+params['container'])";
-    let lastIndex = -1; // lets say, we have not found the keyword
+    let ec_array = ec_final.split('\n')
 
-    for (let index = 0; index < dataArray.length; index++) {
-        if (dataArray[index].includes(searchKeyword)) { // check if a line contains the 'searchKeyword' keyword
-            lastIndex = index;
-            break;
-        }
-    }
+    ec_array = searchArrayAndReplace("$('#'+params['container'])", ec_array, animating_fix)
 
-    if (lastIndex !== -1) {
-        dataArray.splice(lastIndex, 1, animating_fix);
-    }
-
-    ec_final = dataArray.join('\n')
+    ec_final = ec_array.join('\n')
 
     eventControl = new Function(args, ec_final + "\n")
-})
+})()
 </script>

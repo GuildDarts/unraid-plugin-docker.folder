@@ -612,4 +612,21 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             }, 100);
         }
     };
+    
+    function searchArrayAndReplace(searchKeyword, dataArray, replace) {
+        let lastIndex = -1
+
+        for (let index = 0; index < dataArray.length; index++) {
+            if (dataArray[index].includes(searchKeyword)) {
+                lastIndex = index
+                break
+            }
+        }
+
+        if (lastIndex !== -1) {
+            dataArray.splice(lastIndex, 1, replace);
+        }
+
+        return dataArray
+    }
 </script>
