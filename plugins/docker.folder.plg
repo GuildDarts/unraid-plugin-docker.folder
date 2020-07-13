@@ -2,17 +2,21 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.07.05">
+<!ENTITY version   "2020.07.13">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "dc7662b7d11f7b718d6a8635d1b79aad">
+<!ENTITY md5       "70a06829e052b52412643ddb0a662d9a">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+#2020.07.13
+- Change: A few small style tweaks
+- Change: Cleanup edit functions a bit
+
 ###2020.07.05
 - Change: Improve chart performance a bit
 - Change: Make advanced context feel like default context
