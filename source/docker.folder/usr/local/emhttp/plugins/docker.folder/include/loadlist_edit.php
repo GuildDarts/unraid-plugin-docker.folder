@@ -1,6 +1,5 @@
 <script>
-(function() {
-    let userperfs_fix = `
+const userperfs_fix = `
     var indexPlusNr = 0;
     // fix for moving expanded docker thats in index 0 (should fix this by attaching children to parent docker)
     if ($(row).attr('class').includes('docker-folder-child-')) {
@@ -35,8 +34,9 @@
         names += nam + ';'
         index += parseInt(ind + indexPlusNr) + ';'
     });
-    `
+    `;
 
+(function() {
     let ls = loadlist.toString()
 
     let args = ls.slice(ls.indexOf("(") + 1, ls.indexOf(")"))
@@ -65,14 +65,12 @@
     ls = ls_array.join('\n')
 
     loadlist = new Function(args, ls + "\n")
-
-
-
-    function loadlistUpdate(e,ui) {
-        var row = $('#docker_list').find('tr:first');
-        var names = ''; var index = '';
-        eval(userperfs_fix)
-        $.post('/plugins/dynamix.docker.manager/include/UserPrefs.php',{names:names,index:index});
-    }
 })()
+
+function loadlistUpdate(e,ui) {
+    var row = $('#docker_list').find('tr:first');
+    var names = ''; var index = '';
+    eval(userperfs_fix)
+    $.post('/plugins/dynamix.docker.manager/include/UserPrefs.php',{names:names,index:index});
+}
 </script>
