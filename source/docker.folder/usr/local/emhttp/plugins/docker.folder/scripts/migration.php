@@ -53,6 +53,9 @@
         if ($folders['foldersVersion'] < 2.7) {
             $folders = migration_8($folders);
         }
+        if ($folders['foldersVersion'] < 2.8) {
+            $folders = migration_9($folders);
+        }
 
         finish($path, $folders, $folders_file, $isImport);
         
@@ -226,6 +229,19 @@
 
             // add docker_preview_text_update_color
             $folder['docker_preview_text_update_color'] = false;
+        }
+
+        return $folders;
+    }
+
+    function migration_9($folders) {
+        echo("migration_9");
+        logger("migration_9");
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion') {continue;};
+
+            // add docker_preview_icon_show_webui
+            $folder['docker_preview_icon_show_webui'] = false;
         }
 
         return $folders;

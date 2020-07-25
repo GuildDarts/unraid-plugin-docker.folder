@@ -226,6 +226,7 @@ function endsWith($haystack, $needle)
                       $('#setting-docker_preview_text_update_color').hide()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
+                      $('#setting-docker_preview_icon_show_webui').hide()
                       $('#setting-docker_preview_advanced_context_menu').hide()
                       break;
 
@@ -234,6 +235,7 @@ function endsWith($haystack, $needle)
                       $('#setting-docker_preview_text_update_color').show()
                       $('#setting-docker_preview_icon_grayscale').show()
                       $('#setting-docker_preview_icon_show_log').show()
+                      $('#setting-docker_preview_icon_show_webui').show()
                       $('#setting-docker_preview_advanced_context_menu').show()
                       break;
 
@@ -242,6 +244,7 @@ function endsWith($haystack, $needle)
                       $('#setting-docker_preview_text_update_color').show()
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
+                      $('#setting-docker_preview_icon_show_webui').hide()
                       $('#setting-docker_preview_advanced_context_menu').show()
                       break;
                   }
@@ -293,6 +296,18 @@ function endsWith($haystack, $needle)
           </dl>
           <blockquote class="inline_help">
             <p>Will add a little log icon that opens the log menu</p>
+          </blockquote>
+        </div>
+
+        <div id="setting-docker_preview_icon_show_webui" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Add show webUI icon:</dt>
+            <dd>
+              <input class="basic-switch setting" name="docker_preview_icon_show_webui" type="checkbox" checked/>
+            </dd>
+          </dl>
+          <blockquote class="inline_help">
+            <p>Will add a little globe icon that opens the webUI</p>
           </blockquote>
         </div>
 
@@ -544,6 +559,10 @@ function endsWith($haystack, $needle)
 
           case "docker_preview_icon_show_log":
             $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_log'])
+            break;
+
+          case "docker_preview_icon_show_webui":
+            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_webui'])
             break;
 
           case "docker_preview_advanced_context_menu":

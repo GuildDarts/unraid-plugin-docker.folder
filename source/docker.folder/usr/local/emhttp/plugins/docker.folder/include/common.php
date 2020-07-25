@@ -278,15 +278,6 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
             }
 
             return url
-
-            function getDockerWebUI(docker) {
-                let id = dockerIds[docker]
-                let href = $(`#dropdown-${id}`).find('li:first-child > a').attr('href')
-                
-                if (href !== '#') {
-                    return href
-                }
-            }
         }
 
     }
@@ -412,6 +403,15 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
 
         $(`${selector} > ${selectorType}:nth-child(${i})`).after($(template));
+    }
+
+    function getDockerWebUI(docker) {
+        let id = dockerIds[docker]
+        let href = $(`#dropdown-${id}`).find('li:first-child > a').attr('href')
+        
+        if (href !== '#') {
+            return href
+        }
     }
 
     function dockerDefaultCmd(folderName, action) {

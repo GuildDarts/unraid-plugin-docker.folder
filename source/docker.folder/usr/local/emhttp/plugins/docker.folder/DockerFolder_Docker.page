@@ -664,6 +664,7 @@ function dockerPreview(folderName) {
             $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
                 let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
                     clone.children('.advanced').remove()
+                    let name = clone.find('.outer > .inner > .appname').text()
                     let idElement = clone.find('.outer > .hand')
                     let id = idElement.attr('id')
                     idElement.removeAttr('id')
@@ -673,6 +674,10 @@ function dockerPreview(folderName) {
                             log.children('img').removeClass('basic').removeAttr('style')
                             log.children('.advanced').remove()
                         clone.find('.outer > .inner').append(log)
+                    }
+                    if (folders[folderName]['docker_preview_icon_show_webui']) {
+                        let webui = getDockerWebUI(name)
+                        clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
                     }
                 let width = clone.width()
                 widthTotal += width
