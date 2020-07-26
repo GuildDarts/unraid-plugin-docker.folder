@@ -691,7 +691,9 @@ function dockerPreview(folderName) {
                     }
                     if (folders[folderName]['docker_preview_icon_show_webui']) {
                         let webui = getDockerWebUI(name)
-                        clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
+                        if (webui) {
+                            clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
+                        }
                     }
                 let width = clone.width()
                 widthTotal += width
