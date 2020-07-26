@@ -112,6 +112,7 @@ require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerCli
 
 require_once("/usr/local/emhttp/plugins/docker.folder/include/popup.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/import-export.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/global-settings.php");
 
 function searchArray($array, $key, $value)
 {
@@ -176,6 +177,7 @@ function endsWith($haystack, $needle)
 
 ?>
 <div id="docker_tabbed" style="float:right;margin-top:-55px"></div>
+<div id="docker_menus" style="display:flex;float:right;margin-top:-37px"></div>
 <div>
   <form id="form" onsubmit="return false">
     <dl style="padding-left: 12px;">
@@ -503,7 +505,8 @@ function endsWith($haystack, $needle)
   init()
 
   async function init() {
-    folders = await read_folders()
+    dockerFolders = await read_folders()
+    folders = await dockerFolders['folders']
     let folderNames = Object.keys(await folders)
 
     $('.settingC').each(function() {
@@ -860,6 +863,9 @@ function endsWith($haystack, $needle)
     });
   });
 
-  // import - export
-  importExport()
+  // add import - export & global settings buttons
+  $('#docker_menus').append(`
+    <div id='global-settings'><button type='button' onclick='globalSettingsPopup()'>Global Settings</button></div>
+    <div id='import-export'><button type='button' onclick='importExportPopup()'>Import/Export</button></div>
+    `)
 </script>

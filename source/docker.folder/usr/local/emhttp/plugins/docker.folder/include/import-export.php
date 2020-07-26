@@ -1,9 +1,7 @@
 <?php
 $foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/folders.json");
-$folders = json_decode($foldersRaw, true);
-
-// remove foldersVersion
-unset($folders['foldersVersion']);
+$dockerFolders = json_decode($foldersRaw, true);
+$folders = $dockerFolders['folders'];
 
 $foldersSettings = "<div class='folders'>";
 
@@ -139,12 +137,6 @@ $foldersSettings .= "</div>";
     console.log(await exportFolders)
 
     download(name, await exportFolders);
-  }
-
-
-
-  function importExport() {
-    $("#docker_tabbed").append(`<div id='import-export'><button type='button' onclick='importExportPopup()'>Import/Export</button></div>`)
   }
 
 

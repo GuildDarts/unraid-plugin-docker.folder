@@ -53,7 +53,7 @@
         if ($folders['foldersVersion'] < 2.7) {
             $folders = migration_8($folders);
         }
-        if ($folders['foldersVersion'] < 2.8) {
+        if ($folders['foldersVersion'] < 3.0) {
             $folders = migration_9($folders);
         }
 
@@ -237,12 +237,26 @@
     function migration_9($folders) {
         echo("migration_9");
         logger("migration_9");
-        foreach ($folders as $folderKey => &$folder) {
-            if($folderKey == 'foldersVersion') {continue;};
 
+        $folders['folders'] = (array) new stdClass;
+
+        foreach ($folders as $folderKey => &$folder) {
+            if($folderKey == 'foldersVersion' || $folderKey == 'folders') {continue;}
+
+            // move folders to own object
+            $folders['folders'][$folderKey] = $folder;
+            unset($folders[$folderKey]);
+        }
+
+        foreach ($folders['folders'] as $folderKey => &$folder) {
             // add docker_preview_icon_show_webui
             $folder['docker_preview_icon_show_webui'] = false;
         }
+
+        $folders['settings'] = (array) new stdClass;
+
+        // add fix_docker_page_shifting
+        $folders['settings']['fix_docker_page_shifting'] = false;
 
         return $folders;
     }

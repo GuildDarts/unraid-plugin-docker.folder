@@ -10,7 +10,8 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 <script>
 
 (async () => {
-    folders = await read_folders()
+    dockerFolders = await read_folders()
+    folders = await dockerFolders['folders']
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#db-box3 > .docker_view" );
     activeDropdowns = [];
 })();

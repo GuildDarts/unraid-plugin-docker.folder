@@ -7,7 +7,7 @@
     $inp = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
     $tempObj = json_decode($inp);
 
-    $tempObj->$name = $response;
+    $tempObj->folders->$name = $response;
 
     // remove old key if renaming folder & rename folder in userprefs
     $rename = $_POST['rename'];
