@@ -1,8 +1,8 @@
 <?php
-    $response = json_decode("${_POST["settings"]}",true);
+    $response = json_decode("${_POST["settings"]}");
     
-    $name = $response['name'];
-    unset($response['name']);
+    $name = $response->name;
+    unset($response->name);
 
     $inp = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
     $tempObj = json_decode($inp);

@@ -1,5 +1,5 @@
 <?php
-$response = json_decode("${_POST["settings"]}",true);
+$response = json_decode("${_POST["settings"]}");
 
 $dockerFoldersRaw = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
 $dockerFolders = json_decode($dockerFoldersRaw);

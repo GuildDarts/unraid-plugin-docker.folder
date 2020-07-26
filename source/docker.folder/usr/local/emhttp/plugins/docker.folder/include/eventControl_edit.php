@@ -9,7 +9,7 @@
                 for (const folderName of folderNames) {
                     for (const child of folders[folderName]['children']) {
                         if (dockerName == child) {
-                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {folderName: folderName, child: child}, function(){(async () => {folders = await read_folders()})();});
+                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {folderName: folderName, child: child}, function(){(async () => {dockerFolders = await read_folders()})();});
                         }
                     }
                 }
