@@ -409,6 +409,7 @@ async function apply_folder(callback) {
     waitForGlobal("folders", async function() {
         let folderNames = Object.keys(await folders)
         folderChildren = []
+        activeFolders = []
         
         for (const folderName of folderNames) {
             edit_folder_base(folderName)

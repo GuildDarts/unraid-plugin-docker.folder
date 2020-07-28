@@ -299,24 +299,30 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
         if (location.pathname == "/Dashboard") {
             var selector = "#db-box3 > tbody.docker_view > tr > td:nth-child(2)"
-            var selectorType = "span"
             var folderTemplate = `<span class="outer solid apps stopped docker-folder-parent-${folderName}"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span>`
         } else {
             var selector = "#docker_list"
-            var selectorType = "tr"
             var folderTemplate = `<tr class="sortable docker-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderName}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td></td><td></td></tr>`
         }
 
         var prefs = <?= json_encode($prefs) ?>;
 
         var insertIndex = 0
+
+        // add another index if folder is expanded, as children are in there own div
+        for (const docker of activeDropdowns) {
+            if (activeFolders.includes(docker)) {
+                insertIndex++
+            }
+        }
+
         // insert at start if not in prefs
         if (!prefs.includes(`${folderName}-folder`)) {
-            insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
+            insertAtIndex(insertIndex, folderTemplate, selector)
         } else {
             for (i = 0; i < prefs.length; i++) {
                 if (prefs[i] == `${folderName}-folder`) {
-                    insertAtIndex(insertIndex, folderTemplate, selector, selectorType)
+                    insertAtIndex(insertIndex, folderTemplate, selector)
                     break
                 }
                 if (folderChildren.includes(prefs[i])) {
@@ -329,8 +335,10 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
                 }
                 insertIndex++
             }
-
         }
+
+        // add folder to activeFolders
+        activeFolders.push(folderName)
 
         loadDropdownButtons(folderName)
 
@@ -395,14 +403,14 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
     }
 
-    function insertAtIndex(i, template, selector, selectorType) {
+    function insertAtIndex(i, template, selector) {
         if (i === 0) {
             $(selector).prepend($(template));
             return;
         }
 
 
-        $(`${selector} > ${selectorType}:nth-child(${i})`).after($(template));
+        $(`${selector} > :nth-child(${i})`).after($(template));
     }
 
     function getDockerWebUI(docker) {
