@@ -6,8 +6,9 @@ if (file_exists($path) == false) {
     $jsonData = new stdClass;
     $jsonData->foldersVersion = $GLOBALS['foldersVersion'];
     $jsonData->settings = new stdClass;
+    $jsonData->settings->fix_docker_page_shifting = false;
     $jsonData->folders = new stdClass;
-    $jsonOut = json_encode($jsonData);
+    $jsonOut = json_encode($jsonData, JSON_PRETTY_PRINT);
     file_put_contents($path, $jsonOut);
     echo 'folders.json created';
 } else {

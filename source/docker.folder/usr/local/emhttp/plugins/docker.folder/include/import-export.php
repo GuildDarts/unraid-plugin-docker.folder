@@ -1,13 +1,13 @@
 <?php
 $foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/folders.json");
-$dockerFolders = json_decode($foldersRaw, true);
-$folders = $dockerFolders['folders'];
+$dockerFolders = json_decode($foldersRaw);
+$folders = $dockerFolders->folders;
 
 $foldersSettings = "<div class='folders'>";
 
 foreach ($folders as $folderKey => &$folder) {
 
-  $img = $folder['icon'];
+  $img = $folder->icon;
   if ($img == "") {
     $img = "/plugins/dynamix.docker.manager/images/question.png";
   }

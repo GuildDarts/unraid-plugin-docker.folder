@@ -4,10 +4,8 @@ $import = json_decode("${_POST["import"]}",true);
 //$import = json_decode($importRaw, true);
 
 $currentFoldersRaw = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
-$currentFolders = json_decode($currentFoldersRaw, true);
+$currentFolders = json_decode($currentFoldersRaw);
 
-// save import foldersVersion and remove it from obj
-$importFoldersVersion = $import['foldersVersion'];
 unset($import['foldersVersion']);
 
 $obj_merged = (object) array_merge((array) $currentFolders, (array) $import);
