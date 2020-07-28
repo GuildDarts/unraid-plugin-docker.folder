@@ -2,6 +2,7 @@
     require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
 
     function logger($string) {
+        echo $string, PHP_EOL;
         shell_exec("logger 'Docker Folder: $string'");
     }
 
@@ -19,42 +20,41 @@
 
     function init($path, $folders_file, $import, $isImport) {
         
-        $folders = json_decode($import, true);
+        $folders = json_decode($import);
 
         // exit if there are no folders
-            if (count($folders) == null || count($folders) < 2) {
+            if (count((array)$folders) == null || count((array)$folders) < 2 || (count((array)$folders->folders) == 0 && $folders->folders != null) ) {
+            logger('No folders to migrate');
             finish($path, $folders, $folders_file, $isImport);
             exit();
         }
 
         file_put_contents($path.'folders.backup.json', $folders_file);
 
-        if ($folders['foldersVersion'] == null) {
+        $functionsArray = get_defined_functions();
+        $migrationFunctions = array_filter($functionsArray['user'], function($func) {
+            $string = 'migration_';
+            $length = strlen($string);
+            if (substr($func, 0, $length) === $string) {
+                return true;
+            }
+        });
+        
+        if ($folders->foldersVersion == null) {
+            logger('migration_1');
             $folders = migration_1($folders);
         }
-        if ($folders['foldersVersion'] < 2.1) {
-            $folders = migration_2($folders);
-        }
-        if ($folders['foldersVersion'] < 2.2) {
-            $folders = migration_3($folders);
-        }
-        if ($folders['foldersVersion'] < 2.3) {
-            $folders = migration_4($folders);
-        }
-        if ($folders['foldersVersion'] < 2.4) {
-            $folders = migration_5($folders);
-        }
-        if ($folders['foldersVersion'] < 2.5) {
-            $folders = migration_6($folders);
-        }
-        if ($folders['foldersVersion'] < 2.6) {
-            $folders = migration_7($folders);
-        }
-        if ($folders['foldersVersion'] < 2.7) {
-            $folders = migration_8($folders);
-        }
-        if ($folders['foldersVersion'] < 3.0) {
-            $folders = migration_9($folders);
+
+        foreach ($migrationFunctions as $function) {
+            $func = str_replace('migration_', '', $function);
+            $func = str_replace('_', '.', $func);
+
+            $version = floatval($func);
+
+            if ($folders->foldersVersion < $version)  {
+                logger($version);
+                $folders = $function($folders);
+            }
         }
 
         finish($path, $folders, $folders_file, $isImport);
@@ -62,11 +62,11 @@
     }
 
     function finish($path, $folders, $folders_file, $isImport) {
-        $folders['foldersVersion'] = $GLOBALS['foldersVersion'];
+        $folders->foldersVersion = $GLOBALS['foldersVersion'];
 
         if ($isImport) {
-            unset($folders['foldersVersion']);
-            $currentFolders = json_decode($folders_file, true);
+            unset($folders->foldersVersion);
+            $currentFolders = json_decode($folders_file);
             $output = (object) array_merge((array) $currentFolders, (array) $folders);
         } else {
             $output = $folders;
@@ -77,37 +77,35 @@
     }
 
     function migration_1($folders) {
-        echo("migration_1");
-        logger("migration_1");
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion');
-            foreach ($folder['buttons'] as $buttonKey => &$button) {
+            foreach ($folder->buttons as $buttonKey => &$button) {
 
                 // if its got type just skip
-                if($button['type'] !== null) {
+                if($button->type !== null) {
                     continue;
                 }
 
                 $isBash = true;
 
                 // WebUI
-                if ($button['name'] == 'WebUI') {
+                if ($button->name == 'WebUI') {
                     $isBash = false;
 
-                    $button['type'] = 'WebUI';
+                    $button->type = 'WebUI';
                 }
 
                 // Docker_Default
-                if ($button['cmd'] == 'Docker_Default') {
+                if ($button->cmd == 'Docker_Default') {
                     $isBash = false;
 
-                    $button['type'] = 'Docker_Default';
-                    $button['cmd'] = strtolower($button['name']);
+                    $button->type = 'Docker_Default';
+                    $button->cmd = strtolower($button->name);
                 } 
                 
                 // bash
                 if ($isBash == true) {
-                    $button['type'] = 'Bash';
+                    $button->type = 'Bash';
                 }
             }
         }
@@ -115,15 +113,13 @@
         return $folders;
     }
 
-    function migration_2($folders) {
-        echo("migration_2");
-        logger("migration_2");
+    function migration_2_1($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
-            foreach ($folder['buttons'] as $buttonKey => &$button) {
+            foreach ($folder->buttons as $buttonKey => &$button) {
                 // Docker_Sub_Menu set cmd val = name val
-                if ($button['type'] == 'Docker_Sub_Menu') {
-                    $button['cmd'] = $button['name'];
+                if ($button->type == 'Docker_Sub_Menu') {
+                    $button->cmd = $button->name;
                 }
             }
         }
@@ -131,16 +127,14 @@
         return $folders;
     }
 
-    function migration_3($folders) {
-        echo("migration_3");
-        logger("migration_3");
+    function migration_2_2($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             // remove hidden docker
             exec("docker rm $folderKey-folder");
             
             // remove 'id' key
-            unset($folder['id']);
+            unset($folder->id);
         }
 
         // remove tianon/true docker image (goodbye old friend ♥)
@@ -149,114 +143,101 @@
         return $folders;
     }
 
-    function migration_4($folders) {
-        echo("migration_4");
-        logger("migration_4");
+    function migration_2_3($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             // add docker_expanded_style
-            $folder['docker_expanded_style'] = 'bottom';
+            $folder->docker_expanded_style = 'bottom';
 
             // rename start_expanded
-            $folder['docker_start_expanded'] = $folder['start_expanded'];
-            unset($folder['start_expanded']);
+            $folder->docker_start_expanded = $folder->start_expanded;
+            unset($folder->start_expanded);
 
             // add docker_preview
-            $folder['docker_preview'] = 'none';
+            $folder->docker_preview = 'none';
         }
 
         return $folders;
     }
 
-    function migration_5($folders) {
-        echo("migration_5");
-        logger("migration_5");
+    function migration_2_4($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
             // add docker_icon_style
-            $folder['docker_icon_style'] = 'docker';
+            $folder->docker_icon_style = 'docker';
 
             // add icon_animate_hover
-            $folder['icon_animate_hover'] = false;
+            $folder->icon_animate_hover = false;
 
             // add docker_preview_hover_only
-            $folder['docker_preview_hover_only'] = false;
+            $folder->docker_preview_hover_only = false;
 
             // add docker_preview_icon_grayscale
-            $folder['docker_preview_icon_grayscale'] = true;
+            $folder->docker_preview_icon_grayscale = true;
         }
 
         return $folders;
     }
 
-    function migration_6($folders) {
-        echo("migration_6");
-        logger("migration_6");
+    function migration_2_5($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
 
             // add docker_preview_hover_only
-            $folder['docker_preview_icon_show_log'] = false;
+            $folder->docker_preview_icon_show_log = false;
         }
 
         return $folders;
     }
 
-    function migration_7($folders) {
-        echo("migration_7");
-        logger("migration_7");
+    function migration_2_6($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
 
             // add docker_preview_advanced_context_menu
-            $folder['docker_preview_advanced_context_menu'] = false;
+            $folder->docker_preview_advanced_context_menu = false;
 
             // add docker_preview_advanced_context_menu_activation_mode
-            $folder['docker_preview_advanced_context_menu_activation_mode'] = 'click';
+            $folder->docker_preview_advanced_context_menu_activation_mode = 'click';
 
             // add docker_preview_advanced_context_menu_graph_mode
-            $folder['docker_preview_advanced_context_menu_graph_mode'] = 'none';
+            $folder->docker_preview_advanced_context_menu_graph_mode = 'none';
         }
 
         return $folders;
     }
 
-    function migration_8($folders) {
-        echo("migration_8");
-        logger("migration_8");
+    function migration_2_7($folders) {
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion') {continue;};
 
             // add docker_preview_text_update_color
-            $folder['docker_preview_text_update_color'] = false;
+            $folder->docker_preview_text_update_color = false;
         }
 
         return $folders;
     }
 
-    function migration_9($folders) {
-        echo("migration_9");
-        logger("migration_9");
-
-        $folders['folders'] = (array) new stdClass;
+    function migration_3_0($folders) {
+        $folders->folders = new stdClass;
 
         foreach ($folders as $folderKey => &$folder) {
             if($folderKey == 'foldersVersion' || $folderKey == 'folders') {continue;}
 
             // move folders to own object
-            $folders['folders'][$folderKey] = $folder;
-            unset($folders[$folderKey]);
+            $folders->folders->$folderKey = $folder;
+            unset($folders->$folderKey);
         }
 
-        foreach ($folders['folders'] as $folderKey => &$folder) {
+        foreach ($folders->folders as $folderKey => &$folder) {
             // add docker_preview_icon_show_webui
-            $folder['docker_preview_icon_show_webui'] = false;
+            $folder->docker_preview_icon_show_webui = false;
         }
 
-        $folders['settings'] = (array) new stdClass;
+        $folders->settings = new stdClass;
 
         // add fix_docker_page_shifting
-        $folders['settings']['fix_docker_page_shifting'] = false;
+        $folders->settings->fix_docker_page_shifting = false;
 
         return $folders;
     }
