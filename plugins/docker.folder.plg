@@ -2,17 +2,21 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.07.26a">
+<!ENTITY version   "2020.07.28">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "19f8041e5402c0470e797ff017069706">
+<!ENTITY md5       "a45968608b7b7d38e4144de523f37d83">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.07.28
+- Fixed: Refactor migration script and fix a few issues
+- Fixed: folder export
+
 ###2020.07.26a
 - Fixed: Object turning into array
 - Fixed: eventControl_edit
