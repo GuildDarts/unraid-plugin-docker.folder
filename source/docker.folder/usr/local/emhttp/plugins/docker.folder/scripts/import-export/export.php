@@ -1,10 +1,16 @@
 <?php
 $selection = json_decode($_GET["selection"]);
-//$selection = ['random_web'];
 
+$dockerFoldersRaw = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
+$dockerFolders = json_decode($dockerFoldersRaw);
 
-$foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/folders.json");
-$folders = json_decode($foldersRaw, true);
+unset($dockerFolders->settings);
 
-echo json_encode($folders, JSON_PRETTY_PRINT);
+foreach ($dockerFolders->folders as $folderKey => &$folder) {
+    if (!in_array($folderKey, $selection)) {
+        unset($dockerFolders->folders->$folderKey);
+    }
+}
+
+echo json_encode($dockerFolders, JSON_PRETTY_PRINT);
 ?>
