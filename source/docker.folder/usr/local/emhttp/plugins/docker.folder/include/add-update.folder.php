@@ -776,7 +776,7 @@ function endsWith($haystack, $needle)
 
     let settingsSting = JSON.stringify(await settings)
 
-    if (settings['name'] !== editFolderName) {
+    if (settings['name'] !== editFolderName && editFolderName !== null) {
       var rename = editFolderName
     }
 

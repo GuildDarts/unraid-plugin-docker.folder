@@ -12,14 +12,16 @@
     // remove old key if renaming folder & rename folder in userprefs
     $rename = $_POST['rename'];
     if (isset($rename)) {
-        unset($tempObj->$rename);
+        unset($tempObj->folders->$rename);
 
         $path = '/boot/config/plugins/dockerMan/userprefs.cfg';
         if (file_exists($path)) {
             $userprefs = parse_ini_file($path,true);
             $index = array_search($rename.'-folder', $userprefs);
-            $userprefs[$index] = $name.'-folder';
-            write_php_ini($userprefs, $path);
+            if ($index) {
+                $userprefs[$index] = $name.'-folder';
+                write_php_ini($userprefs, $path);
+            }
         }
     }
 
