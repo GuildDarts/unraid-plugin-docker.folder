@@ -318,7 +318,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
         // insert at start if not in prefs
         if (!prefs.includes(`${folderName}-folder`)) {
-            insertAtIndex(insertIndex, folderTemplate, selector)
+            insertAtIndex(0, folderTemplate, selector)
         } else {
             for (i = 0; i < prefs.length; i++) {
                 if (prefs[i] == `${folderName}-folder`) {
