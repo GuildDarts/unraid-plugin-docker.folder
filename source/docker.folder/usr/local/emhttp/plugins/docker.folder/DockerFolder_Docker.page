@@ -388,25 +388,25 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 (async () => {
     dockerFolders = await read_folders()
     folders = await dockerFolders['folders']
-    dfSettings = await dockerFolders['settings']
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#docker_list" );
     activeDropdowns = [];
 })();
 
 async function apply_folder(callback) {
-    if (dfSettings['fix_docker_page_shifting']) {
-        $('#docker_containers > thead > tr > th').each(function(i, e) {
-            if (i > 0) {
-                if (i === 2) {
-                    $(e).css('min-width', $(e).width())
-                } else {
-                    $(e).width($(e).width())
-                }
-            }
-        })
-    }
-
     waitForGlobal("folders", async function() {
+        let dfSettings = await dockerFolders['settings']
+        if (dfSettings['fix_docker_page_shifting']) {
+            $('#docker_containers > thead > tr > th').each(function(i, e) {
+                if (i > 0) {
+                    if (i === 2) {
+                        $(e).css('min-width', $(e).width())
+                    } else {
+                        $(e).width($(e).width())
+                    }
+                }
+            })
+        }
+
         let folderNames = Object.keys(await folders)
         folderChildren = []
         activeFolders = []
