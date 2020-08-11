@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.08.11">
+<!ENTITY version   "2020.08.11a">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "946c794fa2e72ecfdfb5cc1798efb365">
+<!ENTITY md5       "fbcd5102380508a30e62870f790c8d41">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.08.11a
+- Fixed: Fix for the prefs being an object and not an array (Thanks darki73)
+
 ###2020.08.11
 - Fixed: dfSettings undefined
 
