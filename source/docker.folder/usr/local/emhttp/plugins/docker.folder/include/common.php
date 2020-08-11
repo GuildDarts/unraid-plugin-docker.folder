@@ -306,6 +306,7 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         }
 
         var prefs = <?= json_encode($prefs) ?>;
+        var prefsArray = Object.values(prefs);
 
         var insertIndex = 0
 
@@ -317,20 +318,20 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
         }
 
         // insert at start if not in prefs
-        if (!prefs.includes(`${folderName}-folder`)) {
+        if (!prefsArray.includes(`${folderName}-folder`)) {
             insertAtIndex(0, folderTemplate, selector)
         } else {
-            for (i = 0; i < prefs.length; i++) {
-                if (prefs[i] == `${folderName}-folder`) {
+            for (i = 0; i < prefsArray.length; i++) {
+                if (prefsArray[i] == `${folderName}-folder`) {
                     insertAtIndex(insertIndex, folderTemplate, selector)
                     break
                 }
-                if (folderChildren.includes(prefs[i])) {
+                if (folderChildren.includes(prefsArray[i])) {
                     continue
                 }
                 // continue incase folder does not get remove from userprefs (better safe than sorry)
                 let folderNames = Object.keys(folders)
-                if (prefs[i].includes('-folder') && !folderNames.includes(prefs[i].slice(0, -7))) {
+                if (prefsArray[i].includes('-folder') && !folderNames.includes(prefsArray[i].slice(0, -7))) {
                     continue
                 }
                 insertIndex++
