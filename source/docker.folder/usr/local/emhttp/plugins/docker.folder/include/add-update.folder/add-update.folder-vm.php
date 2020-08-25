@@ -12,10 +12,6 @@ foreach ($vms as $vm) {
   $res = $lv->get_domain_by_name($vm);
   $desc = $lv->domain_get_description($res);
 
-  if (endsWith($container, "-folder")) {
-    continue;
-  }
-
   $img = $lv->domain_get_icon_url($res);
   if ($img == null) {
     $img = "/plugins/dynamix.docker.manager/images/question.png";

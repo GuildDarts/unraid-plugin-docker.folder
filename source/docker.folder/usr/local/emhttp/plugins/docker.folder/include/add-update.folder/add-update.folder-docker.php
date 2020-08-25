@@ -6,34 +6,29 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
 require_once("$docroot/plugins/docker.folder/include/add-update.folder/popup-docker.php");
 require_once("$docroot/plugins/docker.folder/include/common-docker.php");
 
+$containers = $DockerClient->getDockerContainers();
 $info = $DockerTemplates->getAllInfo();
-$moreInfo = $DockerClient->getDockerContainers();
 
 $dockerSettings = "<div class='containers'>";
-$containerNames = array_keys($info);
 
-foreach ($containerNames as $container) {
+foreach ($containers as $ct) {
+  $name = $ct['Name'];
 
-  if (endsWith($container, "-folder")) {
-    continue;
-  }
-
-  $img = $info[$container]['icon'];
+  $img = $info[$name]['icon'];
   if ($img == null) {
     $img = "/plugins/dynamix.docker.manager/images/question.png";
   }
 
-  $index = searchArray($moreInfo, "Name", $container);
-  $repository = ($index === false) ? "Unknown" : $moreInfo[$index]['Image'];
-  $id = ($index === false) ? "Unknown" : $moreInfo[$index]['Id'];
+  $repository = ($index === false) ? "Unknown" : $ct['Image'];
+  $id = ($index === false) ? "Unknown" : $ct['Id'];
   $dockerSettings .= "<div class='container_item'>";
   $dockerSettings .= "<div class='info'><span><img class='docker_img' src='" . $img . "'></span>";
 
-  $dockerSettings .= "<span><strong>$container</strong><br>$repository";
+  $dockerSettings .= "<span><strong>$name</strong><br>$repository";
 
   $dockerSettings .= "</span></div>";
 
-  $dockerSettings .= "<div class='settingC-box'><input class='settingC' type='checkbox' name='$container'></div>";
+  $dockerSettings .= "<div class='settingC-box'><input class='settingC' type='checkbox' name='$name'></div>";
 
   $dockerSettings .= "</div>";
 }
