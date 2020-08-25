@@ -2,17 +2,21 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.08.11a">
+<!ENTITY version   "2020.08.25">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "fbcd5102380508a30e62870f790c8d41">
+<!ENTITY md5       "cdf7f4e1c9d041e31f2a04de4ce09c4d">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.08.25
+- Added: VM folder support
+- Fixed: Oddly named dockers showing up
+
 ###2020.08.11a
 - Fixed: Fix for the prefs being an object and not an array (Thanks darki73)
 
