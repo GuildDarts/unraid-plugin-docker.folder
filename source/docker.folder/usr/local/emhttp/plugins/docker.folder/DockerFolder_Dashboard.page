@@ -72,7 +72,7 @@ async function apply_folder_dashboard(_type, _folders, _options) {
             $(this).attr('dashboard_expanded', true)
             docker_toggle_visibility(name, _type)
             $(`.${_type}-folder-parent-${name}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
-            dashboard_expanded(folders[name])
+            dashboard_expanded(folders[_type][name])
         }
     })
 
@@ -108,7 +108,7 @@ function dashboard_expanded_button(folder) {
             $(`[class*="${folderType}-folder-parent-"]`).each(function() {
                 var name = $(this).find(folder.options['dashboardHideSelectorName']).text()
                 var index = $(this).index()
-                if (activeDropdowns.includes(name) && name !== folderName && index > selectionIndex) {
+                if (folder.options['activeDropdowns'].includes(name) && name !== folderName && index > selectionIndex) {
                     childrenDropdown(name, folderType)
                     childrenDropdown(name, folderType)
                 }
@@ -129,7 +129,7 @@ function addSwitchListener(type, options) {
         $(`[class*="${type}-folder-parent-"]`).each(function() {
             let name = $(this).find(options['dashboardHideSelectorName']).textFirst()
             let stopped = $(this).find('.inner > i').hasClass('stopped')
-            if (activeDropdowns.includes(name)) {
+            if (options['activeDropdowns'].includes(name)) {
                 childrenDropdown(name, type)
                 if (!stopped) {
                     tmpActiveDropdowns.push(name)
@@ -246,7 +246,7 @@ function childrenDropdown(folderName, folderType) {
             });
         }
         // remove folderName from activeDropdowns
-        activeDropdowns = activeDropdowns.filter(function(elm) {
+        folder.options['activeDropdowns'] = folder.options['activeDropdowns'].filter(function(elm) {
             return elm != folderName;
         })
         // remove spacers
@@ -256,7 +256,7 @@ function childrenDropdown(folderName, folderType) {
     } else {
         dashboard_expanded(folder);
         // add folderName to activeDropdowns
-        activeDropdowns.push(folderName);
+        folder.options['activeDropdowns'].push(folderName);
     }
 }
 
