@@ -257,8 +257,8 @@ async function apply_folder(callback) {
 
         let dFolders = await dockerFolders['folders']
         let folderNames = Object.keys(await dFolders)
-        folderChildren = []
-        activeFolders = []
+        window[`${type}Options`]['folderChildren'] = []
+        window[`${type}Options`]['activeFolders'] = []
         
         for (const folderName of folderNames) {
             folders[type][folderName] = new folder(folderName, dFolders[folderName], dockerOptions)
