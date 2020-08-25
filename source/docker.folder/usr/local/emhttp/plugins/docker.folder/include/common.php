@@ -331,7 +331,7 @@ class folder {
                     continue
                 }
                 // continue incase folder does not get remove from userprefs (better safe than sorry)
-                let folderNames = Object.keys(folders)
+                let folderNames = Object.keys(folders[folderType])
                 if (prefsArray[i].includes('-folder') && !folderNames.includes(prefsArray[i].slice(0, -7))) {
                     continue
                 }
