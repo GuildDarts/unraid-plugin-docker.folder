@@ -9,7 +9,7 @@ function userprefs_fix(type) {
         row = $(row).parent()
     }
     row.parent().children().find('td.${name}-name').each(function() {
-        var folderNames = Object.keys(folders)
+        var folderNames = Object.keys(folders['${type}'])
         var nam = $(this).find('.inner > :first-child').text();
         var ind = $(this).parent().parent().children('tr').index($(this).parent());
 
