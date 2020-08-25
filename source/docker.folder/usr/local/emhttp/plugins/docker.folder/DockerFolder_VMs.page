@@ -1,0 +1,57 @@
+Menu="VMs"
+Icon="server"
+---
+<?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-page.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-vm.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/ajaxVMDispatch_edit.php");
+?>
+
+<script>
+
+(function() {
+    userprefs_fix_apply('vm')
+})();
+
+(async () => {
+    folders = {
+        vm: {}
+    }
+    dockerFolders = await read_folders('folders-vm')
+    $( "<tbody id='vm_list_storage' style='display:none;'></tbody>" ).insertAfter( "#kvm_list" );
+})();
+
+async function apply_folder(callback) {
+    const type = 'vm'
+    waitForGlobal("dockerFolders", async function() {
+        let dfSettings = await dockerFolders['settings']
+
+        let dFolders = await dockerFolders['folders']
+        let folderNames = Object.keys(await dFolders)
+        folderChildren = []
+        activeFolders = []
+        
+        for (const folderName of folderNames) {
+            folders[type][folderName] = new folder(folderName, dFolders[folderName], vmOptions)
+        }
+
+        for (const folderName of folderNames) {
+            const folder = folders[type][folderName]
+
+            edit_folder_base(folder)
+            edit_folder_extra(folder)
+        }
+        callback()
+    });
+}
+
+$('<input/>', {
+    type: 'button',
+    onclick: 'addFolder("vm")',
+    value: 'Add Folder',
+    style: 'display:none'
+}).insertBefore('div.content > input:first-of-type');
+
+</script>

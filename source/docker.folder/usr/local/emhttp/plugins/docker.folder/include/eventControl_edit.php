@@ -1,15 +1,15 @@
 <script>
 (function() {
     let remove_fix = `
-    var folderNames = Object.keys(folders)
+    var folderNames = Object.keys(folders['docker'])
 
-    if (params['container'] && (params['action'] == 'remove_container' || params['action'] == 'remove_all') ) {
-        for (const [dockerName, dockerId] of Object.entries(dockerIds)) {
-            if (dockerId == params['container']) {
+    if (params['container'] && (params['action'] === 'remove_container' || params['action'] === 'remove_all') ) {
+        for (const [dockerName, dockerId] of Object.entries(dockerOptions["ids"])) {
+            if (dockerId === params['container']) {
                 for (const folderName of folderNames) {
-                    for (const child of folders[folderName]['children']) {
-                        if (dockerName == child) {
-                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {folderName: folderName, child: child}, function(){(async () => {dockerFolders = await read_folders()})();});
+                    for (const child of folders['docker'][folderName]['properties']['children']) {
+                        if (dockerName === child) {
+                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: 'docker', folderName: folderName, child: child}, function(){(async () => {dockerFolders = await read_folders('folders')})();});
                         }
                     }
                 }

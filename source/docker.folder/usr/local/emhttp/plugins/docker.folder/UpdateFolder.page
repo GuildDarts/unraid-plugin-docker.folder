@@ -3,5 +3,10 @@ Cond="(pgrep('dockerd')!==false)"
 Markdown="false"
 ---
 <?php
-require_once("/usr/local/emhttp/plugins/docker.folder/include/add-update.folder.php");
+$url = $_GET['type'];
+if ($url !== 'vm') {
+    require_once("/usr/local/emhttp/plugins/docker.folder/include/add-update.folder/add-update.folder-docker.php");
+} else {
+    require_once("/usr/local/emhttp/plugins/docker.folder/include/add-update.folder/add-update.folder-vm.php");
+}
 ?>

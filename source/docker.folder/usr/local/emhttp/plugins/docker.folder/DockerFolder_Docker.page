@@ -2,6 +2,8 @@ Menu="Docker"
 Icon="server"
 ---
 <?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-page.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-docker.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/listview_edit.php");
@@ -9,166 +11,6 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 ?>
 
 <style type="text/css">
-    :root {
-    --border-color: #c4c4c4;
-    }
-    [class*="docker-folder-parent-"] > .updatecolumn {
-        padding: 4px 0px 4px 6px;
-    }
-    [class*="docker-folder-child-"] > td:first-child {
-        padding-left: 30px !important;
-    }
-    .docker-folder-child {
-        display:none;
-    }
-    .expanded_right {
-        float: right;
-        transform: translate(-12px, 5px);
-        color: #7c7c7c;
-        border-style: solid;
-        border-color: var(--border-color);
-        border-width: 1px;
-        border-radius: 5px;
-        padding: 5px;
-    }
-    [class*="docker-folder-child-div-"] > tr:first-child {
-        border-top: 1px solid var(--border-color);
-    }
-    [class*="docker-folder-child-div-"] > tr {
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .label-tab > .ct-name > div > .outer > .inner {
-        padding-top: 6px;
-    }
-    .label-tab > .ct-name, .dockerPreview {
-        padding: 4px !important;
-    }
-    .label-tab > .ct-name > div {
-        border-style: solid;
-        border-color: var(--border-color);
-        border-width: 1px;
-        border-radius: 5px;
-        box-shadow: -10px 0 0px -2px #91c8f0 inset;
-    }
-    .label-tab > .ct-name > div > .outer > .hand img {
-        height: 42px;
-        width: 42px;
-        margin-right: 0px;
-    }
-    .label-tab > .ct-name > div > .outer > .hand > :first-child {
-        height: 42px;
-        width: 42px;
-        border-right: solid;
-        border-width: 1px;
-        border-color: var(--border-color);
-        padding: 2px;
-        margin-right: 6px;
-    }
-    .ff-container > .ff-canvas {
-        top: 2px;
-        left: 2px;
-    }
-    .label-tab .expanded_right {
-        transform: translate(-15px, 10px);
-    }
-
-    .dockerPreview-no-icon-container {
-        display: grid;
-        grid-template-columns: max-content repeat(6, max-content );
-        color: #626262;
-        border-style: solid;
-        border-color: var(--border-color);
-        border-width: 1px;
-        border-radius: 5px;
-        margin-block-start: initial;
-        margin-block-end: initial;
-        margin-inline-start: initial;
-        margin-inline-end: initial;
-        padding-inline-start: initial;
-        list-style-position: inside;
-        padding-top: 6px;
-        padding-bottom: 6px;
-        box-shadow: 10px 0 0px -2px #beddf5 inset;
-    }
-    .dockerPreview-no-icon-container > div {
-        padding-left: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    .dockerPreview-no-icon-container > .header {
-        font-size: 14px;
-        font-weight: bold;
-        grid-area: 1 / 1 / span 2 / span 1;
-        border-right: solid;
-        border-width: 1px;
-        border-color: var(--border-color);
-        padding-right: 6px;
-        padding-top: 12px;
-        margin-top: -6px;
-        margin-bottom: -6px;
-        margin-left: 4px;
-    }
-    .dockerPreview-no-icon-container li {
-        padding-left: 4px;
-        cursor: pointer;
-    }
-    .dockerPreview-no-icon-container > li > span {
-        position: relative;
-        left: -10px;
-    }
-    /* chrome/firefox issue with bullet points */
-    @media screen and (min--moz-device-pixel-ratio:0) {
-        .dockerPreview-no-icon-container > li > span {
-            left: -5px;
-        }
-    }
-
-    .dockerPreview-icon-container {
-        border-style: solid;
-        border-color: var(--border-color);
-        border-width: 1px;
-        border-radius: 5px;
-        box-shadow: 10px 0 0px -2px #beddf5 inset;
-        padding: 2px;
-    }
-    .dockerPreview-icon-container img.img {
-        margin-right: 6px;
-    }
-    .dockerPreview-icon-container > td:first-child img.img {
-        padding-left: 4px;
-    }
-    .dockerPreview-icon-container .log > img {
-        display: inline-block;
-        padding-left: 3px;
-    }
-    .dockerPreview-icon-container td {
-        width: auto;
-        padding-right: 6px !important;
-        white-space: nowrap;
-        position: relative;
-    }
-    .dockerPreview-icon-container td:not(:first-child) {
-        padding-left: 6px;
-    }
-    .dockerPreview-icon-container td:last-child {
-        border-right: 0px;
-    }
-    .dockerPreview-grayscale {
-        white-space: nowrap;
-        overflow: hidden;
-        filter: grayscale(100%);
-        opacity: 0.9;
-    }
-
-    .border-right {
-        left: 100%;
-        top: 3px;
-        bottom: 3px;
-        position: absolute;
-        border-right: 1px solid #b9b7b7;
-    }
-
     .dropdown-menu-advanced {
         display: grid !important;
         min-width: 540px;
@@ -385,15 +227,21 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 <script src="/plugins/docker.folder/include/chart/chartjs-plugin-streaming.min.js"></script>
 <script>
 
+(function() {
+    userprefs_fix_apply('docker')
+})();
+
 (async () => {
-    dockerFolders = await read_folders()
-    folders = await dockerFolders['folders']
+    folders = {
+        docker: {}
+    }
+    dockerFolders = await read_folders('folders')
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#docker_list" );
-    activeDropdowns = [];
 })();
 
 async function apply_folder(callback) {
-    waitForGlobal("folders", async function() {
+    const type = 'docker'
+    waitForGlobal("dockerFolders", async function() {
         let dfSettings = await dockerFolders['settings']
         if (dfSettings['fix_docker_page_shifting']) {
             $('#docker_containers > thead > tr > th').each(function(i, e) {
@@ -407,167 +255,46 @@ async function apply_folder(callback) {
             })
         }
 
-        let folderNames = Object.keys(await folders)
+        let dFolders = await dockerFolders['folders']
+        let folderNames = Object.keys(await dFolders)
         folderChildren = []
         activeFolders = []
         
         for (const folderName of folderNames) {
-            edit_folder_base(folderName)
-            edit_folder_extra(folderName)
+            folders[type][folderName] = new folder(folderName, dFolders[folderName], dockerOptions)
+        }
+
+        for (const folderName of folderNames) {
+            const folder = folders[type][folderName]
+
+            edit_folder_base(folder)
+            edit_folder_extra(folder)
+            cpuMemoryLoad(folder)
+            advancedContextMenu(folder)
         }
         callback()
     });
 }
 
-function edit_folder_extra(folderName) {
-
-    // advanced view fix
-    if (!$('input.advancedview').prop('checked')) {
-        $(`.docker-folder-parent-${folderName}`).children('td.advanced').hide()
-    }
-
-    // add show children button
-    if ($(`.docker-folder-parent-${folderName}`).find('.outer > i').length == 0) {
-
-        switch (folders[folderName]['docker_expanded_style']) {
-            case 'bottom':
-                $(`.docker-folder-parent-${folderName}`).find('.outer').append(`<br><i class="fa fa-fw fa-chevron-up expanded_bottom""></i>`)
-                break;
-
-            case 'right':
-                $(`.docker-folder-parent-${folderName}`).find('.outer').append(`<i class="fa fa-fw fa-chevron-up expanded_right""></i>`)
-                break;
-        }
-
-        $(`.docker-folder-parent-${folderName}`).find('.outer > i').click(function() {
-            childrenDropdown(folderName)
-        });
-    }
-
-    // docker_start_expanded - activeDropdowns
-    if (folders[folderName]['docker_start_expanded'] == true && !activeDropdowns.includes(folderName)) {
-        activeDropdowns.push(folderName)
-    }
-
-    // wrap children in table
-    $(`.docker-folder-child-${folderName}`).wrapAll(`<div class='docker-folder-child-div-${folderName}'></div>`)
-
-    // remove sortable from children and add new sortable
-    // adjust child width (done to counter padding)
-    $(`.docker-folder-child-${folderName}`).each(function() {
-        $(this).removeClass("sortable").addClass(`sortable-child-${folderName}`)
-        $(this).children('.ct-name').css({
-            'width': '190'
-        })
-    })
-
-    // custom sortable helper for children
-    var sortableHelper2 = function(e,i){
-        i.children().each(function(){
-            $(this).width($(this).width());
-        });
-        return $(i).clone();
-    };
-
-    // make children sortable
-    $(`.docker-folder-child-div-${folderName}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
-    update:function(e,ui){
-        var children = []
-        $(`.docker-folder-child-div-${folderName} > tr`).each(function() {
-            var nam = $(this).find('.appname').text();
-            children.push(nam)
-        })
-        folders[folderName]['children'] = children
-        loadlistUpdate(e,ui)
-    }})
-
-    // open dropdown on loadlist
-    for (const dropdown of activeDropdowns) {
-        if (dropdown == folderName) {
-            docker_toggle_visibility(folderName)
-            $(`.docker-folder-parent-${folderName}`).find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
-            childrenMove(folderName)
-        }
-    }
-
-    // folder update status
-    var upToDate = true
-    for (const child of folders[folderName]['children']) {
-        waitForGlobal("docker", function() {
-            for (const dock of docker) {
-                if (child == dock['name']) {
-                    if (dock['update'] == 1) {
-                        upToDate = false
-                    }
-                }
-            }
-        })
-    }
-    if (upToDate == true) {
-        var updateConf = `<span class="green-text" style="white-space:nowrap;"><i class="fa fa-check fa-fw"></i> up-to-date</span>`
-    } else {
-        var updateConf = `<span class="orange-text" style="white-space:nowrap;"><i class="fa fa-flash fa-fw"></i> update ready</span>`
-    }
-    $(`.docker-folder-parent-${folderName}`).find('td.updatecolumn').html(updateConf)
-
-    // auto start folder
-    autoStartFolder(folderName)
-
-    // docker preview
-    dockerPreview(folderName)
-
-    // icon style
-    iconStyle(folderName)
-
-    // cpu / memory load 
-    cpuMemoryLoad(folderName)
-
-    // advanced context menu
-    advancedContextMenu(folderName)
-}
-
-function childrenDropdown(folderName) {
-    docker_toggle_visibility(folderName)
-    $(`.docker-folder-parent-${folderName}`).find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
-    
-    if ($(`.docker-folder-parent-${folderName}`).find('.outer > i').hasClass('fa-chevron-up')) {
-        $(`.docker-folder-child-div-${folderName}`).each(function() {
-            $(this).appendTo("#docker_list_storage")
-        });
-        // remove folderName from activeDropdowns
-        activeDropdowns = activeDropdowns.filter(function(elm) {
-            return elm != folderName
-        })
-    } else {
-        childrenMove(folderName)
-        // add folderName to activeDropdowns
-        activeDropdowns.push(folderName)
-    }
-}
-
-function childrenMove(folderName) {
-    $(`.docker-folder-child-div-${folderName}`).insertAfter(`.docker-folder-parent-${folderName}`)
-}
-
-function cpuMemoryLoad(folderName) {
+function cpuMemoryLoad(folder) {
     var cpuLoad = 0.00
     var memoryLoad = 0.00
     var memoryMax = 0.00
 
     if ($('input.advancedview').prop('checked')) {
-        $(`.docker-folder-child-${folderName}`).each(function() {
+        folder.child().each(function() {
             cpuLoad += parseFloat($(this).find("td.advanced > [class*='cpu-']").text().replace(/\%/g, ""))
             let memory = getMemUsage($(this))
                 memoryLoad += memory['load']
                 memoryMax = (memory['max'] != 0) ? memory['max'] : memoryMax
         });
 
-        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
-        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
-        $(`.docker-folder-parent-${folderName}`).find('td.advanced > .mem').text(`${formatBytes(memoryLoad)} / ${memoryMax}`)
+        folder.parent().find('td.advanced > .cpu').text(cpuLoad.toFixed(2) + '%')
+        folder.parent().find('td.advanced > .usage-disk > #cpu').css('width', `${cpuLoad.toFixed(2)}%`)
+        folder.parent().find('td.advanced > .mem').text(`${formatBytes(memoryLoad)} / ${memoryMax}`)
     }
     
-    setTimeout(cpuMemoryLoad.bind(null, folderName), 2000);
+    setTimeout(cpuMemoryLoad.bind(null, folder), 2000);
 }
 
 function getMemUsage(childElement) {
@@ -602,191 +329,12 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + '' + sizes[i];
 }
 
-function autoStartFolder(folderName) {
-    // set the init state for folder autostart
-    if (checkFolderSwitch()) {
-        var initState = 'checked'
-    }
-
-    // adds switches
-    $(`.docker-folder-parent-${folderName}`).find('td:nth-last-child(2)').html(
-        `<input type="checkbox" class="docker-folder-autostart" folder="${folderName}" ${initState}>`
-    ).find('input').switchButton({
-        labels_placement: "right"
-    });
-
-    // event: clicks all the children so they match parent
-    $(`.docker-folder-parent-${folderName}`).find('input.docker-folder-autostart').change(function() {
-        clickChild($(this).prop('checked'))
-    });
-    
-
-    function clickChild(state) {
-        $(`.docker-folder-child-${folderName}`).find('input.autostart').each(function() {
-            if (state !== $(this).prop('checked')) {
-                $(this).parent().find('div.switch-button-background').trigger('click')
-            }
-        })
-    }
-
-    // returns true if any child has autostart checked
-    function checkFolderSwitch() {
-        var initStateArray = []
-        $(`.docker-folder-child-${folderName}`).find('input.autostart').each(function() {
-            initStateArray.push($(this).prop('checked'))
-        })
-        
-        return initStateArray.some( (val, i, arr) => val === true)
-    }
-
-
-}
-
-function dockerPreview(folderName) {
-    const dockerPreview = $(`.docker-folder-parent-${folderName} > .dockerPreview`)
-
-    switch (folders[folderName]['docker_preview']) {
-        case 'no-icon':
-            dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></ul>`)
-            $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
-                if (i < 12) {
-                    let child = $(this).find('.appname').text()
-                    let id = $(this).find('.hand').attr('id')
-
-                    let row = ((2+i) % 2 == 0) ? 1 : 2
-                    let element = $(`<li class="docker-preview-id-${id}"><span>${child}</span></li>`)
-                    dockerPreview.find('.dockerPreview-no-icon-container').append(element)
-                    dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
-
-                    // make text orange on update
-                    updateText(folderName, id, element, 'no-icon')
-
-                    // add context menu
-                    dockerPreview.find(`.dockerPreview-no-icon-container > li.docker-preview-id-${id}`).click(function(e) {
-                        showContextMenu(e, id, folderName)
-                    })
-                }
-            })
-
-            hoverOnly(folderName)
-            break;
-
-        case 'icon':
-            dockerPreview.append(`<div class="dockerPreview-icon-container"></div></div>`)
-            var dockerPreviewWidth = dockerPreview.width()
-            var widthTotal = 0
-            var childrenCount = $(`.docker-folder-child-div-${folderName}`).children().length
-            $(`.docker-folder-child-div-${folderName}`).children().each(function(i) {
-                let clone = $(this).children('.ct-name').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
-                    clone.children('.advanced').remove()
-                    let name = clone.find('.outer > .inner > .appname').text()
-                    let idElement = clone.find('.outer > .hand')
-                    let id = idElement.attr('id')
-                    idElement.removeAttr('id')
-                    idElement.addClass(`docker-preview-id-${id}`)
-                    if (folders[folderName]['docker_preview_icon_show_log']) {
-                        let log = $(this).find('td:last-child > .log').clone(true)
-                            log.children('img').removeClass('basic').removeAttr('style')
-                            log.children('.advanced').remove()
-                        clone.find('.outer > .inner').append(log)
-                    }
-                    if (folders[folderName]['docker_preview_icon_show_webui']) {
-                        let webui = getDockerWebUI(name)
-                        if (webui) {
-                            clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
-                        }
-                    }
-                let width = clone.width()
-                widthTotal += width
-
-                if (widthTotal >= dockerPreviewWidth) {
-                    clone.remove()
-                    return false
-                } else {
-                    clone.prev().children('.outer').append('<div class="border-right">')
-                }
-
-                // make text orange on update
-                updateText(folderName, id, clone, 'icon')
-
-                // add context menu
-                idElement.click(function(e) {
-                    showContextMenu(e, id, folderName)
-                })
-            })
-
-            // grayscale
-            if (folders[folderName]['docker_preview_icon_grayscale']) {
-                dockerPreview.children('.dockerPreview-icon-container').find('img').addClass('dockerPreview-grayscale')
-            }
-
-            hoverOnly(folderName)
-            break;
-    }
-
-    function hoverOnly(folderName) {
-        if (folders[folderName]['docker_preview_hover_only']) {
-            $(`.docker-folder-parent-${folderName} > .dockerPreview > :first-child`).css('visibility', 'hidden').fadeTo(0, 0)
-
-            $(`.docker-folder-parent-${folderName} > .dockerPreview`).hover(
-                function() {
-                    $(this).children(':first-child').css('visibility', 'initial').fadeTo(500, 1)
-                }, function() {
-                    $(this).children(':first-child').fadeTo(500, 0, function(){
-                        $(this).css('visibility', 'hidden')
-                    })
-                }
-            );
-        }
-    }
-
-    function updateText(folderName, id, element, type) {
-        if (folders[folderName]['docker_preview_text_update_color']) {
-            waitForGlobal('docker', function() {
-                for (const dock of docker) {
-                    if (id === dock['id']) {
-                        if (dock['update'] === 1) {
-                            if (type === 'icon') {
-                                let appname = element.find('.outer > .inner > .appname')
-                                let appnameChild = appname.children('a')
-
-                                if (appnameChild.length > 0) {
-                                    appnameChild.addClass('orange-text')
-                                } else {
-                                    appname.addClass('orange-text')
-                                }
-                            } else {
-                                element.children('span').addClass('orange-text')
-                            }
-                            break
-                        }
-                    }
-                }
-            })
-        }
-    }
-}
-
-function iconStyle(folderName) {
-    switch (folders[folderName]['docker_icon_style']) {
-        case 'label-tab':
-            // blue text / bigger text size
-            $(`.docker-folder-parent-${folderName}`).find('.ct-name .appname').addClass('blue-text').css({
-                'font-size': 'larger',
-                'font-weight': 'bold'
-            })
-
-            $(`.docker-folder-parent-${folderName}`).addClass('label-tab')
-            break;
-    }
-}
-
-function advancedContextMenu(folderName) {
-    if (folders[folderName]['docker_preview_advanced_context_menu']) {
+function advancedContextMenu(folder) {
+    if (folder['properties']['docker_preview_advanced_context_menu']) {
         listview_edit()
         $.post('/plugins/dynamix.docker.manager/include/UpdateConfig.php', {action:'docker_load_start'});
-        for (const child of folders[folderName]['children']) {
-            let id = dockerIds[child]
+        for (const child of folder['properties']['children']) {
+            let id = folder.options['ids'][child]
             const dropdownMenuAdvancedElement = `
                 <div class="dropdown-menu-advanced" id="dropdown-advanced-${id}">
                     <div class="header-name">
@@ -942,7 +490,7 @@ function advancedContextMenu(folderName) {
                         }
 
             let charts = []
-            switch (folders[folderName]['docker_preview_advanced_context_menu_graph_mode']) {
+            switch (folder['properties']['docker_preview_advanced_context_menu_graph_mode']) {
                 case 'none':
                     clone.find('.info > button:first-child').hide()
                     clone.find('.info > div > .graphs').hide()
@@ -1043,7 +591,7 @@ function advancedContextMenu(folderName) {
                 interactive: true,
                 theme: ['tooltipster-docker-folder'],
                 content: clone,
-                trigger: folders[folderName]['docker_preview_advanced_context_menu_activation_mode'],
+                trigger: folder['properties']['docker_preview_advanced_context_menu_activation_mode'],
                 zIndex: 90000,
                 functionBefore: function() {
                     for (const chart of charts) {
@@ -1064,16 +612,9 @@ function advancedContextMenu(folderName) {
 
 $('<input/>', {
     type: 'button',
-    onclick: 'addFolder()',
+    onclick: 'addFolder("docker")',
     value: 'Add Folder',
     style: 'display:none'
-}).insertBefore("div.content > input:first-of-type");
-
-function addFolder() {
-  var path = location.pathname;
-  var x = path.indexOf('?');
-  if (x!=-1) path = path.substring(0,x);
-  location = path+'/AddFolder';
-}
+}).insertBefore('div.content > input:first-of-type');
 
 </script>

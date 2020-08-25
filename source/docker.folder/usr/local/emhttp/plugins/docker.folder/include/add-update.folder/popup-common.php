@@ -20,59 +20,8 @@ require_once "$docroot/webGui/include/Helpers.php";
 </head>
 
 
-<div id="templatePopupConfig" style="display:none">
-  <dl>
-    <dt>Config Type:</dt>
-    <dd>
-      <select name="Type" onchange="toggleMode(this,false);">
-        <option value="WebUI">WebUI</option>
-        <option value="WebUI_New_Tab">WebUI_New_Tab</option>
-        <option value="Docker_Default">Docker_Default</option>
-        <option value="Bash">Bash</option>
-        <option value="Docker_Sub_Menu">Docker_Sub_Menu</option>
-      </select>
-    </dd>
-    <div id="popup-name">
-      <dt id="dt1">Name:</dt>
-      <dd><input type="text" name="Name" required></dd>
-    </div>
-    <div id="popup-icon">
-      <dt id="dt2">Icon:</dt>
-      <dd><input class="fa-icon-picker" type="text" name="Icon"></dd>
-    </div>
-    <div id="popup-cmd">
-      <dt id="dt3">CMD:</dt>
-      <dd><input type="text" name="CMD"></dd>
-    </div>
 
-    <div id="popup-action">
-      <dt>Action:</dt>
-      <dd>
-        <select name="action">
-          <option value="start">Start</option>
-          <option value="stop">Stop</option>
-          <option value="restart">Restart</option>
-          <option value="update">Update</option>
-          <option value="pause">Pause</option>
-          <option value="unpause">Unpause</option>
-        </select>
-      </dd>
-    </div>
-
-    <div id="popup-docker-sub-menu">
-      <dt>Docker:</dt>
-      <dd>
-        <select name="docker_sub_menu">
-        </select>
-      </dd>
-    </div>
-
-  </dl>
-</div>
-
-
-
-
+<body>
 <div id="templateDisplayConfig" style="display:none">
   <input type="hidden" name="confType[]" value="{0}">
   <input type="hidden" name="confName[]" value="{1}">
@@ -101,7 +50,7 @@ require_once "$docroot/webGui/include/Helpers.php";
   <select class="image-picker">
   </select>
 </div>
-
+</body>
 
 
 <script>
@@ -155,9 +104,6 @@ require_once "$docroot/webGui/include/Helpers.php";
           ["Type", "Name", "Icon", "CMD"].forEach(function(e) {
             Opts[e] = getVal(Element, e);
           });
-          if (!Opts.Name) {
-            Opts.Name = makeName(Opts.Type);
-          }
           Opts.Buttons = `<button type='button' onclick='editConfigPopup("${confNum}",false)'>Edit</button>`;
           Opts.Buttons += `<button type='button' onclick='removeConfig("${confNum}")'>Remove</button>`;
           Opts.Number = confNum;
@@ -225,9 +171,6 @@ require_once "$docroot/webGui/include/Helpers.php";
           });
           Opts.Buttons = `<button type='button' onclick='editConfigPopup("${num}",<?= $disableEdit ?>)'>Edit</button>`;
           Opts.Buttons += `<button type='button' onclick='removeConfig("${num}")'>Remove</button>`;
-          if (!Opts.Name) {
-            Opts.Name = makeName(Opts.Type);
-          }
           Opts.Number = num;
           newConf = makeConfig(Opts);
           config.remove();
@@ -245,79 +188,12 @@ require_once "$docroot/webGui/include/Helpers.php";
     $('.fa-icon-picker').iconpicker(".fa-icon-picker");
   }
 
-  function toggleMode(el, disabled) {
-    var base = $(el).parent().parent();
-
-    var name = base.find("#popup-name")
-    var name_input = name.find('input')
-    var icon = base.find("#popup-icon")
-    var icon_input = icon.find('input')
-    var cmd = base.find("#popup-cmd")
-    var cmd_input = cmd.find('input')
-    var action = base.find("#popup-action")
-    var action_input = action.find('select')
-    var subMenu = base.find("#popup-docker-sub-menu")
-    var subMenu_input = subMenu.find('select')
-
-    name.show()
-    icon.hide()
-    cmd.show()
-    action.hide()
-    subMenu.hide()
-
-    switch ($(el)[0].selectedIndex) {
-      case 0: // WebUI
-        base.find('#dt3').text('URL:');
-        icon_input.val('globe')
-        break;
-      case 1: // WebUI_New_Tab
-        base.find('#dt3').text('URL:');
-        icon_input.val('globe')
-        break;
-      case 2: // Docker_Default
-        name.hide()
-        icon.hide()
-        cmd.hide()
-        action.show()
-
-        var iconArray = ['play', 'stop', 'refresh', 'arrow-down', 'pause', 'pause']
-
-        action_input.val(cmd_input.val())
-        action_input.change(function() {
-          var index = $(this).prop('selectedIndex')
-          name_input.val($(this).children("option:selected").text())
-          icon_input.val(iconArray[index])
-          cmd_input.val($(this).val())
-        });
-
-        break;
-      case 3: // Bash
-        icon.show()
-        base.find('#dt3').text('CMD:');
-        break;
-
-      case 4: // Docker_Sub_Menu
-        name.hide()
-        cmd.hide()
-        subMenu.show()
-
-        subMenu_input.val(name_input.val())
-        subMenu_input.change(function() {
-          var index = $(this).prop('selectedIndex')
-          name_input.val($(this).children("option:selected").text())
-          icon_input.val('docker')
-          cmd_input.val($(this).children("option:selected").text())
-        })
-        break;
-    }
-  }
-
   function loadDockerSubMenu(popup) {
     sub_menu = popup.find('#popup-docker-sub-menu > dd > select')
     sub_menu.empty()
     $('div.container_item').each(function() {
       if ($(this).hasClass('checked')) {
-        var name = $(this).find('.info > strong').text()
+        var name = $(this).find('.info > span:last-child > :first-child').text()
 
         sub_menu.append(`<option value="${name}">${name}</option>`);
       }

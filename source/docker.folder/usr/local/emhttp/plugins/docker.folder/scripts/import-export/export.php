@@ -1,7 +1,8 @@
 <?php
-$selection = json_decode($_GET["selection"]);
+$folderFile = $_POST['folderFile'];
+$selection = json_decode($_POST['selection']);
 
-$dockerFoldersRaw = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
+$dockerFoldersRaw = file_get_contents("/boot/config/plugins/docker.folder/$folderFile.json");
 $dockerFolders = json_decode($dockerFoldersRaw);
 
 unset($dockerFolders->settings);

@@ -1,10 +1,17 @@
 <?php
+    $type = $_POST['type'];
+
+    if ($type !== 'vm') {
+        $file = 'folders';
+    } else {
+        $file = 'folders-vm';
+    }
+
     $response = json_decode("${_POST["settings"]}");
-    
     $name = $response->name;
     unset($response->name);
 
-    $inp = file_get_contents('/boot/config/plugins/docker.folder/folders.json');
+    $inp = file_get_contents("/boot/config/plugins/docker.folder/$file.json");
     $tempObj = json_decode($inp);
 
     $tempObj->folders->$name = $response;
@@ -26,7 +33,7 @@
     }
 
     $jsonData = json_encode($tempObj, JSON_PRETTY_PRINT);
-    file_put_contents('/boot/config/plugins/docker.folder/folders.json', $jsonData);
+    file_put_contents("/boot/config/plugins/docker.folder/$file.json", $jsonData);
 
     function write_php_ini($array, $file) {
         $res = array();

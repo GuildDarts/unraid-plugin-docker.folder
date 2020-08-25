@@ -2,6 +2,8 @@ Menu="Dashboard"
 Icon="server"
 ---
 <?php
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-docker.php");
+require_once("/usr/local/emhttp/plugins/docker.folder/include/common-vm.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/common.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/loadlist_edit.php");
 require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.php");
@@ -9,108 +11,153 @@ require_once("/usr/local/emhttp/plugins/docker.folder/include/eventControl_edit.
 
 <script>
 
+(function() {
+    userprefs_fix_apply()
+})();
+
 (async () => {
-    dockerFolders = await read_folders()
-    folders = await dockerFolders['folders']
+    folders = {
+        docker: {},
+        vm: {}
+    }
+    dockerFolders = await read_folders('folders')
+    vmFolders = await read_folders('folders-vm')
     $( "<tbody id='docker_list_storage' style='display:none;'></tbody>" ).insertAfter( "#db-box3 > .docker_view" );
-    activeDropdowns = [];
+    $( "<tbody id='vm_list_storage' style='display:none;'></tbody>" ).insertAfter( "#db-box3 > .vm_view" );
 })();
 
 async function apply_folder() {
-    waitForGlobal("folders", async function() {
-        let folderNames = Object.keys(await folders)
-        folderChildren = []
-        activeFolders = []
-        
-        for (const folderName of folderNames) {
-            edit_folder_base(folderName)
-            edit_folder_extra(folderName)
-        }
-
-        // dashboard expanded
-        for (const folderName of folderNames) {
-            if (folders[folderName]['dashboard_expanded_button']) {
-                dashboard_expanded_button(folderName)
-            }
-
-            // dashboard_expanded - activeDropdowns
-            if (folders[folderName]['dashboard_expanded'] && !activeDropdowns.includes(folderName)) {
-                activeDropdowns.push(folderName)
-            }            
-        }
-
-        // open dropdown on loadlist
-        $('[class*="docker-folder-parent-"]').each(function() {
-            var name = $(this).find('span.inner > span:first-child').text()
-            if (activeDropdowns.includes(name) && $(this).attr('dashboard_expanded') !== 'true') {
-                $(this).attr('dashboard_expanded', true)
-                docker_toggle_visibility(name)
-                $(`.docker-folder-parent-${name}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
-                dashboard_expanded(name)
-            }
-        })
+    waitForGlobal('dockerFolders', async function() {
+        let folders = await dockerFolders['folders']
+        apply_folder_dashboard('docker', folders, dockerOptions)
+    })
+    waitForGlobal('vmFolders', async function() {
+        let folders = await vmFolders['folders']
+        apply_folder_dashboard('vm', folders, vmOptions)
     })
 }
 
-function edit_folder_extra(folderName) {
+async function apply_folder_dashboard(_type, _folders, _options) {
+    let folderNames = Object.keys(await _folders)
+    window[`${_type}Options`]['folderChildren'] = []
+    window[`${_type}Options`]['activeFolders'] = []
+    
+    for (const folderName of folderNames) {
+        folders[_type][folderName] = new folder(folderName, _folders[folderName], _options)
+    }
+
+    for (const folderName of folderNames) {
+        edit_folder_base(folders[_type][folderName])
+        edit_folder_extra(folders[_type][folderName])
+    }
+
+    // dashboard expanded
+    for (const folderName of folderNames) {
+        const folder = folders[_type][folderName]
+
+        if (folder['properties']['dashboard_expanded_button']) {
+            dashboard_expanded_button(folder)
+        }
+
+        // dashboard_expanded - activeDropdowns
+        if (folder['properties']['dashboard_expanded'] && !folder.options['activeDropdowns'].includes(folderName)) {
+            folder.options['activeDropdowns'].push(folderName)
+        }            
+    }
+
+    // open dropdown on loadlist
+    $(`[class*="${_type}-folder-parent-"]`).each(function() {
+        var name = $(this).find(_options['dashboardHideSelectorName']).textFirst()
+        if (_options['activeDropdowns'].includes(name) && $(this).attr('dashboard_expanded') !== 'true') {
+            $(this).attr('dashboard_expanded', true)
+            docker_toggle_visibility(name, _type)
+            $(`.${_type}-folder-parent-${name}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
+            dashboard_expanded(folders[name])
+        }
+    })
+
+    addSwitchListener(_type, _options)
+}
+
+function edit_folder_extra(folder) {
     // started only fix
-    if ($('#apps').prop('checked') && $(`.docker-folder-parent-${folderName}`).find("span.inner > i").hasClass('stopped')) {
-        $(`.docker-folder-parent-${folderName}`).hide()
+    if (folder.options['type'] === 'docker')  {
+        var selector = '#apps'
+    } else {
+        var selector = '#vms'
+    }
+
+    if ($(selector).prop('checked') && folder.parent().find("span.inner > i").hasClass('stopped')) {
+        folder.parent().hide()
     }
 }
 
-function dashboard_expanded_button(folderName) {
-    // add button
-    if ($(`.docker-folder-parent-${folderName}`).children("i").length == 0) {
-        
-        var offset = $(`.docker-folder-parent-${folderName}`).offset()
+function dashboard_expanded_button(folder) {
+    const folderName = folder.name
+    const folderType = folder.options['type']
 
-        $(`.docker-folder-parent-${folderName}`).css('position', 'relative').prepend(`<i class="fa fa-fw fa-chevron-up"" style="position: absolute; top: 22px; left: -16px;"></i>`)
-        $(`.docker-folder-parent-${folderName}`).children("i").click(function() {
-            childrenDropdown(folderName)
-            var selectionIndex = $(`.docker-folder-parent-${folderName}`).index()
-            $('[class*="docker-folder-parent-"]').each(function() {
-                var name = $(this).find('span.inner > span:first-child').text()
+    // add button
+    if (folder.parent().children("i").length == 0) {
+        
+        var offset = folder.parent().offset()
+
+        folder.parent().css('position', 'relative').prepend(`<i class="fa fa-fw fa-chevron-up"" style="position: absolute; top: 22px; left: -16px;"></i>`)
+        folder.parent().children("i").click(function() {
+            childrenDropdown(folderName, folderType)
+            var selectionIndex = folder.parent().index()
+            $(`[class*="${folderType}-folder-parent-"]`).each(function() {
+                var name = $(this).find(folder.options['dashboardHideSelectorName']).text()
                 var index = $(this).index()
                 if (activeDropdowns.includes(name) && name !== folderName && index > selectionIndex) {
-                    childrenDropdown(name)
-                    childrenDropdown(name)
+                    childrenDropdown(name, folderType)
+                    childrenDropdown(name, folderType)
                 }
             })
         });
     }
 }
 
-$('#apps').change(function() {
-    let tmpActiveDropdowns = []
-    $('[class*="docker-folder-parent-"]').each(function() {
-        let name = $(this).find('span.inner > span:first-child').text()
-        let stopped = $(this).find('.inner > i').hasClass('stopped')
-        if (activeDropdowns.includes(name)) {
-            childrenDropdown(name)
-            if (!stopped) {
-                tmpActiveDropdowns.push(name)
-            }
-        }
-    })
-    setTimeout(() => {
-        $('[class*="docker-folder-parent-"]').each(function() {
-            let name = $(this).find('span.inner > span:first-child').text()
-            if (tmpActiveDropdowns.includes(name)) {
-                childrenDropdown(name)
+function addSwitchListener(type, options) {
+    if (type === 'docker')  {
+        var selector = '#apps'
+    } else {
+        var selector = '#vms'
+    }
+
+    $(selector).change(function() {
+        let tmpActiveDropdowns = []
+        $(`[class*="${type}-folder-parent-"]`).each(function() {
+            let name = $(this).find(options['dashboardHideSelectorName']).textFirst()
+            let stopped = $(this).find('.inner > i').hasClass('stopped')
+            if (activeDropdowns.includes(name)) {
+                childrenDropdown(name, type)
+                if (!stopped) {
+                    tmpActiveDropdowns.push(name)
+                }
             }
         })
-    }, 200);
-})
+        setTimeout(() => {
+            $(`[class*="${type}-folder-parent-"]`).each(function() {
+                let name = $(this).find(options['dashboardHideSelectorName']).textFirst()
+                if (tmpActiveDropdowns.includes(name)) {
+                    childrenDropdown(name, type)
+                }
+            })
+        }, 200);
+    })
+}
 
-function dashboard_expanded(folderName) {
-    const spaces_template = `<span class="outer solid apps docker-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
-    const dashboardElement = $('tbody.docker_view > tr > td:nth-child(2)')
+function dashboard_expanded(folder) {
+    const folderName = folder.name
+    const folderType = folder.options['type']
+
+    const spaces_template = `<span class="outer solid apps ${folderType}-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
+    const dashboardElement = $(`tbody.${folderType}_view > tr > td:nth-child(2)`)
 
     // main logic
     var addCountStart = 0
     var addCountEnd = 0
-    var index = dashboardElement.children('span:visible').index(dashboardElement.children(`.docker-folder-parent-${folderName}`))+1
+    var index = dashboardElement.children('span:visible').index(dashboardElement.children(`.${folderType}-folder-parent-${folderName}`))+1
     var rows = 3
 
     // get rows count (should find a better way)
@@ -132,7 +179,7 @@ function dashboard_expanded(folderName) {
 
     // get children count
     let childrenCount = 0
-    $(`.docker-folder-child-${folderName}`).each(function() {
+    folder.child().each(function() {
         if ($(this).css('display') !== 'none') {
             childrenCount++
         }
@@ -144,29 +191,29 @@ function dashboard_expanded(folderName) {
         index++
     }
 
-    childrenMove(folderName)
-    $(`.docker-folder-child-${folderName}`).removeClass('docker-folder-hide')
+    childrenMove(folder)
+    folder.child().removeClass('folder-hide')
 
     // add spaces at start
     for (i=1; i <= addCountStart; i++) {
-        $(spaces_template).insertAfter($(`.docker-folder-parent-${folderName}`))
+        $(spaces_template).insertAfter(folder.parent())
     }
 
     // add spaces at end
     for (i=1; i <= addCountEnd; i++) {
-        $(spaces_template).insertAfter(dashboardElement.children(`.docker-folder-child-${folderName}:visible:last`))
+        $(spaces_template).insertAfter(dashboardElement.children(`.${folderType}-folder-child-${folderName}:visible:last`))
     }
 
     // add line at start
-    $(`.docker-folder-child-${folderName}`).each(function(i){
+    folder.child().each(function(i){
         if (i < rows) {
             $(this).css('border-top', 'inset').css('margin-bottom', '16px')
         }
     })
     if (childrenCount < rows) {
-        $(`.docker-folder-spacer-${folderName}`).each(function() {
+        $(`.${folderType}-folder-spacer-${folderName}`).each(function() {
             let sIndex = $(this).index()
-            if (sIndex > dashboardElement.children(`.docker-folder-child-${folderName}`).index()) {
+            if (sIndex > dashboardElement.children(`.${folderType}-folder-child-${folderName}`).index()) {
                 $(this).css('border-top', 'inset').css('margin-bottom', '16px')
             }
         })
@@ -174,25 +221,27 @@ function dashboard_expanded(folderName) {
 
     // add line at end
     if (addCountEnd === 0) {
-        var lastIndex = $(`.docker-folder-child-${folderName}`).last().index()
+        var lastIndex = folder.child().last().index()
     } else {
-        var lastIndex = $(`.docker-folder-spacer-${folderName}`).last().index()
+        var lastIndex = $(`.${folderType}-folder-spacer-${folderName}`).last().index()
     }
     for(i=0; i < addCountEnd+rows-addCountEnd; i++) {
-        $('tbody.docker_view > tr > td:nth-child(2)').children().eq(lastIndex-i).css('border-bottom', 'solid')
+        $(`tbody.${folderType}_view > tr > td:nth-child(2)`).children().eq(lastIndex-i).css('border-bottom', 'solid')
     }
 }
 
-function childrenDropdown(folderName) {
-    docker_toggle_visibility(folderName);
-    $(`.docker-folder-parent-${folderName}`).children('i').toggleClass('fa-chevron-down fa-chevron-up');
+function childrenDropdown(folderName, folderType) {
+    const folder = folders[folderType][folderName]
 
-    if ($(`.docker-folder-parent-${folderName}`).children('i').hasClass('fa-chevron-up')) {
+    docker_toggle_visibility(folderName, folderType);
+    folder.parent().children('i').toggleClass('fa-chevron-down fa-chevron-up');
+
+    if (folder.parent().children('i').hasClass('fa-chevron-up')) {
         // add to storage
-        for (const folder of folders[folderName]['children'].reverse()) {
-            $(`.docker-folder-child-${folderName}`).each(function() {
-                if (folder == $(this).find('span.inner > span:first-child').text()) {
-                    $(this).appendTo('#docker_list_storage');
+        for (const child of folder['properties']['children'].reverse()) {
+            folder.child().each(function() {
+                if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
+                    $(this).appendTo(`#${folderType}_list_storage`);
                 }
             });
         }
@@ -201,21 +250,21 @@ function childrenDropdown(folderName) {
             return elm != folderName;
         })
         // remove spacers
-        $(`.docker-folder-spacer-${folderName}`).each(function() {
+        $(`.${folderType}-folder-spacer-${folderName}`).each(function() {
             $(this).remove();
         });
     } else {
-        dashboard_expanded(folderName);
+        dashboard_expanded(folder);
         // add folderName to activeDropdowns
         activeDropdowns.push(folderName);
     }
 }
 
-function childrenMove(folderName) {
-    for (const folder of folders[folderName]['children'].reverse()) {
-        $(`.docker-folder-child-${folderName}`).each(function() {
-            if (folder == $(this).find('span.inner > span:first-child').text()) {
-                $(this).insertAfter(`.docker-folder-parent-${folderName}`);
+function childrenMove(folder) {
+    for (const child of folder['properties']['children'].reverse()) {
+        folder.child().each(function() {
+            if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
+                $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.name}`);
             }
         });
     }

@@ -4,7 +4,7 @@
 }
 </style>
 
-<div id="templatePopupGlobalSettings" style="display:none">
+<div id="templatePopupGlobalSettings-docker" style="display:none">
   <div id="popupGlobalSettings">
     <div>
         <dl>
@@ -19,13 +19,21 @@
   </div>
 </div>
 
+<div id="templatePopupGlobalSettings-vm" style="display:none">
+  <div id="popupGlobalSettings">
+    <div>
+    </div>
+  </div>
+</div>
+
 <script>
-function globalSettingsPopup() {
+function globalSettingsPopup(_folderType) {
+    let folderType = (_folderType === 'folders-vm') ? 'vm' : 'docker'
     let title = 'Import/Export Folder';
     let popup = $('#dialogAddConfig');
 
     // Load popup the popup with the template info
-    popup.html($('#templatePopupGlobalSettings').html());
+    popup.html($(`#templatePopupGlobalSettings-${folderType}`).html());
 
     // load settings
     popup.find('.globalSetting').each(function() {
@@ -116,6 +124,7 @@ function globalSettingsPopup() {
         dockerFolders['settings'] = settings
 
         $.post('/plugins/docker.folder/scripts/save_global-settings.php', {
+            folderFile: '<?= $folderFile?>',
             settings: settingsSting,
         });
     }

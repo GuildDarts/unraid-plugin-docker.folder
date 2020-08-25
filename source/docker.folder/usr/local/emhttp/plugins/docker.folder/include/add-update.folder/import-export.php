@@ -1,5 +1,5 @@
 <?php
-$foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/folders.json");
+$foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/$folderFile.json");
 $dockerFolders = json_decode($foldersRaw);
 $folders = $dockerFolders->folders;
 
@@ -72,6 +72,7 @@ $foldersSettings .= "</div>";
       } else if (result['foldersVersion'] < foldersVersion) {
         var resultString = JSON.stringify(result);
         $.post("/plugins/docker.folder/scripts/migration.php", {
+          folderFile: '<?= $folderFile?>',
           importFolder: resultString
         }, function() {
           swal({
@@ -91,7 +92,8 @@ $foldersSettings .= "</div>";
         var resultString = JSON.stringify(result);
         console.log(resultString);
         $.post("/plugins/docker.folder/scripts/import-export/import.php", {
-          import: resultString
+          folderFile: '<?= $folderFile?>',
+          importFolder: resultString
         }, function() {
           swal({
             title: "Folder Import Done",
@@ -130,7 +132,8 @@ $foldersSettings .= "</div>";
 
     selectionString = JSON.stringify(selection)
 
-    var exportFolders = await Promise.resolve($.get("/plugins/docker.folder/scripts/import-export/export.php", {
+    var exportFolders = await Promise.resolve($.post("/plugins/docker.folder/scripts/import-export/export.php", {
+      folderFile: '<?= $folderFile?>',
       selection: selectionString
     }));
 
@@ -181,7 +184,8 @@ $foldersSettings .= "</div>";
   }
 
   function download(name, text) {
-    var filename = `docker.folder-${name}-${date()}.json`
+    let vm = ('<?= $folderFile?>' === 'folders-vm') ? 'vm-' : ''
+    var filename = `docker.folder-${vm}${name}-${date()}.json`
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(text));

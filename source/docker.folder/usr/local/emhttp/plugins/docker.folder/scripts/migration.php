@@ -23,7 +23,7 @@
         $folders = json_decode($import);
 
         // exit if there are no folders
-            if (count((array)$folders) == null || count((array)$folders) < 2 || (count((array)$folders->folders) == 0 && $folders->folders != null) ) {
+        if (count((array)$folders) == null || count((array)$folders) < 2 || (count((array)$folders->folders) == 0 && $folders->folders != null) ) {
             logger('No folders to migrate');
             finish($path, $folders, $folders_file, $isImport);
             exit();
@@ -238,6 +238,22 @@
 
         // add fix_docker_page_shifting
         $folders->settings->fix_docker_page_shifting = false;
+
+        return $folders;
+    }
+
+    function migration_4_0($folders) {
+        foreach ($folders->folders as $folderKey => &$folder) {
+            foreach ($folder->buttons as $buttonKey => &$button) {
+                if($button->type === 'Docker_Default') {
+                    $button->type = 'Action';
+                }
+
+                if($button->type === 'Docker_Sub_Menu') {
+                    $button->type = 'Sub_Menu';
+                }
+            }
+        }
 
         return $folders;
     }

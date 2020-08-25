@@ -1,18 +1,14 @@
 <?php
-
-// stuff for checking if container is stopped (then dont restart)
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once "$docroot/plugins/dynamix.docker.manager/include/DockerClient.php";
 
-// Read container info
 $DockerClient    = new DockerClient();
 $DockerTemplates = new DockerTemplates();
 $containers      = $DockerClient->getDockerContainers();
 $allInfo = $DockerTemplates->getAllInfo();
 
-
-$action = $_GET["action"];
-$iContainers = json_decode("${_GET["containers"]}",true);
+$action = $_POST["action"];
+$iContainers = json_decode("${_POST["containers"]}",true);
 
 foreach ($iContainers as $iContainer) {
     if ($action == "restart") {
