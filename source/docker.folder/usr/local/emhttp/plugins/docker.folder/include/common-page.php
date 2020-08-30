@@ -406,7 +406,7 @@ function dockerPreview(folder) {
                         clone.find('.outer > .inner').append(log)
                     }
                     if (folder['properties']['docker_preview_icon_show_webui']) {
-                        let webui = getDockerWebUI(folder.options['ids']['name'])
+                        let webui = getDockerWebUI(folder.options['ids'][name])
                         if (webui) {
                             clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
                         }
@@ -488,7 +488,7 @@ function iconStyle(folder) {
     switch (folder['properties']['docker_icon_style']) {
         case 'label-tab':
             // blue text / bigger text size
-            folder.parent().find('td:first-child .appname').addClass('blue-text').css({
+            folder.parent().find('> td:first-child .appname').addClass('blue-text').css({
                 'font-size': 'larger',
                 'font-weight': 'bold'
             })
