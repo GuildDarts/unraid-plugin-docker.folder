@@ -185,7 +185,7 @@ $foldersSettings .= "</div>";
 
   function download(name, text) {
     let vm = ('<?= $folderFile?>' === 'folders-vm') ? 'vm-' : ''
-    var filename = `docker.folder-${vm}${name}-${date()}.json`
+    var filename = `<?= $var['NAME']?>.docker.folder-${vm}${name}-${date()}.json`
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
