@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.08.30">
+<!ENTITY version   "2020.09.09">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "d1b27c13c73ead3d42a60b9d62fd3ee6">
+<!ENTITY md5       "70cc0e7c1dbc41bfa9813844e5d124c8">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.09.09
+- Change: Add hostname to folder export
+
 ###2020.08.30
 - Fixed: Preview no webui shortcut and visual issue
 
