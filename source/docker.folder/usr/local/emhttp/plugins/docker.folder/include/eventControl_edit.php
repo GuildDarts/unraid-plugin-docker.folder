@@ -9,7 +9,7 @@
                 for (const folderId of folderIds) {
                     for (const child of folders['docker'][folderId]['properties']['children']) {
                         if (dockerName === child) {
-                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: 'docker', folderId: folderId, child: child}, function(){(async () => {dockerFolders = await read_folders('folders')})();});
+                            $.post("/plugins/docker.folder/scripts/save_folder.php", {type: 'docker', childrenRemove: JSON.stringify([{folderId: folderId, child: child}])}, function(){(async () => {dockerFolders = await read_folders('folders')})();});
                         }
                     }
                 }

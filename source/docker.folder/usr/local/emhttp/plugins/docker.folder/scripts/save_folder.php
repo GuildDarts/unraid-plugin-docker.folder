@@ -7,7 +7,8 @@
         $file = 'folders-vm';
     }
 
-    $response = json_decode("${_POST["settings"]}");
+    $folder = json_decode("${_POST["settings"]}");
+    $childrenRemove = json_decode("${_POST["childrenRemove"]}");
 
     $folderRaw = file_get_contents("/boot/config/plugins/docker.folder/$file.json");
     $folders = json_decode($folderRaw);
@@ -15,28 +16,30 @@
     $editFolderId = $_POST['editFolderId'];
     if ($editFolderId) {
         $id = $editFolderId;
-    } else {
+    } else if (isset($folder)) {
         $id = generateId($folders);
     }
-    
-    $folders->folders->$id = $response;
+
+    // remove children from folder
+    if (isset($childrenRemove)) {
+        foreach ($childrenRemove as $child) {
+            $needle = $child->child;
+            $folderId = $child->folderId;
+            if (($key = array_search($child->child, $folders->folders->$folderId->children)) !== false) {
+                unset($folders->folders->$folderId->children[$key]);
+                $folders->folders->$folderId->children = array_values($folders->folders->$folderId->children);
+            }
+        }
+    }
+
+    if (isset($folder)) {
+        $folders->folders->$id = $folder;
+    }
 
     $jsonData = json_encode($folders, JSON_PRETTY_PRINT);
     file_put_contents("/boot/config/plugins/docker.folder/$file.json", $jsonData);
 
-    function write_php_ini($array, $file) {
-        $res = array();
-        foreach($array as $key => $val)
-        {
-            if(is_array($val))
-            {
-                $res[] = "[$key]";
-                foreach($val as $skey => $sval) $res[] = "$skey=".(is_numeric($sval) ? $sval : '"'.$sval.'"');
-            }
-            else $res[] = "$key=".(is_numeric($val) ? $val : '"'.$val.'"');
-        }
-        file_put_contents($file, implode("\r\n", $res));
-    }
+
 
     function generateId($folders) {
         $ids = [];

@@ -187,6 +187,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
     } else {
       var folder_children = folders[editFolderId]['children']
     }
+    let childrenRemove = []
     $(".settingC").each(function() {
       var value = $(this).prop("checked");
       var name = $(this).attr('name');
@@ -196,7 +197,8 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
         // remove docker from old folder e.g docker is in folder but you check it in another folder and save
         if ($(this).parent().parent().hasClass('disabled')) {
           let oldFolder = $(this).parent().parent().find('.current-folder').text().replace('Folder: ', '')
-          $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: options['type'], folderId: oldFolder, child: name});
+          let remove = {folderId: oldFolder, child: name}
+          childrenRemove.push(remove)
         }
       }
       // remove value from array e.g removing a folder
@@ -209,7 +211,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
     });
     settings["buttons"] = buttonAdd()
     settings["children"] = folder_children;
-    return settings;
+    return {folderSettings: settings, childrenRemove: childrenRemove};
   }
 
 
@@ -241,12 +243,14 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
 
     console.log(settings)
 
-    let settingsSting = JSON.stringify(await settings)
+    let settingsSting = JSON.stringify(await settings['folderSettings'])
+    let childrenRemoveString = JSON.stringify(await settings['childrenRemove'])
 
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
         type: options['type'],
         settings: await settingsSting,
-        editFolderId: await editFolderId
+        editFolderId: await editFolderId,
+        childrenRemove: await childrenRemoveString
     }, function() {
         //lazy fck
         location.replace(`/${location.href.split("/")[3]}`)
