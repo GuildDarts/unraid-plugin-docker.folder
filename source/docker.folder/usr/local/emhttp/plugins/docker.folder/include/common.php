@@ -66,18 +66,18 @@ echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 
 <script>
 class folder {
-    constructor(_name, _properties, _options) {
-        this.name = _name
+    constructor(_id, _properties, _options) {
+        this.id = _id
         this.properties = _properties
         this.options = _options
     }
 
     parent() {
-        return $(`.${this.options['type']}-folder-parent-${this.name}`)
+        return $(`.${this.options['type']}-folder-parent-${this.id}`)
     }
 
     child() {
-        return $(`.${this.options['type']}-folder-child-${this.name}`)
+        return $(`.${this.options['type']}-folder-child-${this.id}`)
     }
 }
 </script>
@@ -85,7 +85,7 @@ class folder {
 <script src="/plugins/docker.folder/include/freezeframe.min.js"></script>
 <script>
     function checkStatus(folder) {
-        const folderName = folder.name
+        const folderId = folder.id
 
         var selector = folder.parent().find("span.inner > i")
         var max = folder['properties']['children'].length
@@ -131,12 +131,12 @@ class folder {
     }
 
     function loadDropdownButtons(folder) {
-        const folderName = folder.name
+        const folderId = folder.id
         const folderType = folder.options['type']
 
-        context.attach(`#${folderType}-folder-${folderName}`, [{}]);
+        context.attach(`#${folderType}-folder-${folderId}`, [{}]);
 
-        let dropdown = $(`#dropdown-${folderType}-folder-${folderName}`)
+        let dropdown = $(`#dropdown-${folderType}-folder-${folderId}`)
         dropdown.empty()
 
         dropdown.addClass('docker-dropdown-menu')
@@ -152,7 +152,7 @@ class folder {
 
 
     function dropdownButton(dropdown, folder, type, name, icon, cmd) {
-        const folderName = folder.name
+        const folderId = folder.id
         const folderType = folder.options['type']
 
         if (type == "divider") {
@@ -165,7 +165,7 @@ class folder {
         switch (name) {
             case "Edit Folder":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
-                    editFolder(folderName, folder.options['type'])
+                    editFolder(folderId, folder.options['type'])
                 })
                 break;
 
@@ -173,7 +173,7 @@ class folder {
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     swal({
                         title: "Are you sure?",
-                        text: "Remove folder: " + folderName,
+                        text: `Remove folder: ${folder.properties['name']} (${folderId})`,
                         type: "warning",
                         showCancelButton: true
                     }, function() {
@@ -207,7 +207,7 @@ class folder {
 
             case "Bash":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
-                    let title = `${name}: ${folderName}`;
+                    let title = `${name}: ${folderId}`;
                     let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`;
                     popupWithIframe(title, address, true, 'loadlist');
                 })
@@ -277,7 +277,8 @@ class folder {
     }
 
     function edit_folder_base(folder) {
-        const folderName = folder.name
+        const folderId = folder.id
+        const folderName = folder.properties['name']
         const folderType = folder.options['type']
 
         // regex
@@ -297,17 +298,18 @@ class folder {
         if (location.pathname === '/Dashboard') {
             let type = (folderType === 'docker') ? 'apps': 'vms'
             var selector = `#db-box3 > tbody.${folderType}_view > tr > td:nth-child(2)`
-            var folderTemplate = `<span class="outer solid ${type} stopped ${folderType}-folder-parent-${folderName}"><span class="hand" id="${folderType}-folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span>`
+            var folderTemplate = `<span class="outer solid ${type} stopped ${folderType}-folder-parent-${folderId}"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="">${folderName}</span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span>`
         } else {
             var selector = folder['options']['listSelector']
+            let name = (folderType === 'vm') ? 'vm' : 'ct'
             if (folder['options']['type'] === 'docker') {
-                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderName}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td class="autostart"></td><td></td></tr>`
+                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderId}"><td class="${name}-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderId}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td class="autostart"></td><td></td></tr>`
             } else {
-                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderName}"><td class="ct-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderName}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderName}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td colspan="5" class="dockerPreview"></td><td class="autostart"></td></tr>`
+                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderId}"><td class="${name}-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderId}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td colspan="5" class="dockerPreview"></td><td class="autostart"></td></tr>`
             }
         }
 
-        var prefsArray = Object.values(folder['options']['prefs']);
+        const prefsArray = Object.values(folder['options']['prefs']);
 
         var insertIndex = 0
 
@@ -319,20 +321,24 @@ class folder {
         }
 
         // insert at start if not in prefs
-        if (!prefsArray.includes(`${folderName}-folder`)) {
+        if (!prefsArray.includes(`${folderId}-folder`)) {
             insertAtIndex(0, folderTemplate, selector)
         } else {
-            for (i = 0; i < prefsArray.length; i++) {
-                if (prefsArray[i] == `${folderName}-folder`) {
+            for (pref of prefsArray) {
+                if (pref === `${folderId}-folder`) {
                     insertAtIndex(insertIndex, folderTemplate, selector)
                     break
                 }
-                if (folder.options['folderChildren'].includes(prefsArray[i])) {
+                if (folder.options['folderChildren'].includes(pref)) {
+                    continue
+                }
+                // continue if folder is not in activeFolders
+                if (pref.includes('-folder') && !folder.options['activeFolders'].includes(pref.slice(0, -7))) {
                     continue
                 }
                 // continue incase folder does not get remove from userprefs (better safe than sorry)
-                let folderNames = Object.keys(folders[folderType])
-                if (prefsArray[i].includes('-folder') && !folderNames.includes(prefsArray[i].slice(0, -7))) {
+                let folderIds = Object.keys(folders[folderType])
+                if (pref.includes('-folder') && !folderIds.includes(pref.slice(0, -7))) {
                     continue
                 }
                 insertIndex++
@@ -340,7 +346,7 @@ class folder {
         }
 
         // add folder to activeFolders
-        folder.options['activeFolders'].push(folderName)
+        folder.options['activeFolders'].push(folderId)
 
         loadDropdownButtons(folder)
 
@@ -360,7 +366,7 @@ class folder {
 
                     svgElement.find('style')[0].sheet.insertRule(`#${svgId} * {animation-play-state: paused !important}`, 0)
 
-                    $(`.${folderType}-folder-parent-${folderName},.${folderType}-folder-child-div-${folderName},#dropdown-${folderType}-folder-${folderName}`).hover(
+                    $(`.${folderType}-folder-parent-${folderId},.${folderType}-folder-child-div-${folderId},#dropdown-${folderType}-folder-${folderId}`).hover(
                         function() {
                             setSvgPlayState('running')
                         }, function() {
@@ -389,7 +395,7 @@ class folder {
                         warnings: false
                     });
 
-                    $(`.${folderType}-folder-parent-${folderName},.${folderType}-folder-child-div-${folderName},#dropdown-${folderType}-folder-${folderName}`).hover(
+                    $(`.${folderType}-folder-parent-${folderId},.${folderType}-folder-child-div-${folderId},#dropdown-${folderType}-folder-${folderId}`).hover(
                         function() {
                             iconFreeze.start()
                         }, function() {
@@ -411,7 +417,7 @@ class folder {
             return;
         }
 
-        $(`${selector} > :nth-child(${i})`).after($(template));
+        $(`${selector} > :not([id*="name-"])`).eq(i-1).after($(template));
     }
 
     function getDockerWebUI(id) {
@@ -470,11 +476,11 @@ class folder {
         removeSubMenu('vm')
     })
 
-    function editFolder(folderName, type) {
+    function editFolder(folderId, type) {
         var path = location.pathname;
         var x = path.indexOf('?');
         if (x != -1) path = path.substring(0, x);
-        location = `${path}/UpdateFolder?type=${type}&folderName=${folderName}`;
+        location = `${path}/UpdateFolder?type=${type}&folderId=${folderId}`;
     }
 
     async function read_folders(file, runscount) {
@@ -513,7 +519,7 @@ class folder {
                 return
             }
             console.log("Docker Folder: migration")
-            $.post("/plugins/docker.folder/scripts/migration.php", function() {
+            $.post("/plugins/docker.folder/scripts/migration/common_migration.php", function() {
                 read_folders(file, runs)
             });
         }
@@ -534,22 +540,22 @@ class folder {
     function folderRemove(folder) {
         $.post("/plugins/docker.folder/scripts/remove_folder.php", {
             type: folder.options['type'],
-            folderName: folder.name
+            folderId: folder.id
         }, function() {
             location.reload()
         });
     }
 
     function docker_hide(folder) {
-        const folderName = folder.name
+        const folderId = folder.id
         const folderType = folder.options['type']
 
         if (location.pathname === '/Dashboard') {
-            $(`#${folderType}_list_storage > .${folderType}-folder-child-${folderName}`).remove()
+            $(`#${folderType}_list_storage > .${folderType}-folder-child-${folderId}`).remove()
             var selector = `#db-box3 > tbody.${folderType}_view > tr > td:nth-child(2) > span.outer`
             var selectorName = folder.options['dashboardHideSelectorName']
         } else {
-            $(`#${folderType}_list_storage > .${folderType}-folder-child-div-${folderName} > .${folderType}-folder-child-${folderName}`).remove()
+            $(`#${folderType}_list_storage > .${folderType}-folder-child-div-${folderId} > .${folderType}-folder-child-${folderId}`).remove()
             var selector = folder['options']['hideSelector']
             var selectorName = folder['options']['hideSelectorName']
         }
@@ -558,14 +564,14 @@ class folder {
             let name = $(this).find(selectorName).textFirst()
             let folderChildren = folder['properties']['children']
             for (const child of folderChildren) {
-                if (child === name) {
+                if (child === name && !$(this).attr('class').includes('-folder-parent-')) {
                     // hide disk devices for vms
                     if (folderType === 'vm' && location.pathname !== '/Dashboard') {
                         let id = $(this).attr('parent-id')
                         slideUpRows($(`#name-${id}`))
                     }
 
-                    $(this).addClass(`folder-hide ${folderType}-folder-child-${folderName}`)
+                    $(this).addClass(`folder-hide ${folderType}-folder-child-${folderId}`)
                     $(this).appendTo(`#${folderType}_list_storage`)
                 }
             }
@@ -573,8 +579,8 @@ class folder {
 
     }
 
-    function docker_toggle_visibility(folderName, folderType) {
-        $(`.${folderType}-folder-child-${folderName}`).each(function() {
+    function docker_toggle_visibility(folderId, folderType) {
+        $(`.${folderType}-folder-child-${folderId}`).each(function() {
             $(this).toggleClass('folder-hide');
         });
     }

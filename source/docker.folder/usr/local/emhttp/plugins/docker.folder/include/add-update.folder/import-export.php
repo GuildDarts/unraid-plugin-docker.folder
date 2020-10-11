@@ -15,7 +15,7 @@ foreach ($folders as $folderKey => &$folder) {
   $foldersSettings .= "<div class='folder_item'>";
   $foldersSettings .= "<div class='info'><img class='folder_img' src='" . $img . "'>";
 
-  $foldersSettings .= "<strong>$folderKey</strong>";
+  $foldersSettings .= "<strong>$folder->name</strong>";
 
   $foldersSettings .= "<div class='container-id' style='display:none;'>$id</div></div>";
 

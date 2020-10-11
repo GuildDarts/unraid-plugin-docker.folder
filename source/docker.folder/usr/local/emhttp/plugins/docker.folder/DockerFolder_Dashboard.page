@@ -38,30 +38,30 @@ async function apply_folder() {
 }
 
 async function apply_folder_dashboard(_type, _folders, _options) {
-    let folderNames = Object.keys(await _folders)
+    let folderIds = Object.keys(await _folders)
     window[`${_type}Options`]['folderChildren'] = []
     window[`${_type}Options`]['activeFolders'] = []
     
-    for (const folderName of folderNames) {
-        folders[_type][folderName] = new folder(folderName, _folders[folderName], _options)
+    for (const folderId of folderIds) {
+        folders[_type][folderId] = new folder(folderId, _folders[folderId], _options)
     }
 
-    for (const folderName of folderNames) {
-        edit_folder_base(folders[_type][folderName])
-        edit_folder_extra(folders[_type][folderName])
+    for (const folderId of folderIds) {
+        edit_folder_base(folders[_type][folderId])
+        edit_folder_extra(folders[_type][folderId])
     }
 
     // dashboard expanded
-    for (const folderName of folderNames) {
-        const folder = folders[_type][folderName]
+    for (const folderId of folderIds) {
+        const folder = folders[_type][folderId]
 
         if (folder['properties']['dashboard_expanded_button']) {
             dashboard_expanded_button(folder)
         }
 
         // dashboard_expanded - activeDropdowns
-        if (folder['properties']['dashboard_expanded'] && !folder.options['activeDropdowns'].includes(folderName)) {
-            folder.options['activeDropdowns'].push(folderName)
+        if (folder['properties']['dashboard_expanded'] && !folder.options['activeDropdowns'].includes(folderId)) {
+            folder.options['activeDropdowns'].push(folderId)
         }            
     }
 
@@ -93,7 +93,7 @@ function edit_folder_extra(folder) {
 }
 
 function dashboard_expanded_button(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
 
     // add button
@@ -103,12 +103,12 @@ function dashboard_expanded_button(folder) {
 
         folder.parent().css('position', 'relative').prepend(`<i class="fa fa-fw fa-chevron-up"" style="position: absolute; top: 22px; left: -16px;"></i>`)
         folder.parent().children("i").click(function() {
-            childrenDropdown(folderName, folderType)
+            childrenDropdown(folderId, folderType)
             var selectionIndex = folder.parent().index()
             $(`[class*="${folderType}-folder-parent-"]`).each(function() {
                 var name = $(this).find(folder.options['dashboardHideSelectorName']).text()
                 var index = $(this).index()
-                if (folder.options['activeDropdowns'].includes(name) && name !== folderName && index > selectionIndex) {
+                if (folder.options['activeDropdowns'].includes(name) && name !== folderId && index > selectionIndex) {
                     childrenDropdown(name, folderType)
                     childrenDropdown(name, folderType)
                 }
@@ -148,16 +148,16 @@ function addSwitchListener(type, options) {
 }
 
 function dashboard_expanded(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
 
-    const spaces_template = `<span class="outer solid apps ${folderType}-folder-spacer-${folderName}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
+    const spaces_template = `<span class="outer solid apps ${folderType}-folder-spacer-${folderId}"><span class="inner" style="margin-left: 42px;margin-bottom: 17px;"><span class=""></span><br><i class=""></i><span></span></span></span>`
     const dashboardElement = $(`tbody.${folderType}_view > tr > td:nth-child(2)`)
 
     // main logic
     var addCountStart = 0
     var addCountEnd = 0
-    var index = dashboardElement.children('span:visible').index(dashboardElement.children(`.${folderType}-folder-parent-${folderName}`))+1
+    var index = dashboardElement.children('span:visible').index(dashboardElement.children(`.${folderType}-folder-parent-${folderId}`))+1
     var rows = 3
 
     // get rows count (should find a better way)
@@ -201,7 +201,7 @@ function dashboard_expanded(folder) {
 
     // add spaces at end
     for (i=1; i <= addCountEnd; i++) {
-        $(spaces_template).insertAfter(dashboardElement.children(`.${folderType}-folder-child-${folderName}:visible:last`))
+        $(spaces_template).insertAfter(dashboardElement.children(`.${folderType}-folder-child-${folderId}:visible:last`))
     }
 
     // add line at start
@@ -211,9 +211,9 @@ function dashboard_expanded(folder) {
         }
     })
     if (childrenCount < rows) {
-        $(`.${folderType}-folder-spacer-${folderName}`).each(function() {
+        $(`.${folderType}-folder-spacer-${folderId}`).each(function() {
             let sIndex = $(this).index()
-            if (sIndex > dashboardElement.children(`.${folderType}-folder-child-${folderName}`).index()) {
+            if (sIndex > dashboardElement.children(`.${folderType}-folder-child-${folderId}`).index()) {
                 $(this).css('border-top', 'inset').css('margin-bottom', '16px')
             }
         })
@@ -223,17 +223,17 @@ function dashboard_expanded(folder) {
     if (addCountEnd === 0) {
         var lastIndex = folder.child().last().index()
     } else {
-        var lastIndex = $(`.${folderType}-folder-spacer-${folderName}`).last().index()
+        var lastIndex = $(`.${folderType}-folder-spacer-${folderId}`).last().index()
     }
     for(i=0; i < addCountEnd+rows-addCountEnd; i++) {
         $(`tbody.${folderType}_view > tr > td:nth-child(2)`).children().eq(lastIndex-i).css('border-bottom', 'solid')
     }
 }
 
-function childrenDropdown(folderName, folderType) {
-    const folder = folders[folderType][folderName]
+function childrenDropdown(folderId, folderType) {
+    const folder = folders[folderType][folderId]
 
-    docker_toggle_visibility(folderName, folderType);
+    docker_toggle_visibility(folderId, folderType);
     folder.parent().children('i').toggleClass('fa-chevron-down fa-chevron-up');
 
     if (folder.parent().children('i').hasClass('fa-chevron-up')) {
@@ -245,18 +245,18 @@ function childrenDropdown(folderName, folderType) {
                 }
             });
         }
-        // remove folderName from activeDropdowns
+        // remove folderId from activeDropdowns
         folder.options['activeDropdowns'] = folder.options['activeDropdowns'].filter(function(elm) {
-            return elm != folderName;
+            return elm != folderId;
         })
         // remove spacers
-        $(`.${folderType}-folder-spacer-${folderName}`).each(function() {
+        $(`.${folderType}-folder-spacer-${folderId}`).each(function() {
             $(this).remove();
         });
     } else {
         dashboard_expanded(folder);
-        // add folderName to activeDropdowns
-        folder.options['activeDropdowns'].push(folderName);
+        // add folderId to activeDropdowns
+        folder.options['activeDropdowns'].push(folderId);
     }
 }
 
@@ -264,7 +264,7 @@ function childrenMove(folder) {
     for (const child of folder['properties']['children'].reverse()) {
         folder.child().each(function() {
             if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
-                $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.name}`);
+                $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.id}`);
             }
         });
     }

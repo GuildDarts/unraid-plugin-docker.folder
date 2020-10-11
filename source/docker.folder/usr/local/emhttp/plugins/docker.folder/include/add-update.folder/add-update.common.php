@@ -182,10 +182,10 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
 
 
 
-    if (editFolderName == null) {
+    if (editFolderId == null) {
       var folder_children = new Array();
     } else {
-      var folder_children = folders[editFolderName]['children']
+      var folder_children = folders[editFolderId]['children']
     }
     $(".settingC").each(function() {
       var value = $(this).prop("checked");
@@ -196,7 +196,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
         // remove docker from old folder e.g docker is in folder but you check it in another folder and save
         if ($(this).parent().parent().hasClass('disabled')) {
           let oldFolder = $(this).parent().parent().find('.current-folder').text().replace('Folder: ', '')
-          $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: options['type'], folderName: oldFolder, child: name});
+          $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: options['type'], folderId: oldFolder, child: name});
         }
       }
       // remove value from array e.g removing a folder
@@ -239,30 +239,14 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
 
     let settings = await getSettings(options)
 
-    let idKeys = Object.keys(options['ids'])
-    for (const id of idKeys) {
-      if (settings['name'] === id) {
-        swal({
-          title: "Same Name",
-          text: "The Folder has the same name as an existing docker \n (note is case sensitive)",
-          type: "warning"
-        })
-        return
-      }
-    }
-
     console.log(settings)
 
     let settingsSting = JSON.stringify(await settings)
 
-    if (settings['name'] !== editFolderName && editFolderName !== null) {
-      var rename = editFolderName
-    }
-
     $.post("/plugins/docker.folder/scripts/save_folder.php", {
         type: options['type'],
         settings: await settingsSting,
-        rename: await rename
+        editFolderId: await editFolderId
     }, function() {
         //lazy fck
         location.replace(`/${location.href.split("/")[3]}`)

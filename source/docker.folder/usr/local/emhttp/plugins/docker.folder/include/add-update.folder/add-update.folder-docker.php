@@ -45,7 +45,7 @@ $dockerSettings .= "</div>";
       <div>
         <dl>
           <dt>Name:</dt>
-          <dd><input class="setting" type="text" name="name" pattern="[A-Za-z0-9_\-.]+" title="Only a-z nubers and ._- sorry" required></dd>
+          <dd><input class="setting" type="text" name="name" title="NOW with unicode 🎂" required></dd>
         </dl>
       </div>
 
@@ -357,22 +357,22 @@ $dockerSettings .= "</div>";
 
 <script>
   let url = new URLSearchParams(window.location.search)
-  editFolderName = url.get("folderName")
+  editFolderId = url.get("folderId")
 
   init()
 
   async function init() {
     dockerFolders = await read_folders('folders')
     folders = await dockerFolders['folders']
-    let folderNames = Object.keys(await folders)
+    let folderIds = Object.keys(await folders)
 
     $('.settingC').each(function() {
-      for (const folderName of folderNames) {
-        let folderChild = folders[folderName]['children']
+      for (const folderId of folderIds) {
+        let folderChild = folders[folderId]['children']
         for (const child of folderChild) {
-          if ($(this).attr('name') == child && folderName !== editFolderName) {
+          if ($(this).attr('name') == child && folderId !== editFolderId) {
             $(this).parent().parent().addClass("disabled")
-          } else if (folderName == editFolderName && $(this).attr('name') == child) {
+          } else if (folderId == editFolderId && $(this).attr('name') == child) {
             $(this).prop("checked", true)
             $(this).parent().parent().addClass("checked")
           }
@@ -385,15 +385,15 @@ $dockerSettings .= "</div>";
 
     });
 
-    if (editFolderName !== null) {
+    if (editFolderId !== null) {
       $('.setting').each(function() {
         switch ($(this).attr('name')) {
           case "name":
-            $(this).val(editFolderName)
+            $(this).val(folders[editFolderId]['name'])
             break;
 
           case "icon":
-            var icon = folders[editFolderName]['icon']
+            var icon = folders[editFolderId]['icon']
             $(this).val(icon)
             if (icon !== "") {
               $('#icon-upload-preview').attr('src', icon)
@@ -401,78 +401,78 @@ $dockerSettings .= "</div>";
             break;
 
           case "docker_preview":
-            $(this).val(folders[editFolderName]['docker_preview'])
-            dockerPreview_change(folders[editFolderName]['docker_preview'])
+            $(this).val(folders[editFolderId]['docker_preview'])
+            dockerPreview_change(folders[editFolderId]['docker_preview'])
             break;
 
           case "docker_preview_hover_only":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_hover_only'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_hover_only'])
             break;
 
           case "docker_preview_text_update_color":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_text_update_color'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_text_update_color'])
             break;
 
           case "docker_preview_icon_grayscale":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_grayscale'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_icon_grayscale'])
             break;
 
           case "docker_preview_icon_show_log":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_log'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_icon_show_log'])
             break;
 
           case "docker_preview_icon_show_webui":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_icon_show_webui'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_icon_show_webui'])
             break;
 
           case "docker_preview_advanced_context_menu":
-            $(this).prop('checked', folders[editFolderName]['docker_preview_advanced_context_menu'])
-            advancedContext_change(folders[editFolderName]['docker_preview_advanced_context_menu'])
+            $(this).prop('checked', folders[editFolderId]['docker_preview_advanced_context_menu'])
+            advancedContext_change(folders[editFolderId]['docker_preview_advanced_context_menu'])
             break;
 
           case "docker_preview_advanced_context_menu_activation_mode":
-            $(this).val(folders[editFolderName]['docker_preview_advanced_context_menu_activation_mode'])
+            $(this).val(folders[editFolderId]['docker_preview_advanced_context_menu_activation_mode'])
             break;
 
           case "docker_preview_advanced_context_menu_graph_mode":
-            $(this).val(folders[editFolderName]['docker_preview_advanced_context_menu_graph_mode'])
+            $(this).val(folders[editFolderId]['docker_preview_advanced_context_menu_graph_mode'])
             break;
 
           case "docker_icon_style":
-            $(this).val(folders[editFolderName]['docker_icon_style'])
+            $(this).val(folders[editFolderId]['docker_icon_style'])
             break;
 
           case "docker_expanded_style":
-            $(this).val(folders[editFolderName]['docker_expanded_style'])
+            $(this).val(folders[editFolderId]['docker_expanded_style'])
             break;
 
           case "docker_start_expanded":
-            $(this).prop('checked', folders[editFolderName]['docker_start_expanded'])
+            $(this).prop('checked', folders[editFolderId]['docker_start_expanded'])
             break;
 
           case "dashboard_expanded":
-            $(this).prop('checked', folders[editFolderName]['dashboard_expanded'])
+            $(this).prop('checked', folders[editFolderId]['dashboard_expanded'])
             break;
 
           case "icon_animate_hover":
-            $(this).prop('checked', folders[editFolderName]['icon_animate_hover'])
+            $(this).prop('checked', folders[editFolderId]['icon_animate_hover'])
             break;
 
           case "status_icon_autostart":
-            $(this).prop('checked', folders[editFolderName]['status_icon_autostart'])
+            $(this).prop('checked', folders[editFolderId]['status_icon_autostart'])
             break;
 
           case "dashboard_expanded_button":
-            $(this).prop('checked', folders[editFolderName]['dashboard_expanded_button'])
+            $(this).prop('checked', folders[editFolderId]['dashboard_expanded_button'])
             break;
 
           case "regex":
-            $(this).val(folders[editFolderName]['regex'])
+            $(this).val(folders[editFolderId]['regex'])
             break;
         }
       })
 
-      loadButtons(folders, editFolderName)
+      loadButtons(folders, editFolderId)
 
     }
 
@@ -481,11 +481,11 @@ $dockerSettings .= "</div>";
       let name = $(this).find('.info > span:last-child > strong').text()
       $(this).find('.info > span:last-child').append(`<br><span class="current-folder">Folder: None</span>`)
       mainLoop:
-      for (const folderName of folderNames) {
-        let folderChildren = folders[folderName]['children']
+      for (const folderId of folderIds) {
+        let folderChildren = folders[folderId]['children']
         for (const child of folderChildren) {
           if (child === name) {
-            $(this).find('.current-folder').text(`Folder: ${folderName}`)
+            $(this).find('.current-folder').text(`Folder: ${folderId}`)
             break mainLoop
           }
         }

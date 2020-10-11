@@ -29,16 +29,16 @@ async function apply_folder(callback) {
         let dfSettings = await dockerFolders['settings']
 
         let dFolders = await dockerFolders['folders']
-        let folderNames = Object.keys(await dFolders)
+        let folderIds = Object.keys(await dFolders)
         window[`${type}Options`]['folderChildren'] = []
         window[`${type}Options`]['activeFolders'] = []
         
-        for (const folderName of folderNames) {
-            folders[type][folderName] = new folder(folderName, dFolders[folderName], vmOptions)
+        for (const folderId of folderIds) {
+            folders[type][folderId] = new folder(folderId, dFolders[folderId], vmOptions)
         }
 
-        for (const folderName of folderNames) {
-            const folder = folders[type][folderName]
+        for (const folderId of folderIds) {
+            const folder = folders[type][folderId]
 
             edit_folder_base(folder)
             edit_folder_extra(folder)

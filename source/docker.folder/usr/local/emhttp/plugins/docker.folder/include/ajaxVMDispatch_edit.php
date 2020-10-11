@@ -1,15 +1,15 @@
 <script>
 (function() {
     let remove_fix = `
-    var folderNames = Object.keys(folders['vm'])
+    var folderIds = Object.keys(folders['vm'])
 
     if (params['uuid'] && (params['action'] === 'domain-undefine' || params['action'] === 'domain-delete') ) {
         for (const [vmName, vmId] of Object.entries(vmOptions["ids"])) {
             if (vmId === params['uuid']) {
-                for (const folderName of folderNames) {
-                    for (const child of folders['vm'][folderName]['properties']['children']) {
+                for (const folderId of folderIds) {
+                    for (const child of folders['vm'][folderId]['properties']['children']) {
                         if (vmName === child) {
-                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: 'vm', folderName: folderName, child: child}, function(){(async () => {folders['vm'] = await read_folders('folders-vm')})();});
+                            $.post("/plugins/docker.folder/scripts/remove_folder_child.php", {type: 'vm', folderId: folderId, child: child}, function(){(async () => {folders['vm'] = await read_folders('folders-vm')})();});
                         }
                     }
                 }

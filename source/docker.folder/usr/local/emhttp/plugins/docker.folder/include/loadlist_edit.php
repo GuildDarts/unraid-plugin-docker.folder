@@ -9,21 +9,21 @@ function userprefs_fix(type) {
         row = $(row).parent()
     }
     row.parent().children().find('td.${name}-name').each(function() {
-        var folderNames = Object.keys(folders['${type}'])
         var nam = $(this).find('.inner > :first-child').text();
-        var ind = $(this).parent().parent().children('tr').index($(this).parent());
+        var ind = $(this).parent().parent().find('tr.sortable').index($(this).parent());
 
         // skip if its folder child
         if ($(this).parent().attr('class').includes("${type}-folder-child-")) {
             return
         }
 
-        for (const folderName of folderNames) {
-            if (nam == folderName) {
-                names += nam + "-folder" + ';'
+        for (const [folderId, folder] of Object.entries(folders['${type}'])) {
+            let folderName = folder.properties['name']
+            if (nam === folderName) {
+                names += folderId + "-folder" + ';'
                 index += parseInt(ind + indexPlusNr) + ';'
                 var loopPlusNr = 0
-                $('.${type}-folder-child-' + folderName).each(function(i) {
+                $('.${type}-folder-child-' + folderId).each(function(i) {
                     let childName = $(this).find('.inner > :first-child').text()
                     names += childName + ";"
                     index += parseInt(ind + indexPlusNr + i + 1) + ';'

@@ -55,7 +55,7 @@ window.dockerOptions = {
 
 <script>
     function dockerDefaultCmd(folder, action) {
-        const folderName = folder.name
+        const folderId = folder.id
         const containers = folder['properties']['children']
         const containersString = JSON.stringify(containers)
 
@@ -79,11 +79,11 @@ window.dockerOptions = {
             }
             if (list !== '') {
                 var address = '/plugins/dynamix.docker.manager/include/CreateDocker.php?updateContainer=true' + list;
-                popupWithIframe(`Updating all ${folderName} Containers`, address, true, 'loadlist');
+                popupWithIframe(`Updating all ${folderId} Containers`, address, true, 'loadlist');
             } else {
                 swal({
                     title: 'Nothing to update',
-                    text: `All containers in ${folderName} are up to date`,
+                    text: `All containers in ${folderId} are up to date`,
                     type: 'info'
                 })
                 loadlist()

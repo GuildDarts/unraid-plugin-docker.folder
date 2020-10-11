@@ -261,7 +261,7 @@ The 'post-install' script
 <FILE Run="/bin/bash">
 <INLINE>
 php &plugdir;/scripts/create_folders_file.php
-php &plugdir;/scripts/migration.php
+php &plugdir;/scripts/migration/common_migration.php
 
 echo ""
 echo "----------------------------------------------------"

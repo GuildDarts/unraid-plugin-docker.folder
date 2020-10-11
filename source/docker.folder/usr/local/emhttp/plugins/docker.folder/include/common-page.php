@@ -161,7 +161,7 @@
 
 <script>
 function edit_folder_extra(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
 
     // advanced view fix
@@ -188,17 +188,17 @@ function edit_folder_extra(folder) {
     }
 
     // docker_start_expanded - activeDropdowns
-    if (folder['properties']['docker_start_expanded'] == true && !folder.options['activeDropdowns'].includes(folderName)) {
-        folder.options['activeDropdowns'].push(folderName)
+    if (folder['properties']['docker_start_expanded'] == true && !folder.options['activeDropdowns'].includes(folderId)) {
+        folder.options['activeDropdowns'].push(folderId)
     }
 
     // wrap children in div
-    folder.child().wrapAll(`<div class='${folderType}-folder-child-div-${folderName}'></div>`)
+    folder.child().wrapAll(`<div class='${folderType}-folder-child-div-${folderId}'></div>`)
 
     // remove sortable from children and add new sortable
     // adjust child width (done to counter padding)
     folder.child().each(function() {
-        $(this).removeClass("sortable").addClass(`sortable-child-${folderName}`)
+        $(this).removeClass("sortable").addClass(`sortable-child-${folderId}`)
         $(this).children('td:first-child').css({
             'width': '190'
         })
@@ -213,10 +213,10 @@ function edit_folder_extra(folder) {
     };
 
     // make children sortable
-    $(`.${folderType}-folder-child-div-${folderName}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
+    $(`.${folderType}-folder-child-div-${folderId}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
     update:function(e,ui){
         var children = []
-        $(`.${folderType}-folder-child-div-${folderName} > tr`).each(function() {
+        $(`.${folderType}-folder-child-div-${folderId} > tr`).each(function() {
             var nam = $(this).find('.appname').text();
             children.push(nam)
         })
@@ -226,8 +226,8 @@ function edit_folder_extra(folder) {
 
     // open dropdown on loadlist
     for (const dropdown of folder.options['activeDropdowns']) {
-        if (dropdown == folderName) {
-            docker_toggle_visibility(folderName, folderType)
+        if (dropdown == folderId) {
+            docker_toggle_visibility(folderId, folderType)
             folder.parent().find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
             childrenMove(folder)
         }
@@ -264,10 +264,10 @@ function edit_folder_extra(folder) {
 }
 
 function childrenDropdown(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
 
-    docker_toggle_visibility(folderName, folderType)
+    docker_toggle_visibility(folderId, folderType)
     folder.parent().find('.outer > i').toggleClass('fa-chevron-down fa-chevron-up')
 
     if (folder.parent().find('.outer > i').hasClass('fa-chevron-up')) {
@@ -279,12 +279,12 @@ function childrenDropdown(folder) {
             })
         }
 
-        $(`.${folderType}-folder-child-div-${folderName}`).each(function() {
+        $(`.${folderType}-folder-child-div-${folderId}`).each(function() {
             $(this).appendTo(`#${folderType}_list_storage`)
         });
-        // remove folderName from activeDropdowns
+        // remove folderId from activeDropdowns
         folder.options['activeDropdowns'] = folder.options['activeDropdowns'].filter(function(elm) {
-            return elm != folderName
+            return elm != folderId
         })
     } else {
         // show disk devices for vms
@@ -298,16 +298,16 @@ function childrenDropdown(folder) {
         }
 
         childrenMove(folder)
-        // add folderName to activeDropdowns
-        folder.options['activeDropdowns'].push(folderName)
+        // add folderId to activeDropdowns
+        folder.options['activeDropdowns'].push(folderId)
     }
 }
 
 function childrenMove(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
 
-    $(`.${folderType}-folder-child-div-${folderName}`).insertAfter(folder.parent())
+    $(`.${folderType}-folder-child-div-${folderId}`).insertAfter(folder.parent())
     $('#kvm_list').find('div > tr').each(function(){
         var parent = $(this).attr('parent-id');
         var child = $('tr[child-id="'+parent+'"]');
@@ -323,7 +323,7 @@ function autoStartFolder(folder) {
 
     // adds switches
     folder.parent().find('td.autostart').html(
-        `<input type="checkbox" class="folder-autostart" folder="${folder.name}" ${initState}>`
+        `<input type="checkbox" class="folder-autostart" folder="${folder.id}" ${initState}>`
     ).find('input').switchButton({
         labels_placement: "right"
     });
@@ -356,14 +356,14 @@ function autoStartFolder(folder) {
 }
 
 function dockerPreview(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
     const folderType = folder.options['type']
-    const dockerPreview = $(`.${folderType}-folder-parent-${folderName} > .dockerPreview`)
+    const dockerPreview = $(`.${folderType}-folder-parent-${folderId} > .dockerPreview`)
 
     switch (folder['properties']['docker_preview']) {
         case 'no-icon':
             dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></ul>`)
-            $(`.${folderType}-folder-child-div-${folderName}`).children().each(function(i) {
+            $(`.${folderType}-folder-child-div-${folderId}`).children().each(function(i) {
                 if (i < 12) {
                     let child = $(this).find('.appname').text()
                     let id = $(this).find('.hand').attr('id')
@@ -374,7 +374,7 @@ function dockerPreview(folder) {
                     dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
 
                     // make text orange on update
-                    updateText(folderName, id, element, 'no-icon')
+                    updateText(folderId, id, element, 'no-icon')
 
                     // add context menu
                     dockerPreview.find(`.dockerPreview-no-icon-container > li.docker-preview-id-${id}`).click(function(e) {
@@ -383,15 +383,15 @@ function dockerPreview(folder) {
                 }
             })
 
-            hoverOnly(folderName)
+            hoverOnly(folderId)
             break;
 
         case 'icon':
             dockerPreview.append(`<div class="dockerPreview-icon-container"></div></div>`)
             var dockerPreviewWidth = dockerPreview.width()
             var widthTotal = 0
-            var childrenCount = $(`.${folderType}-folder-child-${folderName}`).length
-            $(`.${folderType}-folder-child-${folderName}`).each(function(i) {
+            var childrenCount = $(`.${folderType}-folder-child-${folderId}`).length
+            $(`.${folderType}-folder-child-${folderId}`).each(function(i) {
                 let clone = $(this).children('td:first-child').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
                     clone.children('.advanced').remove()
                     let name = clone.find('.outer > .inner > :first-child').text()
@@ -422,7 +422,7 @@ function dockerPreview(folder) {
                 }
 
                 // make text orange on update
-                updateText(folderName, id, clone, 'icon')
+                updateText(folderId, id, clone, 'icon')
 
                 // add context menu
                 idElement.click(function(e) {
@@ -435,15 +435,15 @@ function dockerPreview(folder) {
                 dockerPreview.children('.dockerPreview-icon-container').find('img').addClass('dockerPreview-grayscale')
             }
 
-            hoverOnly(folderName, folderType)
+            hoverOnly(folderId, folderType)
             break;
     }
 
-    function hoverOnly(folderName, folderType) {
+    function hoverOnly(folderId, folderType) {
         if (folder['properties']['docker_preview_hover_only']) {
-            $(`.${folderType}-folder-parent-${folderName} > .dockerPreview > :first-child`).css('visibility', 'hidden').fadeTo(0, 0)
+            $(`.${folderType}-folder-parent-${folderId} > .dockerPreview > :first-child`).css('visibility', 'hidden').fadeTo(0, 0)
 
-            $(`.${folderType}-folder-parent-${folderName} > .dockerPreview`).hover(
+            $(`.${folderType}-folder-parent-${folderId} > .dockerPreview`).hover(
                 function() {
                     $(this).children(':first-child').css('visibility', 'initial').fadeTo(500, 1)
                 }, function() {
@@ -455,7 +455,7 @@ function dockerPreview(folder) {
         }
     }
 
-    function updateText(folderName, id, element, type) {
+    function updateText(folderId, id, element, type) {
         if (folder['properties']['docker_preview_text_update_color']) {
             waitForGlobal('docker', function() {
                 for (const dock of docker) {
@@ -483,7 +483,7 @@ function dockerPreview(folder) {
 }
 
 function iconStyle(folder) {
-    const folderName = folder.name
+    const folderId = folder.id
 
     switch (folder['properties']['docker_icon_style']) {
         case 'label-tab':

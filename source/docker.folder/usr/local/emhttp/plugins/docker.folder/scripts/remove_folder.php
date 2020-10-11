@@ -11,9 +11,9 @@ $foldersRaw = file_get_contents("/boot/config/plugins/docker.folder/$file.json")
 $dockerFolders = json_decode($foldersRaw);
 $folders = $dockerFolders->folders;
 
-$folderName = $_POST['folderName'];
+$folderId = $_POST['folderId'];
 
-unset($folders->$folderName);
+unset($folders->$folderId);
 
 $dockerFolders->folders = $folders;
 $jsonData = json_encode($dockerFolders, JSON_PRETTY_PRINT);

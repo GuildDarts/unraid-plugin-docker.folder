@@ -1,6 +1,6 @@
 <?php
     $type = $_POST['type'];
-    $folerName = $_POST['folderName'];
+    $folerName = $_POST['folderId'];
     $child = $_POST['child'];
 
     if ($type !== 'vm') {

@@ -248,8 +248,8 @@ require_once "$docroot/webGui/include/Helpers.php";
     return newConfig.prop('outerHTML');
   }
 
-  function loadButtons(folders, folderName) {
-    for (const button of folders[folderName]['buttons']) {
+  function loadButtons(folders, folderId) {
+    for (const button of folders[folderId]['buttons']) {
       confNum += 1;
       if (button.type !== 'divider') {
         var Opts = Object;
