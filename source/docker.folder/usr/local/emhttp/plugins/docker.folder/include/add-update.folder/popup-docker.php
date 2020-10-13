@@ -1,6 +1,8 @@
 <body>
 <div id="templatePopupConfig" style="display:none">
   <dl>
+    <blockquote id="popup-helper" style="display: none;">
+    </blockquote>
     <dt>Config Type:</dt>
     <dd>
       <select name="Type" onchange="toggleMode(this,false);">
@@ -54,6 +56,7 @@
     function toggleMode(el, disabled) {
     var base = $(el).parent().parent();
 
+    var popup = base.find("#popup-helper")
     var name = base.find("#popup-name")
     var name_input = name.find('input')
     var icon = base.find("#popup-icon")
@@ -70,16 +73,27 @@
     cmd.show()
     action.hide()
     subMenu.hide()
+    popup.html('')
 
     switch ($(el)[0].selectedIndex) {
         case 0: // WebUI
             base.find('#dt3').text('URL:');
             icon_input.val('globe')
+            popup.html(`
+            <p>[IP] will get your unraid servers ip</p>
+            <p>[PORT:xxxx]</p>
+            <p>[DOCKER:xxxx] will get specified docker webUI</p>
+            `)
         break;
 
         case 1: // WebUI_New_Tab
             base.find('#dt3').text('URL:');
             icon_input.val('globe')
+            popup.html(`
+            <p>[IP] will get your unraid servers ip</p>
+            <p>[PORT:xxxx]</p>
+            <p>[DOCKER:xxxx] will get specified docker webUI</p>
+            `)
         break;
 
         case 2: // Action

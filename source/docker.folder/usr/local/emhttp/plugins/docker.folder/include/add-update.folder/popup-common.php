@@ -17,6 +17,24 @@ require_once "$docroot/webGui/include/Helpers.php";
 
   <link type="text/css" rel="stylesheet" href="/plugins/docker.folder/include/image-picker/image-picker.css">
   <script src="/plugins/docker.folder/include/image-picker/image-picker.min.js"></script>
+
+  <style>
+    .ui-dialog-titlebar-help {
+      position: absolute;
+      left: .3em;
+      top: 50%;
+      width: 20px;
+      margin: -10px 0 0 0;
+      padding: 1px;
+      height: 20px;
+      cursor: help;
+    }
+
+    #popup-helper > p {
+      margin: initial;
+    }
+  </style>
+
 </head>
 
 
@@ -116,6 +134,10 @@ require_once "$docroot/webGui/include/Helpers.php";
         }
       }
     });
+
+    // Add little helper question mark
+    addHelpIcon(popup)
+
     $(".ui-dialog .ui-dialog-titlebar").addClass('menu');
     $(".ui-dialog .ui-dialog-title").css('text-align', 'center').css('width', "100%");
     $(".ui-dialog .ui-dialog-content").css('padding-top', '15px').css('vertical-align', 'bottom');
@@ -181,11 +203,26 @@ require_once "$docroot/webGui/include/Helpers.php";
         }
       }
     });
+
+    // Add little helper question mark
+    addHelpIcon(popup)
+
     $(".ui-dialog .ui-dialog-titlebar").addClass('menu');
     $(".ui-dialog .ui-dialog-title").css('text-align', 'center').css('width', "100%");
     $(".ui-dialog .ui-dialog-content").css('padding-top', '15px').css('vertical-align', 'bottom');
     $(".ui-button-text").css('padding', '0px 5px');
     $('.fa-icon-picker').iconpicker(".fa-icon-picker");
+  }
+
+  function addHelpIcon(popup) {
+    let titlebar = popup.prev()
+
+    if (!$(titlebar).children('.ui-dialog-titlebar-help').length) {
+      $(titlebar).prepend(`<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-help"><i class="fa fa-question-circle"></i></button>`)
+      $(titlebar).children('.ui-dialog-titlebar-help').click(function() {
+        popup.find('#popup-helper').toggle('slow')
+      })
+    }
   }
 
   function loadDockerSubMenu(popup) {
