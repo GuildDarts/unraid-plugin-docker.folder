@@ -2,27 +2,29 @@
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/dynamix.vm.manager/include/libvirt_helpers.php");
 
-$vm_prefs_file = '/boot/config/plugins/dynamix.vm.manager/userprefs.cfg';
-$vms = $lv->get_domains();
+if (isset($lv)) {
+    $vm_prefs_file = '/boot/config/plugins/dynamix.vm.manager/userprefs.cfg';
+    $vms = $lv->get_domains();
 
-$vmIds = new stdClass;
+    $vmIds = new stdClass;
 
-foreach($vms as $vm) {
-    $res = $lv->get_domain_by_name($vm);
-    $uuid = $lv->domain_get_uuid($res);
+    foreach($vms as $vm) {
+        $res = $lv->get_domain_by_name($vm);
+        $uuid = $lv->domain_get_uuid($res);
 
-    $vmIds->$vm = $uuid;
-}
-
-if (file_exists($vm_prefs_file)) {
-    $vm_prefs = parse_ini_file($vm_prefs_file);
-    foreach ($vm_prefs as $prefKey => &$pref) {
-        if (!strpos($pref, '-folder') && !in_array($pref, $vms)) {
-            array_splice($vm_prefs, $prefKey, 1);
-        }
+        $vmIds->$vm = $uuid;
     }
-} else {	
-    $vm_prefs = json_encode([]);	
+
+    if (file_exists($vm_prefs_file)) {
+        $vm_prefs = parse_ini_file($vm_prefs_file);
+        foreach ($vm_prefs as $prefKey => &$pref) {
+            if (!strpos($pref, '-folder') && !in_array($pref, $vms)) {
+                array_splice($vm_prefs, $prefKey, 1);
+            }
+        }
+    } else {	
+        $vm_prefs = json_encode([]);	
+    }
 }
 
 ?>
