@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.10.13">
+<!ENTITY version   "2020.10.19">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "6b7aa0311a8be69cd24618943b16743c">
+<!ENTITY md5       "8fe84e41ff5041b656e590fc3b709a6a">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.10.19
+- Fixed: Dashboard not working without VMs enabled
+
 ###2020.10.13
 - Change: Allow more characters for folder names
 - Fixed: Prevent multiple scripts from editing folders simultaneously
