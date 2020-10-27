@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.10.19">
+<!ENTITY version   "2020.10.27">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "8fe84e41ff5041b656e590fc3b709a6a">
+<!ENTITY md5       "9a439b0501c18356771c9cfb96c265a5">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.10.27
+- Fixed: Align preview no-icon text with only one container
+- Fixed: folderId showing instead of folderName
+- Change: Use "Containers" not "Dockers"
+
 ###2020.10.19
 - Fixed: Dashboard not working without VMs enabled
 
