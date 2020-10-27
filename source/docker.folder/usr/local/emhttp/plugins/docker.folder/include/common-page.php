@@ -85,6 +85,8 @@
         overflow: hidden;
     }
     .dockerPreview-no-icon-container > .header {
+        display: inline-grid;
+        align-items: center;
         font-size: 14px;
         font-weight: bold;
         grid-area: 1 / 1 / span 2 / span 1;
@@ -92,7 +94,6 @@
         border-width: 1px;
         border-color: var(--border-color);
         padding-right: 6px;
-        padding-top: 12px;
         margin-top: -6px;
         margin-bottom: -6px;
         margin-left: 4px;
