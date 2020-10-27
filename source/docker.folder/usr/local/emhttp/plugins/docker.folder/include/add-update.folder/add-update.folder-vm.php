@@ -389,7 +389,8 @@ $vmSettings .= "</div>";
         let folderChildren = folders[folderId]['children']
         for (const child of folderChildren) {
           if (child === name) {
-            $(this).find('.current-folder').text(`Folder: ${folderId}`)
+            let folderName = folders[folderId]['name']
+            $(this).find('.current-folder').text(`Folder: ${folderName}`)
             break mainLoop
           }
         }
