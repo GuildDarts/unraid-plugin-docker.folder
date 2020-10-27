@@ -363,7 +363,7 @@ function dockerPreview(folder) {
 
     switch (folder['properties']['docker_preview']) {
         case 'no-icon':
-            dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Dockers:</div></ul>`)
+            dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Containers:</div></ul>`)
             $(`.${folderType}-folder-child-div-${folderId}`).children().each(function(i) {
                 if (i < 12) {
                     let child = $(this).find('.appname').text()

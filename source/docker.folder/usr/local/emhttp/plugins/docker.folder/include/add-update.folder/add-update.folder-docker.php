@@ -61,7 +61,7 @@ $dockerSettings .= "</div>";
           </dd>
         </dl>
         <blockquote class="inline_help">
-          <p>You can click the folder icon for a menu of icons from the dockers currently inside the folder</p>
+          <p>You can click the folder icon for a menu of icons for the containers currently inside the folder</p>
         </blockquote>
       </div>
 
@@ -306,7 +306,7 @@ $dockerSettings .= "</div>";
           <dd><input class="basic-switch setting" name="status_icon_autostart" type="checkbox" /></dd>
         </dl>
         <blockquote class="inline_help">
-            <p><i class="fa fa-play green-text"></i> The green play icon will show when all docker inside the folder that are set to <strong>autostart</strong> are running</p>
+            <p><i class="fa fa-play green-text"></i> The green play icon will show when all containers inside the folder that are set to <strong>autostart</strong> are running</p>
         </blockquote>
       </div>
 
@@ -316,7 +316,7 @@ $dockerSettings .= "</div>";
           <dd><input class="setting" name="regex" type="text" /></dd>
         </dl>
         <blockquote class="inline_help">
-            <p>Any docker name the regex matches will be added to folder</p>
+            <p>Any container name the regex matches will be added to folder</p>
             <p>Example for adding pterodactyl egg: \b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b</p>
         </blockquote>
       </div>
