@@ -75,6 +75,7 @@
         margin-inline-end: initial;
         padding-inline-start: initial;
         list-style-position: inside;
+        height: 34px;
         padding-top: 6px;
         padding-bottom: 6px;
         box-shadow: 10px 0 0px -2px #beddf5 inset;
