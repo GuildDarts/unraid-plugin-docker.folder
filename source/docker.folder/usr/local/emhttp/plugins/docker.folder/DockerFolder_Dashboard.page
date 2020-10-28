@@ -67,12 +67,12 @@ async function apply_folder_dashboard(_type, _folders, _options) {
 
     // open dropdown on loadlist
     $(`[class*="${_type}-folder-parent-"]`).each(function() {
-        var name = $(this).find(_options['dashboardHideSelectorName']).textFirst()
-        if (_options['activeDropdowns'].includes(name) && $(this).attr('dashboard_expanded') !== 'true') {
+        let id = $(this).data('id')
+        if (_options['activeDropdowns'].includes(id) && $(this).attr('dashboard_expanded') !== 'true') {
             $(this).attr('dashboard_expanded', true)
-            docker_toggle_visibility(name, _type)
-            $(`.${_type}-folder-parent-${name}`).children("i").toggleClass("fa-chevron-down fa-chevron-up")
-            dashboard_expanded(folders[_type][name])
+            docker_toggle_visibility(id, _type)
+            $(`.${_type}-folder-parent-${id}`).children('i').toggleClass('fa-chevron-down fa-chevron-up')
+            dashboard_expanded(folders[_type][id])
         }
     })
 
@@ -99,18 +99,18 @@ function dashboard_expanded_button(folder) {
     // add button
     if (folder.parent().children("i").length == 0) {
         
-        var offset = folder.parent().offset()
+        let offset = folder.parent().offset()
 
         folder.parent().css('position', 'relative').prepend(`<i class="fa fa-fw fa-chevron-up"" style="position: absolute; top: 22px; left: -16px;"></i>`)
         folder.parent().children("i").click(function() {
             childrenDropdown(folderId, folderType)
-            var selectionIndex = folder.parent().index()
+            let selectionIndex = folder.parent().index()
             $(`[class*="${folderType}-folder-parent-"]`).each(function() {
-                var name = $(this).find(folder.options['dashboardHideSelectorName']).text()
-                var index = $(this).index()
-                if (folder.options['activeDropdowns'].includes(name) && name !== folderId && index > selectionIndex) {
-                    childrenDropdown(name, folderType)
-                    childrenDropdown(name, folderType)
+                let id = $(this).data('id')
+                let index = $(this).index()
+                if (folder.options['activeDropdowns'].includes(id) && id !== folderId && index > selectionIndex) {
+                    childrenDropdown(id, folderType)
+                    childrenDropdown(id, folderType)
                 }
             })
         });
@@ -127,20 +127,20 @@ function addSwitchListener(type, options) {
     $(selector).change(function() {
         let tmpActiveDropdowns = []
         $(`[class*="${type}-folder-parent-"]`).each(function() {
-            let name = $(this).find(options['dashboardHideSelectorName']).textFirst()
+            let id = $(this).data('id')
             let stopped = $(this).find('.inner > i').hasClass('stopped')
-            if (options['activeDropdowns'].includes(name)) {
-                childrenDropdown(name, type)
+            if (options['activeDropdowns'].includes(id)) {
+                childrenDropdown(id, type)
                 if (!stopped) {
-                    tmpActiveDropdowns.push(name)
+                    tmpActiveDropdowns.push(id)
                 }
             }
         })
         setTimeout(() => {
             $(`[class*="${type}-folder-parent-"]`).each(function() {
-                let name = $(this).find(options['dashboardHideSelectorName']).textFirst()
-                if (tmpActiveDropdowns.includes(name)) {
-                    childrenDropdown(name, type)
+                let id = $(this).data('id')
+                if (tmpActiveDropdowns.includes(id)) {
+                    childrenDropdown(id, type)
                 }
             })
         }, 200);
