@@ -2,17 +2,23 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.10.27">
+<!ENTITY version   "2020.10.28">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "9a439b0501c18356771c9cfb96c265a5">
+<!ENTITY md5       "82897d1e587b95ec592d866bd0005e45">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.10.28
+- Change: Make preview no-icon fixed height
+- Fixed: editFolder switch not showing state
+- Fixed: dashboard start expanded
+- Fixed: loadlist shifting expanded folders
+
 ###2020.10.27
 - Fixed: Align preview no-icon text with only one container
 - Fixed: folderId showing instead of folderName
