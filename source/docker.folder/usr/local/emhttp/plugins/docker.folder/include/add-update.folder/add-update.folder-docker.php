@@ -472,6 +472,8 @@ $dockerSettings .= "</div>";
         }
       })
 
+      finalEdits()
+
       loadButtons(folders, editFolderId)
 
     }

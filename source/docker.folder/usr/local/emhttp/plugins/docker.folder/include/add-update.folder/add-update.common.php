@@ -121,7 +121,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
 <script src="/plugins/dynamix.vm.manager/javascript/dynamix.vm.manager.js"></script>
 
 <script>
-    $(function() {
+    function finalEdits() {
         //make it green
         $('.container_item > .settingC-box > input[type="checkbox"]').change(function() {
             if ($(this).prop("checked") == true) {
@@ -153,9 +153,9 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
         })
 
         $('.basic-switch').switchButton({
-            show_labels: false
+          show_labels: false
         });
-    })
+    }
 
   function getSettings(options) {
     let settings = new Object()

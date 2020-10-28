@@ -376,6 +376,8 @@ $vmSettings .= "</div>";
         }
       })
 
+      finalEdits()
+
       loadButtons(folders, editFolderId)
 
     }
