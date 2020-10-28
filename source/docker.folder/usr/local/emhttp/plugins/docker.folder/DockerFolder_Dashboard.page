@@ -261,7 +261,7 @@ function childrenDropdown(folderId, folderType) {
 }
 
 function childrenMove(folder) {
-    for (const child of folder['properties']['children'].reverse()) {
+    for (const child of [...folder['properties']['children']].reverse()) {
         folder.child().each(function() {
             if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
                 $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.id}`);
