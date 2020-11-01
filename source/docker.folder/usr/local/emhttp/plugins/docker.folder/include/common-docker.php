@@ -12,15 +12,18 @@ $allInfo         = $DockerTemplates->getAllInfo();
 $dockers = [];
 $dockerIds = new stdClass;
 $dockerAutostart = new stdClass;
+$dockerUpdates = new stdClass;
 
 foreach ($containers as $ct) {
     $name = $ct['Name'];
     $id = $ct['Id'];
     $info = &$allInfo[$name];
     $is_autostart = $info['autostart'] ? 'true' : 'false';
+    $updateStatus = substr($ct['NetworkMode'],-4)==':???' ? 2 : ($info['updated']=='true' ? 0 : ($info['updated']=='false' ? 1 : 3));
 
     $dockerIds->$name = $id;
     $dockerAutostart->$name = $is_autostart;
+    $dockerUpdates->$name = $updateStatus;
 
     array_push($dockers, $name);
 }
@@ -46,6 +49,7 @@ window.dockerOptions = {
     dashboardHideSelectorName: 'span.inner > span:first-child',
     ids: <?= json_encode($dockerIds) ?>,
     autostart: <?= json_encode($dockerAutostart) ?>,
+    updates: <?= json_encode($dockerUpdates) ?>,
     prefs: <?= json_encode($docker_prefs) ?>,
     activeDropdowns: [],
     folderChildren: [],
@@ -56,6 +60,7 @@ window.dockerOptions = {
 <script>
     function dockerDefaultCmd(folder, action) {
         const folderId = folder.id
+        const folderName = folder.properties['name']
         const containers = folder['properties']['children']
         const containersString = JSON.stringify(containers)
 
@@ -69,21 +74,19 @@ window.dockerOptions = {
                 loadlist();
             })
         } else {
-            var list = '';
-            for (const folder of containers) {
-                for (const ct of docker) {
-                    if (ct.name == folder && ct.update == 'false') {
-                        list += '&ct[]=' + encodeURI(ct.name)
-                    }
+            let list = '';
+            for (const ct of containers) {
+                if (folder.options['updates'][ct] === 1) {
+                    list += '&ct[]=' + encodeURI(ct)
                 }
             }
             if (list !== '') {
-                var address = '/plugins/dynamix.docker.manager/include/CreateDocker.php?updateContainer=true' + list;
-                popupWithIframe(`Updating all ${folderId} Containers`, address, true, 'loadlist');
+                let address = '/plugins/dynamix.docker.manager/include/CreateDocker.php?updateContainer=true' + list;
+                popupWithIframe(`Updating all ${folderName} (${folderId}) Containers`, address, true, 'loadlist');
             } else {
                 swal({
                     title: 'Nothing to update',
-                    text: `All containers in ${folderId} are up to date`,
+                    text: `All containers in ${folderName} (${folderId}) are up to date`,
                     type: 'info'
                 })
                 loadlist()
