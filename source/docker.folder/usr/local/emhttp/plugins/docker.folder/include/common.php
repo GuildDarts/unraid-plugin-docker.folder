@@ -152,6 +152,7 @@ class folder {
 
 
     function dropdownButton(dropdown, folder, type, name, icon, cmd) {
+        const folderName = folder.properties['name']
         const folderId = folder.id
         const folderType = folder.options['type']
 
@@ -207,9 +208,9 @@ class folder {
 
             case "Bash":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
-                    let title = `${name}: ${folderId}`;
-                    let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`;
-                    popupWithIframe(title, address, true, 'loadlist');
+                    let title = `${name}: ${folderName} (${folderId})`
+                    let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`
+                    popupWithIframe(title, address, true, 'loadlist')
                 })
                 break
 
