@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.11.11">
+<!ENTITY version   "2020.12.05">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "9b3ca18bb5f8700b1319348f8c64d19e">
+<!ENTITY md5       "10c07b3f1ac102f4ab63e35e5ad43466">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2020.12.05
+- Added: no-icon preview container count options
+- Fixed: dashboard expanded breaking after first open
+- Change: Remove old migration script
+
 ###2020.11.11
 - Fixed: Action bash
 - Fixed: Docker action update
