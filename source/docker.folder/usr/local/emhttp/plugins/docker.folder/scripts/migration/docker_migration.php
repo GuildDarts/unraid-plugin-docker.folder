@@ -213,4 +213,16 @@ function migration_4_1($folders) {
     return $folders;
 }
 
+function migration_4_2($folders) {
+    foreach ($folders->folders as $folderKey => &$folder) {
+        // add docker_preview_no_icon_row_count
+        $folder->docker_preview_no_icon_row_count = 6;
+
+        // add docker_preview_no_icon_column_count
+        $folder->docker_preview_no_icon_column_count = 2;
+    }
+
+    return $folders;
+}
+
 ?>

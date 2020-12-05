@@ -172,9 +172,14 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/global-se
       }
       value = value.trim();
 
-      // get true/false for checkbox input
-      if (type == 'checkbox') {
-        value = $(this).prop('checked')
+      switch (type) {
+        // get true/false for checkbox input
+        case 'checkbox':
+          value = $(this).prop('checked')
+          break;
+        case 'number':
+          value = parseInt(value)
+          break;
       }
 
       settings[name] = value;

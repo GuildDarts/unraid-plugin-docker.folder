@@ -62,8 +62,11 @@
     }
 
     .dockerPreview-no-icon-container {
+        width: max-content;
+        min-width: 100%;
+        min-height: 34px;
         display: grid;
-        grid-template-columns: max-content repeat(6, max-content );
+        grid-template-columns: max-content repeat(6, max-content);
         color: #626262;
         border-style: solid;
         border-color: var(--border-color);
@@ -75,7 +78,6 @@
         margin-inline-end: initial;
         padding-inline-start: initial;
         list-style-position: inside;
-        height: 34px;
         padding-top: 6px;
         padding-bottom: 6px;
         box-shadow: 10px 0 0px -2px #beddf5 inset;
@@ -364,16 +366,19 @@ function dockerPreview(folder) {
 
     switch (folder['properties']['docker_preview']) {
         case 'no-icon':
-            dockerPreview.append(`<ul class="dockerPreview-no-icon-container"><div class="header">Containers:</div></ul>`)
+            let rowCount = folder['properties']['docker_preview_no_icon_row_count'] || 6
+            let columnCount = folder['properties']['docker_preview_no_icon_column_count'] || 2
+            let maxContainers = rowCount * columnCount
+            dockerPreview.append(`<ul class="dockerPreview-no-icon-container" style="grid-template-columns: max-content repeat(${rowCount}, max-content);"><div class="header" style="grid-area: 1 / 1 / span ${columnCount} / span 1;">Containers:</div></ul>`)
             $(`.${folderType}-folder-child-div-${folderId}`).children().each(function(i) {
-                if (i < 12) {
+                if (i < maxContainers) {
                     let child = $(this).find('.appname').text()
                     let id = $(this).find('.hand').attr('id')
 
-                    let row = ((2+i) % 2 == 0) ? 1 : 2
+                    let columns = ((columnCount+i) % columnCount) + 1
                     let element = $(`<li class="docker-preview-id-${id}"><span>${child}</span></li>`)
                     dockerPreview.find('.dockerPreview-no-icon-container').append(element)
-                    dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${row}`)
+                    dockerPreview.find('.dockerPreview-no-icon-container > li:last-of-type').css('grid-area', `${columns}`)
 
                     // make text orange on update
                     updateText(folderId, id, element, 'no-icon')

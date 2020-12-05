@@ -84,6 +84,8 @@ $vmSettings .= "</div>";
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
                       $('#setting-docker_preview_icon_show_webui').hide()
+                      $('#setting-docker_preview_no_icon_row_count').hide()
+                      $('#setting-docker_preview_no_icon_column_count').hide()
                       break;
 
                     case 'icon':
@@ -91,6 +93,8 @@ $vmSettings .= "</div>";
                       $('#setting-docker_preview_icon_grayscale').show()
                       $('#setting-docker_preview_icon_show_log').show()
                       $('#setting-docker_preview_icon_show_webui').show()
+                      $('#setting-docker_preview_no_icon_row_count').hide()
+                      $('#setting-docker_preview_no_icon_column_count').hide()
                       break;
 
                     case 'no-icon':
@@ -98,6 +102,8 @@ $vmSettings .= "</div>";
                       $('#setting-docker_preview_icon_grayscale').hide()
                       $('#setting-docker_preview_icon_show_log').hide()
                       $('#setting-docker_preview_icon_show_webui').hide()
+                      $('#setting-docker_preview_no_icon_row_count').show()
+                      $('#setting-docker_preview_no_icon_column_count').show()
                       break;
                   }
                 }
@@ -152,6 +158,24 @@ $vmSettings .= "</div>";
           <blockquote class="inline_help">
             <p>Will add a little globe icon that opens the webUI</p>
           </blockquote>
+        </div>
+
+        <div id="setting-docker_preview_no_icon_row_count" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Preview max row count: (default 12)</dt>
+            <dd>
+              <input class="setting" name="docker_preview_no_icon_row_count" type="number" min="0" step="1"/>
+            </dd>
+          </dl>
+        </div>
+
+        <div id="setting-docker_preview_no_icon_column_count" style="display: none;">
+          <dl>
+            <dt class="fake-list-item">Preview column count: (default 2)</dt>
+            <dd>
+              <input class="setting" name="docker_preview_no_icon_column_count" type="number" min="0" step="1"/>
+            </dd>
+          </dl>
         </div>
 
       </div>
@@ -340,6 +364,14 @@ $vmSettings .= "</div>";
 
           case "docker_preview_icon_show_webui":
             $(this).prop('checked', folders[editFolderId]['docker_preview_icon_show_webui'])
+            break;
+
+          case "docker_preview_no_icon_row_count":
+            $(this).val(folders[editFolderId]['docker_preview_no_icon_row_count'])
+            break;
+
+          case "docker_preview_no_icon_column_count":
+            $(this).val(folders[editFolderId]['docker_preview_no_icon_column_count'])
             break;
 
           case "docker_icon_style":
