@@ -1,0 +1,34 @@
+Menu="Buttons:100"
+Link="nav-user"
+---
+<script>
+// a bit hacky wanna find better way ;(
+window.onload = function(){ 
+    if (window.location.pathname === '/Docker/UpdateContainer') {
+        window.nameOld = $('form [name="contName"]').val()
+
+        $('input[type="submit"]').click(function() {
+            let nameNew = $('form [name="contName"]').val()
+            $.post("/plugins/docker.folder/scripts/rename_child.php", {
+                type: 'docker',
+                nameOld: window.nameOld,
+                nameNew: nameNew
+            })
+        })
+
+    }
+
+    if (window.location.pathname === '/VMs/UpdateVM') {
+        window.nameOld = $('#domain_name').val()
+
+        $('#btnSubmit').click(function() {
+            let nameNew = $('#domain_name').val()
+            $.post("/plugins/docker.folder/scripts/rename_child.php", {
+                type: 'vm',
+                nameOld: window.nameOld,
+                nameNew: nameNew
+            })
+        })
+    }
+}
+</script>
