@@ -10,6 +10,7 @@
     }
     .expanded_right {
         float: right;
+        margin-left: 20px;
         transform: translate(-12px, 5px);
         color: #7c7c7c;
         border-style: solid;
@@ -25,6 +26,10 @@
         border-bottom: 1px solid var(--border-color);
     }
 
+    [class*="-folder-parent-"] > td:first-child > div {
+        min-width: max-content;
+    }
+
     .label-tab > td:first-child > div > .outer > .inner {
         padding-top: 6px;
     }
@@ -32,7 +37,6 @@
         padding: 4px !important;
     }
     .label-tab > td:first-child > div {
-        max-width: 275px;
         border-style: solid;
         border-color: var(--border-color);
         border-width: 1px;
