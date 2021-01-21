@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2020.12.05">
+<!ENTITY version   "2021.21.01">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "10c07b3f1ac102f4ab63e35e5ad43466">
+<!ENTITY md5       "3d8fe6acf49ad37ed0eebef9f00d74c9">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.21.01
+- Added: preview icon-basic
+- Fixed: long folder names
+- Fixed: docker/vm renaming
+
 ###2020.12.05
 - Added: no-icon preview container count options
 - Fixed: dashboard expanded breaking after first open
