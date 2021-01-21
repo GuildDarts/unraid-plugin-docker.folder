@@ -121,12 +121,14 @@
     }
 
     .dockerPreview-icon-container {
+        padding: 2px;
+    }
+    .dockerPreview-icon-container.label {
         border-style: solid;
         border-color: var(--border-color);
         border-width: 1px;
         border-radius: 5px;
         box-shadow: 10px 0 0px -2px #beddf5 inset;
-        padding: 2px;
     }
     .dockerPreview-icon-container img.img {
         margin-right: 6px;
@@ -397,13 +399,20 @@ function dockerPreview(folder) {
             hoverOnly(folderId)
             break;
 
-        case 'icon':
+        case 'icon-basic':
+        case 'icon-label':
             dockerPreview.append(`<div class="dockerPreview-icon-container"></div></div>`)
+            var dockerPreviewContainer = dockerPreview.children('.dockerPreview-icon-container')
             var dockerPreviewWidth = dockerPreview.width()
             var widthTotal = 0
             var childrenCount = $(`.${folderType}-folder-child-${folderId}`).length
+
+            if (folder['properties']['docker_preview'] === 'icon-label') {
+                dockerPreviewContainer.addClass('label')
+            }
+
             $(`.${folderType}-folder-child-${folderId}`).each(function(i) {
-                let clone = $(this).children('td:first-child').clone(true).removeAttr('style class').appendTo(dockerPreview.children('.dockerPreview-icon-container'))
+                let clone = $(this).children('td:first-child').clone(true).removeAttr('style class').appendTo(dockerPreviewContainer)
                     clone.children('.advanced').remove()
                     let name = clone.find('.outer > .inner > :first-child').text()
                     let idElement = clone.find('.outer > .hand')

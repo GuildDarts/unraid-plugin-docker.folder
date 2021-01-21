@@ -72,7 +72,8 @@ $dockerSettings .= "</div>";
             <dd>
               <select class="setting" name="docker_preview" onchange="dockerPreview_change(this)">
                 <option value="none">None (Default)</option>
-                <option value="icon">Icon</option>
+                <option value="icon-basic">Icon Basic</option>
+                <option value="icon-label">Icon Label</option>
                 <option value="no-icon">No icon</option>
               </select>
               <script>

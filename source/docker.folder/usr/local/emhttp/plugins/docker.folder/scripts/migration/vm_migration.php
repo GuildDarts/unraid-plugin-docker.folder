@@ -41,4 +41,16 @@ function migration_4_2($folders) {
 
     return $folders;
 }
+
+function migration_4_3($folders) {
+    foreach ($folders->folders as $folderKey => &$folder) {
+        // change docker_preview from 'icon' to 'icon-label'
+        if ($folder->docker_preview === 'icon') {
+            $folder->docker_preview = 'icon-label';
+        }
+    }
+
+    return $folders;
+}
+
 ?>
