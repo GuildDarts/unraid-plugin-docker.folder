@@ -354,7 +354,7 @@ class folder {
         // set icon
         let icon = folder['properties']['icon']
         if (icon !== '') {
-            if ( (icon.slice(icon.length - 3) === 'svg' || icon.includes('image\/svg+xml')) && folder['properties']['icon_animate_hover'] && !isMobile) {
+            if ( (icon.slice(icon.length - 3) === 'svg' || icon.includes('image\/svg+xml')) && folder['properties']['icon_animate_hover'] && !isApple) {
 
                 const decodedSVG = atob(icon.replace('data:image\/svg+xml;base64,', ''));
 
@@ -386,7 +386,7 @@ class folder {
             } else {
                 folder.parent().find('img').attr('src', icon)
 
-                if ( (icon.slice(icon.length - 3) === 'gif' || icon.includes('image\/gif')) && folder['properties']['icon_animate_hover'] && !isMobile) {
+                if ( (icon.slice(icon.length - 3) === 'gif' || icon.includes('image\/gif')) && folder['properties']['icon_animate_hover'] && !isApple) {
                     let element = folder.parent().find('img').addClass('freezeframe')
                     const iconFreeze = new Freezeframe({
                         selector: element,
@@ -586,15 +586,7 @@ class folder {
         });
     }
 
-    const isMobile = function () {
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            return true
-        } else {
-            return navigator.maxTouchPoints &&
-                    navigator.maxTouchPoints > 2 &&
-                    /Macintosh/.test(navigator.userAgent)
-        }
-    }();
+    const isApple = /iPhone|iPad|iPod|Mac|Macintosh/i.test(navigator.userAgent)
 
     var waitForGlobal = function(key, callback) {
         if (window[key]) {
