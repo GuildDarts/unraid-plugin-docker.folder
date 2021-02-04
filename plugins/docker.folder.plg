@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2021.01.30">
+<!ENTITY version   "2021.02.04">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "ecf10845eecd95385bad86b92b8c27a5">
+<!ENTITY md5       "94b4cf912506fabd4f0d7ce242cea56e">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.02.04
+- Fix: add-update vm folder submit
+
 ###2021.01.30
 - Fix: disable 'animate icon on hover' on safari
 - Clean up add-update.folder
