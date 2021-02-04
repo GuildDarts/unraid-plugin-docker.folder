@@ -455,7 +455,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
     init()
 
     async function init() {
-        dockerFolders = await read_folders('folders')
+        dockerFolders = await read_folders('<?= $folderFile ?>')
         folders = await dockerFolders['folders']
         let folderIds = Object.keys(await folders)
 
