@@ -731,6 +731,6 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
 
     // add event listen for form submit
     $('#form').submit(function() {
-        submit(dockerOptions)
+        submit(<?= ($folderType !== 'vm') ? 'dockerOptions' : 'vmOptions' ?>)
     })
 </script>
