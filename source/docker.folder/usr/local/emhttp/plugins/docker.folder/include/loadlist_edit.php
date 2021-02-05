@@ -79,6 +79,11 @@ function loadlistUpdate(_type) {
     var row = $(`#${type}_list`).find('tr:first');
     var names = ''; var index = '';
     eval(userprefs_fix(_type))
-    $.post('/plugins/dynamix.docker.manager/include/UserPrefs.php',{names:names,index:index});
+
+    if (_type !== 'vm') {
+        $.post('/plugins/dynamix.docker.manager/include/UserPrefs.php',{names:names,index:index});
+    } else {
+        $.post('/plugins/dynamix.vm.manager/include/UserPrefs.php',{names:names,index:index});
+    }
 }
 </script>

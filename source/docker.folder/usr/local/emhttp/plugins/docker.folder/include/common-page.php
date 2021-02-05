@@ -225,12 +225,13 @@ function edit_folder_extra(folder) {
     // make children sortable
     $(`.${folderType}-folder-child-div-${folderId}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
     update:function(e,ui){
-        var children = []
-        $(`.${folderType}-folder-child-div-${folderId} > tr`).each(function() {
-            var nam = $(this).find('.appname').text();
-            children.push(nam)
-        })
-        folder['properties']['children'] = children
+        if (folderType === 'vm') {
+            $('#kvm_list').find(`.sortable-child-${folderId}`).each(function(){
+                var parent = $(this).attr('parent-id');
+                var child = $('tr[child-id="'+parent+'"]');
+                child.detach().insertAfter($(this));
+            });
+        }
         loadlistUpdate(folderType)
     }})
 
