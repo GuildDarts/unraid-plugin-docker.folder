@@ -3,5 +3,12 @@ Cond="(pgrep('dockerd')!==false)"
 Markdown="false"
 ---
 <?php
-require_once('/usr/local/emhttp/plugins/docker.folder/include/add-update.folder/add-update.php');
+if (!isset($_GET['type'])) {
+    echo '<p>WOOPS looks like you either clicked the gear icon in the CA or the plugin icon on the plugin page</p>
+          <p>Thats not how you get started, there is a button called "add folder" at the bottom of the docker and vm page</p>
+          <p>Hope this helps ^_^</p>
+          ';
+} else {
+    require_once('/usr/local/emhttp/plugins/docker.folder/include/add-update.folder/add-update.php');
+}
 ?>
