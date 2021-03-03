@@ -2,6 +2,8 @@
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/docker.folder/include/folderVersion.php");
 
+$unraid = parse_ini_file('/etc/unraid-version');
+
 // folderVersion var for javascript
 echo "<script>foldersVersion = " . $GLOBALS['foldersVersion'] . ';</script>';
 ?>
@@ -304,7 +306,8 @@ class folder {
             var selector = folder['options']['listSelector']
             let name = (folderType === 'vm') ? 'vm' : 'ct'
             if (folder['options']['type'] === 'docker') {
-                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderId}" data-id="${folderId}" data-name="${folderName}"><td class="${name}-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderId}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td class="autostart"></td><td></td></tr>`
+                const dockerhandle = '<?= version_compare($unraid['version'], '6.9.0', '>=') ? '<td><span class="dockerhandle"><i class="fa fa-arrows-v"></i></span></td>' : '' ?>'
+                var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderId}" data-id="${folderId}" data-name="${folderName}"><td class="${name}-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderId}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td class="updatecolumn"></td><td colspan="3" class="dockerPreview"></td><td class="advanced" style="display: table-cell;"><span class="cpu">USAGE</span><div class="usage-disk mm"><span id="cpu" style="width: 0%;"></span><span></span></div><br><span class="mem">USAGE</span></div></td><td class="autostart"></td><td></td>${dockerhandle}</tr>`
             } else {
                 var folderTemplate = `<tr class="sortable ${folderType}-folder-parent-${folderId}" data-id="${folderId}" data-name="${folderName}"><td class="${name}-name" style="width:220px;padding:8px;"><div><span class="outer"><span class="hand" id="${folderType}-folder-${folderId}"><img src="/plugins/dynamix.docker.manager/images/question.png?1587731339" class="img"></span><span class="inner"><span class="appname"><a class="exec" onclick="editFolder('${folderId}', '${folderType}')">${folderName}</a></span><br><i class="fa fa-square stopped red-text"></i><span class="state">folder</span></span></span></td><td colspan="5" class="dockerPreview"></td><td class="autostart"></td></tr>`
             }

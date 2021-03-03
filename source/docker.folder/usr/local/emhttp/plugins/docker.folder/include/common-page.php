@@ -223,7 +223,8 @@ function edit_folder_extra(folder) {
     };
 
     // make children sortable
-    $(`.${folderType}-folder-child-div-${folderId}`).sortable({helper:sortableHelper2,appendTo: document.body,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
+    const sortableHandle = '<?= version_compare($unraid['version'], '6.9.0', '>=') ? '.dockerhandle' : '' ?>'
+    $(`.${folderType}-folder-child-div-${folderId}`).sortable({helper:sortableHelper2,appendTo: document.body,handle:sortableHandle,cursor:'move',axis:'y',containment:'parent',cancel:'span.docker_readmore,input',delay:100,opacity:0.5,zIndex:9999,
     update:function(e,ui){
         if (folderType === 'vm') {
             $('#kvm_list').find(`.sortable-child-${folderId}`).each(function(){
