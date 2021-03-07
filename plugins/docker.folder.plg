@@ -2,17 +2,20 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2021.03.03">
+<!ENTITY version   "2021.03.07">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "f70a574c813d59edb7ee3b7eff402b29">
+<!ENTITY md5       "0c04392e7cf00aa3d46e25c68569d32b">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.03.07
+- Fix docker preview log button
+
 ###2021.03.03
 - Add first time install help info at launch path
 - Fix unraid 6.9.0 docker dragging
