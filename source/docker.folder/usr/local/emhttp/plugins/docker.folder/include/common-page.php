@@ -422,10 +422,9 @@ function dockerPreview(folder) {
                     idElement.removeAttr('id')
                     idElement.addClass(`docker-preview-id-${id}`)
                     if (folder['properties']['docker_preview_icon_show_log']) {
-                        let log = $(this).find('td:last-child > .log').clone(true)
-                            log.children('img').removeClass('basic').removeAttr('style')
-                            log.children('.advanced').remove()
-                        clone.find('.outer > .inner').append(log)
+                        clone.find('.outer > .inner').append(`<a href="#" style="color: initial;"><i class="fa fa-fw fa-navicon fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`).click(function() {
+                            containerLogs(name, id)
+                        })
                     }
                     if (folder['properties']['docker_preview_icon_show_webui']) {
                         let webui = getDockerWebUI(folder.options['ids'][name])
