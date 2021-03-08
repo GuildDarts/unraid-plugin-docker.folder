@@ -71,7 +71,7 @@
         min-height: 34px;
         display: grid;
         grid-template-columns: max-content repeat(6, max-content);
-        color: #626262;
+        color: var(--preview-text);
         border-style: solid;
         border-color: var(--border-color);
         border-width: 1px;
@@ -422,14 +422,14 @@ function dockerPreview(folder) {
                     idElement.removeAttr('id')
                     idElement.addClass(`docker-preview-id-${id}`)
                     if (folder['properties']['docker_preview_icon_show_log']) {
-                        clone.find('.outer > .inner').append(`<a href="#" style="color: initial;"><i class="fa fa-fw fa-navicon fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`).click(function() {
+                        clone.find('.outer > .inner').append(`<a href="#" style="color: initial;"><i class="fa fa-fw fa-navicon fa-lg" style="color: var(--preview-icon); opacity: 0.6; transform: translateY(1.2px);"></i></a>`).click(function() {
                             containerLogs(name, id)
                         })
                     }
                     if (folder['properties']['docker_preview_icon_show_webui']) {
                         let webui = getDockerWebUI(folder.options['ids'][name])
                         if (webui) {
-                            clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
+                            clone.find('.outer > .inner').append(`<a href="${webui}" target="_blank" style="color: initial;"><i class="fa fa-fw fa-globe fa-lg" style="color: var(--preview-icon); opacity: 0.6; transform: translateY(1.2px);"></i></a>`)
                         }
                     }
                 let width = clone.width()
@@ -525,4 +525,15 @@ function addFolder(type) {
   if (x!=-1) path = path.substring(0,x);
   location = `${path}/AddFolder?type=${type}`;
 }
+
+(function() {
+    const baseTheme = document.querySelector('head > link[href*="dynamix-"]').href.match(/(?<=dynamix-).*?(?=\.css)/g)[0]
+    const root = document.querySelector(':root')
+    if (baseTheme === 'white') {
+        root.style.setProperty('--preview-text', '#626262')
+    }
+    if (baseTheme === 'black' || baseTheme === 'gray') {
+        root.style.setProperty('--preview-icon', '#c4c4c4')
+    }
+})()
 </script>
