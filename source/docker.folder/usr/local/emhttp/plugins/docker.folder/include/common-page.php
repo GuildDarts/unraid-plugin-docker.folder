@@ -525,7 +525,7 @@ function addFolder(type) {
 }
 
 (function() {
-    const baseTheme = document.querySelector('head > link[href*="dynamix-"]').href.match(/(?<=dynamix-).*?(?=\.css)/g)[0]
+    const baseTheme = document.querySelector('head > link[href*="dynamix-"]').href.match(/dynamix-(.*?)\.css/)[1]
     const root = document.querySelector(':root')
     if (baseTheme === 'white') {
         root.style.setProperty('--preview-text', '#626262')
