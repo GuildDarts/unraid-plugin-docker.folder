@@ -1,4 +1,5 @@
 <?php
+namespace migrations\docker;
 
 function migration_1($folders) {
     foreach ($folders as $folderKey => &$folder) {
@@ -143,7 +144,7 @@ function migration_2_7($folders) {
 }
 
 function migration_3_0($folders) {
-    $folders->folders = new stdClass;
+    $folders->folders = new \stdClass;
 
     foreach ($folders as $folderKey => &$folder) {
         if($folderKey == 'foldersVersion' || $folderKey == 'folders') {continue;}
@@ -158,7 +159,7 @@ function migration_3_0($folders) {
         $folder->docker_preview_icon_show_webui = false;
     }
 
-    $folders->settings = new stdClass;
+    $folders->settings = new \stdClass;
 
     // add fix_docker_page_shifting
     $folders->settings->fix_docker_page_shifting = false;
@@ -184,7 +185,7 @@ function migration_4_0($folders) {
 
 function migration_4_1($folders) {
     $ids = [];
-    $tmpFolders = new stdClass;
+    $tmpFolders = new \stdClass;
     $user_prefs_file = '/boot/config/plugins/dockerMan/userprefs.cfg';
     $user_prefs = parse_ini_file($user_prefs_file);
     foreach ($folders->folders as $folderKey => &$folder) {

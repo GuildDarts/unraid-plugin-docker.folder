@@ -1,6 +1,9 @@
 <?php
-    require_once("/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php");
-    $path = '/boot/config/plugins/docker.folder/';
+    require_once('/usr/local/emhttp/plugins/docker.folder/include/folderVersion.php');
+    require_once('/usr/local/emhttp/plugins/docker.folder/scripts/migration/docker_migration.php');
+    require_once('/usr/local/emhttp/plugins/docker.folder/scripts/migration/vm_migration.php');
+
+    $path = '/boot/config/plugins/docker.folder';
     $file = $_POST['file'];
 
     if (isset($file)) {
@@ -12,7 +15,8 @@
     
 
     function init($path, $file) {
-        $foldersFile = "$path$file.json";
+        $folderType = ($file !== 'folders-vm') ? 'docker' : 'vm';
+        $foldersFile = "$path/$file.json";
         $folders_file = file_get_contents($foldersFile);
 
         if ( file_exists($foldersFile ) ) {
@@ -38,29 +42,21 @@
 
         file_put_contents($path."$file.backup.json", $folders_file);
 
-        // import migrations for docker or vm
-        if ($file === 'folders') {
-            require_once('/usr/local/emhttp/plugins/docker.folder/scripts/migration/docker_migration.php');
-        } else if ($file === 'folders-vm') {
-            require_once('/usr/local/emhttp/plugins/docker.folder/scripts/migration/vm_migration.php');
-        }
-
-        $functionsArray = get_defined_functions();
-        $migrationFunctions = array_filter($functionsArray['user'], function($func) {
-            $string = 'migration_';
-            $length = strlen($string);
-            if (substr($func, 0, $length) === $string) {
-                return true;
-            }
-        });
-        
+        // for when there was no folderVersion
         if ($folders->foldersVersion == null && $file === 'folders') {
             logger('migration_1');
             $folders = migration_1($folders);
         }
 
+        $functionsArray = get_defined_functions();
+        $migrationFunctions = array_filter($functionsArray['user'], function($func) use($folderType) {
+            if (strpos($func, "$folderType\\migration_") !== false) {
+                return true;
+            }
+        });
+
         foreach ($migrationFunctions as $function) {
-            $func = str_replace('migration_', '', $function);
+            $func = str_replace("migrations\\$folderType\\migration_", '', $function);
             $func = str_replace('_', '.', $func);
 
             $version = floatval($func);

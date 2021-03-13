@@ -1,7 +1,9 @@
 <?php
+namespace migrations\vm;
+
 function migration_4_1($folders) {
     $ids = [];
-    $tmpFolders = new stdClass;
+    $tmpFolders = new \stdClass;
     $user_prefs_file = '/boot/config/plugins/dockerMan/userprefs.cfg';
     $user_prefs = parse_ini_file($user_prefs_file);
     foreach ($folders->folders as $folderKey => &$folder) {
