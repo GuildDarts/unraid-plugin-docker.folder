@@ -285,7 +285,7 @@ class folder {
         const folderType = folder.options['type']
 
         // regex
-        if (!(folder['properties']['regex'] === '' || folder['properties']['regex'] === null)) {
+        if (folder['properties']['regex'] !== '' && folder['properties']['regex'] != null) {
             let dockerIdsKeys = Object.keys(folder.options['ids'])
             let regex = new RegExp(folder['properties']['regex'])
             for (const docker of dockerIdsKeys) {
