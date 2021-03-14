@@ -71,7 +71,7 @@ $foldersSettings .= "</div>";
           });
       } else if (result['foldersVersion'] < foldersVersion) {
         var resultString = JSON.stringify(result);
-        $.post("/plugins/docker.folder/scripts/common_migration.php", {
+        $.post("/plugins/docker.folder/scripts/migration/common_migration.php", {
           file: '<?= $folderFile?>',
           importFolder: resultString
         }, function() {
