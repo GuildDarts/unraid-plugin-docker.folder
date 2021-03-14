@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2021.03.08a">
+<!ENTITY version   "2021.03.14">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "19e414dfcc3be30d340d776a58233d5e">
+<!ENTITY md5       "a095bb7abf310debe5730a3e7e969d3c">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.03.14
+- Fix migrations not working for both docker and vm
+- Fix regex null check
+- Fix import migration
+
 ###2021.03.08a
 - Fix regex in safari
 
