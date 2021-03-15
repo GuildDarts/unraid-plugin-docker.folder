@@ -22,12 +22,12 @@
 
     // remove children from folder
     if (isset($childrenRemove)) {
-        foreach ($childrenRemove as $child) {
-            $needle = $child->child;
-            $folderId = $child->folderId;
-            if (($key = array_search($child->child, $folders->folders->$folderId->children)) !== false) {
-                unset($folders->folders->$folderId->children[$key]);
-                $folders->folders->$folderId->children = array_values($folders->folders->$folderId->children);
+        foreach ($childrenRemove as $c) {
+            $child = $c->child;
+            $folderId = $c->folderId;
+            $key = array_search($child, $folders->folders->$folderId->children);
+            if ($key !== false) {
+                array_splice($folders->folders->$folderId->children, $key, 1);
             }
         }
     }

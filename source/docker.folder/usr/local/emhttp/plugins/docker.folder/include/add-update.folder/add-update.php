@@ -527,6 +527,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
                 if (child === name) {
                     let folderName = folders[folderId]['name']
                     $(this).find('.current-folder').text(`Folder: ${folderName}`)
+                    $(this).data('folderId', folderId)
                     break mainLoop
                 }
                 }
@@ -577,10 +578,12 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
         folder_children.push(name)
 
         // remove docker from old folder e.g docker is in folder but you check it in another folder and save
-        if ($(this).parent().parent().hasClass('disabled')) {
-          let oldFolder = $(this).parent().parent().find('.current-folder').text().replace('Folder: ', '')
-          let remove = {folderId: oldFolder, child: name}
-          childrenRemove.push(remove)
+        const containerElement = $(this).parent().parent()
+        if ($(containerElement).hasClass('disabled')) {
+            const oldFolderName = $(containerElement).find('.current-folder').text().replace('Folder: ', '')
+            const oldFolderId = $(containerElement).data('folderId')
+            const remove = {folderId: oldFolderId, child: name}
+            childrenRemove.push(remove)
         }
       }
       // remove value from array e.g removing a folder
