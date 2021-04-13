@@ -186,6 +186,11 @@ function dashboard_expanded(folder) {
         }
     })
 
+    // fixes borders being added randomly
+    if (childrenCount === 0) {
+        return
+    }
+
     index = index+childrenCount
     while (index == 0 || Number.isInteger(index/rows) == false) {
         addCountEnd++
