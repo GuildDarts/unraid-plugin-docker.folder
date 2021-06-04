@@ -2,17 +2,24 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2021.03.15">
+<!ENTITY version   "2021.06.04">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "92730182658ab06ceaca96b7f7181006">
+<!ENTITY md5       "2dbb9450a0e863cfbb5fb145949bbcc2">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.06.04
+- Fix dashboard expanded on folder with no children
+- Fix disable submit button on submit
+- Fix advanced context menu log icon
+- Show dangling children on edit folder page
+- Update chartjs libraries
+
 ###2021.03.14
 - Fix folders.json corruption when saving folder
 
