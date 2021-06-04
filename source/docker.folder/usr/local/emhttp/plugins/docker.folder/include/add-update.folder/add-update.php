@@ -459,6 +459,17 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
         folders = await dockerFolders['folders']
         let folderIds = Object.keys(await folders)
 
+        // show dangling children so that the user can remove them
+        if (editFolderId) {
+            const container_items = Array.from($('.settingC')).map(item => item.getAttribute('name'))
+            const danglingChildren = folders[editFolderId]['children'].filter(child => {
+                return !container_items.includes(child)
+            })
+            for (const child of danglingChildren) {
+                $('.containers').prepend(deletedContainerTemplate(child))
+            }
+        }
+
         $('.settingC').each(function() {
             for (const folderId of folderIds) {
                 let folderChild = folders[folderId]['children']
@@ -736,4 +747,15 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
     $('#form').submit(function() {
         submit(<?= ($folderType !== 'vm') ? 'dockerOptions' : 'vmOptions' ?>)
     })
+
+    function deletedContainerTemplate(name) {
+        return `
+        <div class='container_item'>
+            <div class='info'><span><img class='docker_img' src='/plugins/dynamix.docker.manager/images/question.png'></span>
+            <span><strong>${name}</strong><br>Deleted
+            </span></div>
+            <div class='settingC-box'><input class='settingC' type='checkbox' name='${name}'></div>
+        </div>
+        `
+    }
 </script>
