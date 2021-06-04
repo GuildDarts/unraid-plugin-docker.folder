@@ -622,7 +622,7 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
     }
 
     async function submit(options) {
-        $('input[type=button]').prop('disabled', true);
+        $('input[type=submit]').prop('disabled', true);
 
         let settings = await getSettings(options)
 
