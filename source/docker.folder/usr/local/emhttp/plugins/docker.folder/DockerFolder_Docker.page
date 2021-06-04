@@ -420,15 +420,15 @@ function advancedContextMenu(folder) {
                     'float': 'initial',
                     'transform': 'translateX(10px)'
                 })
-            let dockerLog = dockerElement.children(':last-child')
-                dockerLog.find('img').remove()
-                dockerLog.find('div').removeClass('advanced')
+            let dockerLog = '<i class="fa fa-fw fa-navicon fa-lg "></i>'
 
             let trBody = clone.find('.header-info > table > tbody > tr')
                 clone.find('.header-name > div').html(ctNameElement.html())
                 trBody.children('td.version').html(dockerVersion.html())
                 trBody.children('td.cpu-mem').html(dockerCpuMem.html())
-                trBody.children('td.log').html(dockerLog.html())
+                trBody.children('td.log').html(dockerLog).click(function() {
+                    containerLogs(child, id)
+                })
                 trBody.children('td.autostart').append(dockerAutostart.find('[id*="-wait"]'))
                 let autostart = trBody.find(`td.autostart > #${id}-preview-auto`)
                     autostart.switchButton({labels_placement: 'right', checked: $(`#${id}-auto`).prop('checked')})
