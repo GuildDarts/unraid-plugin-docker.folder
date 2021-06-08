@@ -21,7 +21,7 @@
     let animating_fix = `
     if (spin) {
         $('#'+params['container']).parent().find('i').removeClass('fa-play fa-square fa-pause').addClass('fa-refresh fa-spin');
-        $('.docker-preview-id-'+params['container']).parent().find('i').removeClass('fa-play fa-square fa-pause').addClass('fa-refresh fa-spin');
+        $('.docker-preview-id-'+params['container']).parent().find('i[id^="load"]').removeClass('fa-play fa-square fa-pause').addClass('fa-refresh fa-spin');
         $('#advanced-context-'+params['container']).parent().find('i').removeClass('fa-play fa-square fa-pause').addClass('fa-refresh fa-spin');
     }
     `
