@@ -15,6 +15,14 @@
             <p>Will hopefully fix the docker page shifting when opening/closing folders</p>
             <p>This is done by setting static width for some columns before folders are created (might cause issues)</p>
         </blockquote>
+
+        <dl>
+            <dt>Nuke uptime column:</dt>
+            <dd><input class="globalSetting switch" name="nuke_uptime_column" type="checkbox" /></dd>
+        </dl>
+        <blockquote class="inline_help">
+            <p>This will remmove (nuke) the uptime column</p>
+        </blockquote>
     </div>
   </div>
 </div>
@@ -40,6 +48,9 @@ function globalSettingsPopup(_folderType) {
         switch ($(this).attr('name')) {
             case 'fix_docker_page_shifting':
                 $(this).prop('checked', dockerFolders['settings']['fix_docker_page_shifting'])
+                break;
+            case 'nuke_uptime_column':
+                $(this).prop('checked', dockerFolders['settings']['nuke_uptime_column'])
                 break;
         }
     })

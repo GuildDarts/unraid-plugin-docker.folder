@@ -19,6 +19,7 @@ function main($path, $file) {
         
         if ($file !== 'folders-vm')  {
             $jsonData->settings->fix_docker_page_shifting = false;
+            $jsonData->settings->nuke_uptime_column = false;
         } else {
 
         }

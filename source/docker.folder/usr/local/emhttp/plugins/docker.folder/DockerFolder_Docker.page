@@ -255,6 +255,22 @@ async function apply_folder(callback) {
             })
         }
 
+        if (dfSettings['nuke_uptime_column']) {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #docker_containers > thead > tr > th:nth-last-child(2),
+                #docker_list [class*="sortable"] > td:nth-last-child(2) {
+                    display: none;
+                }
+            `
+            document.head.appendChild(style)
+
+            $('#docker_list > tr.advanced').each(function() {
+                $(this).children('td:nth-child(2)').attr('colspan', '5')
+                $(this).children('td:last-child').attr('colspan', '2')
+            })
+        }
+
         let dFolders = await dockerFolders['folders']
         let folderIds = Object.keys(await dFolders)
         window[`${type}Options`]['folderChildren'] = []

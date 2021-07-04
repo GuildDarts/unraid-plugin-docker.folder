@@ -237,4 +237,13 @@ function migration_4_3($folders) {
     return $folders;
 }
 
+function migration_4_4($folders) {
+    foreach ($folders->folders as $folderKey => &$folder) {
+        // add nuke_uptime_column
+        $folders->settings->nuke_uptime_column = false;
+    }
+
+    return $folders;
+}
+
 ?>
