@@ -28,7 +28,7 @@
                 $isImport = false;
             }
         } else {
-            exit();
+            return;
         }
 
         $folders = json_decode($import);
@@ -37,7 +37,7 @@
         if (count((array)$folders) == null || count((array)$folders) < 2 || (count((array)$folders->folders) == 0 && $folders->folders != null) ) {
             logger("No folders to migrate ($file)");
             finish($foldersFile, $folders, $folders_file, $isImport);
-            exit();
+            return;
         }
 
         file_put_contents($path."$file.backup.json", $folders_file);
