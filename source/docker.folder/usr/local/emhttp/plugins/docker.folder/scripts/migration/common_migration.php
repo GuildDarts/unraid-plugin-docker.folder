@@ -45,7 +45,7 @@
         // for when there was no folderVersion
         if ($folders->foldersVersion == null && $file === 'folders') {
             logger('migration_1');
-            $folders = migration_1($folders);
+            $folders = migrations\docker\migration_1($folders);
         }
 
         $functionsArray = get_defined_functions();
