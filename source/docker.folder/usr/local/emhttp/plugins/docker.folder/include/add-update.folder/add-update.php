@@ -499,33 +499,32 @@ require_once("$docroot/plugins/docker.folder/include/add-update.folder/add-updat
                 }
             })
 
-            // buttons sortable
-            var sortableHelper = function(e, i) {
-                i.children().each(function() {
-                    $(this).width($(this).width());
-                });
-                return i;
-            };
-
-            $('#buttonLocation').sortable({
-                helper: sortableHelper,
-                items: 'div.sortable',
-                cursor: 'move',
-                axis: 'y',
-                containment: 'parent',
-                cancel: 'span.docker_readmore,input',
-                delay: 100,
-                opacity: 0.5,
-                zIndex: 9999
-            })
-
-            $('.basic-switch').switchButton({
-                show_labels: false
-            });
-
             loadButtons(folders, editFolderId)
-
         }
+
+        // buttons sortable
+        var sortableHelper = function(e, i) {
+            i.children().each(function() {
+                $(this).width($(this).width());
+            });
+            return i;
+        };
+
+        $('#buttonLocation').sortable({
+            helper: sortableHelper,
+            items: 'div.sortable',
+            cursor: 'move',
+            axis: 'y',
+            containment: 'parent',
+            cancel: 'span.docker_readmore,input',
+            delay: 100,
+            opacity: 0.5,
+            zIndex: 9999
+        })
+
+        $('.basic-switch').switchButton({
+            show_labels: false
+        });
 
         // add what folder a docker is in
         $('#dockers > .containers').children().each(function() {
