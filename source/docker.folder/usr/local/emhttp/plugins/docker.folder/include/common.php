@@ -628,4 +628,7 @@ class folder {
             return (text !== '') ? text : $(this).text()
         };
     }(jQuery));
+
+    // simple jQuery fn to reverse the selection
+    jQuery.fn.reverse = [].reverse;
 </script>

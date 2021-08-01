@@ -109,7 +109,6 @@ function dashboard_expanded_button(folder) {
                 let id = $(this).data('id')
                 let index = $(this).index()
                 if (folder.options['activeDropdowns'].includes(id) && id !== folderId && index > selectionIndex) {
-                    console.log('yye')
                     childrenDropdown(id, folderType)
                     childrenDropdown(id, folderType)
                 }
@@ -244,13 +243,11 @@ function childrenDropdown(folderId, folderType) {
 
     if (folder.parent().children('i').hasClass('fa-chevron-up')) {
         // add to storage
-        for (const child of [...folder['properties']['children']].reverse()) {
-            folder.child().each(function() {
-                if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
-                    $(this).appendTo(`#${folderType}_list_storage`);
-                }
-            });
-        }
+        folder.child().each(function() {
+            if (folder['properties']['children'].includes($(this).find(folder.options['dashboardHideSelectorName']).textFirst())) {
+                $(this).appendTo(`#${folderType}_list_storage`);
+            }
+        });
         // remove folderId from activeDropdowns
         folder.options['activeDropdowns'] = folder.options['activeDropdowns'].filter(function(elm) {
             return elm != folderId;
@@ -267,13 +264,11 @@ function childrenDropdown(folderId, folderType) {
 }
 
 function childrenMove(folder) {
-    for (const child of [...folder['properties']['children']].reverse()) {
-        folder.child().each(function() {
-            if (child === $(this).find(folder.options['dashboardHideSelectorName']).textFirst()) {
-                $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.id}`);
-            }
-        });
-    }
+    folder.child().reverse().each(function() {
+        if (folder['properties']['children'].includes($(this).find(folder.options['dashboardHideSelectorName']).textFirst())) {
+            $(this).insertAfter(`.${folder.options['type']}-folder-parent-${folder.id}`);
+        }
+    });
 }
 
 </script>
