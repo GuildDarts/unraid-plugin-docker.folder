@@ -354,15 +354,30 @@ class folder {
 
         loadDropdownButtons(folder)
 
-        // set icon
-        let icon = folder['properties']['icon']
+        setIcon(folder)
+
+        docker_hide(folder)
+        checkStatus(folder)
+
+    }
+
+    async function setIcon(folder) {
+        const folderId = folder.id
+        const folderType = folder.options['type']
+        const icon = folder['properties']['icon']
+
         if (icon !== '') {
             if ( (icon.slice(icon.length - 3) === 'svg' || icon.includes('image\/svg+xml')) && folder['properties']['icon_animate_hover'] && !isApple) {
 
-                const decodedSVG = atob(icon.replace('data:image\/svg+xml;base64,', ''));
+                if (icon.includes('data:image\/svg+xml;base64,')) {
+                    var svgSource = atob(icon.replace('data:image\/svg+xml;base64,', ''));
+                } else {
+                    const response = await fetch(icon)
+                    var svgSource = await response.text()
+                }
 
-                if (decodedSVG.includes('keyframes')) {
-                    folder.parent().find('img').replaceWith(decodedSVG)
+                if (svgSource.includes('keyframes')) {
+                    folder.parent().find('img').replaceWith(svgSource)
 
                     const svgElement = folder.parent().find('svg')
                     const svgId = svgElement.attr('id')
@@ -409,10 +424,6 @@ class folder {
                 }
             }
         }
-
-        docker_hide(folder)
-        checkStatus(folder)
-
     }
 
     function insertAtIndex(i, template, selector) {
