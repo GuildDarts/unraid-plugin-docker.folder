@@ -2,17 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "docker.folder">
 <!ENTITY author    "GuildDarts">
-<!ENTITY version   "2021.08.01">
+<!ENTITY version   "2021.08.20">
 <!ENTITY launch    "Docker/AddFolder">
 <!ENTITY github    "GuildDarts/unraid-plugin-docker.folder">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
-<!ENTITY md5       "dc7ad60a65a19c4b39dc413681a7d530">
+<!ENTITY md5       "9450260fbcf36c9e7fcc9fad5a9d6b5f">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="docker">
 
 <CHANGES>
+###2021.08.20
+- Check folderType is valid
+- Use post request for running bash commands
+- Fix icon animate hover with none base64 img
+
 ###2021.08.01
 - Fix dashboard expanded children order
 - Fix switchButton not rendering when adding folder
