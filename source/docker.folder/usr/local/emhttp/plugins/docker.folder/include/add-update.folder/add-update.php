@@ -2,6 +2,12 @@
 $folderType = $_GET['type'];
 $folderFile = ($folderType !== 'vm') ? 'folders' : 'folders-vm';
 
+if (!in_array($folderType, ['docker', 'vm'])) {
+    http_response_code(400);
+    echo "folderType wrong or missing";
+    die();
+}
+
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/docker.folder/include/common.php");
 
