@@ -2,6 +2,7 @@
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once("$docroot/plugins/docker.folder/include/folderVersion.php");
 
+$var = parse_ini_file('state/var.ini');
 $unraid = parse_ini_file('/etc/unraid-version');
 
 // folderVersion var for javascript
@@ -211,8 +212,8 @@ class folder {
             case "Bash":
                 $(dropdown).find(`li > a[name ="${name}"]`).click(function() {
                     let title = `${name}: ${folderName} (${folderId})`
-                    let address = `/plugins/docker.folder/scripts/action_docker.php?command=${cmd}`
-                    popupWithIframe(title, address, true, 'loadlist')
+                    let address = `/plugins/docker.folder/scripts/action_docker.php`
+                    popupWithIframePOST(title, address, cmd, true, 'loadlist')
                 })
                 break
 
@@ -627,6 +628,41 @@ class folder {
         }
 
         return dataArray
+    }
+
+    function popupWithIframePOST(title, address, cmd, reload, func) {
+    pauseEvents();
+        $('#iframe-popup').html('<iframe id="myIframe" name="myIframe" frameborder="0" scrolling="yes" width="100%" height="99%"></iframe>');
+        $('#iframe-popup').dialog({
+            autoOpen:true,
+            title:title,
+            draggable:true,
+            width:800,
+            height:((screen.height / 5) * 4) || 0,
+            resizable:true,
+            modal:true,
+            show:{effect:'fade', duration:250},
+            hide:{effect:'fade', duration:250},
+            open:function(ev, ui) {
+                $('#iframe-popup').append(`
+                    <form action="${address}" method="post" target="myIframe" id="myForm">
+                        <input type="hidden" name="csrf_token" value="<?=$var['csrf_token']?>">
+                        <input type="hidden" name="command" value="${cmd}">
+                    </form>
+                `);
+                $('#myForm').submit()
+            },
+            close:function(event, ui) {
+                if (reload && !$('#myIframe').contents().find('#canvas').length) {
+                    if (func) setTimeout(func+'()',0); else location = window.location.href;
+                } else {
+                    resumeEvents();
+                }
+            }
+        });
+        $('.ui-dialog .ui-dialog-titlebar').addClass('menu');
+        $('.ui-dialog .ui-dialog-title').css('text-align', 'center').css('width', '100%');
+        $('.ui-dialog .ui-dialog-content').css('padding', '12');
     }
 
     (function($) {
