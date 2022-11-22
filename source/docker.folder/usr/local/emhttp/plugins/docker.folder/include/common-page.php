@@ -18,6 +18,7 @@
         border-width: 1px;
         border-radius: 5px;
         padding: 5px;
+        cursor: pointer;
     }
     [class*="-folder-child-div-"] > tr:first-child {
         border-top: 1px solid var(--border-color);
